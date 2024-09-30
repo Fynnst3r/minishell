@@ -4,9 +4,10 @@ CC = cc
 
 FLAGS = -Wall -Wextra -Werror -lreadline 
 
-SRCS = 	test.c\
+SRCS = 	minishell.c\
 		token_utils.c\
-		free.c
+		free.c\
+		new_split.c
 
 OBJS = $(SRCS:.c=.o)
 

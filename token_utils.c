@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/09/24 20:28:02 by fforster         ###   ########.fr       */
+/*   Updated: 2024/09/30 18:34:27 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_token	*find_last_token(t_token *t)
 	return (tmp);
 }
 
-void	make_token(t_token **token)
+void	make_token(t_token **token, char *str, int flag, int id)
 {
 	t_token	*new;
 	t_token	*last;
@@ -35,8 +35,10 @@ void	make_token(t_token **token)
 	new = malloc(sizeof(t_token));
 	if (!new)
 		return ;
-	new->str = NULL;
-	new->flag = 0;
+	new->str = str;
+	new->id = id;
+	// probably needs to be freed!!
+	new->flag = flag;
 	new->next2 = NULL;
 	if (*token == NULL)
 	{
