@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/01 20:45:17 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:52:11 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -28,24 +29,24 @@ typedef struct s_shell_elements	t_shell_elements;
 // identifiers or values to do something.
 // O_PARANT is short for "opening parentheses." Parentheses are ( and ).
 // C_PARANT is short for "closing parentheses."
-enum e_flags
-{
-	WORD,
-	NUMBER,
-	O_PARANT,
-	C_PARANT,
-	SINGLE_QUOTE,
-	T_PIPE,
-	REDIR_IN,
-	REDIR_OUT,
-	REDIR_APP,
-	OTHER
-};
+// enum e_flags
+// {
+// 	WORD,
+// 	NUMBER,
+// 	O_PARANT,
+// 	C_PARANT,
+// 	SINGLE_QUOTE,
+// 	T_PIPE,
+// 	REDIR_IN,
+// 	REDIR_OUT,
+// 	REDIR_APP,
+// 	OTHER
+// };
 
 typedef struct s_token
 {
 	char			*str;
-	enum e_flags	type;
+	int				type;
 	int				id;
 	size_t			len;
 
@@ -99,6 +100,7 @@ typedef struct s_shell_elements
 //parsing/token_utils.c
 // void		make_token(t_token **token, char *str, int flag, int id);
 int			ft_isspace(char c);
+void		print_token_data(t_token *top);
 t_token		*make_token(void);
 void		token_add_back(t_token **last, t_token *new);
 t_token		*find_last_token(t_token *t);
@@ -106,6 +108,10 @@ t_token		*find_last_token(t_token *t);
 //parsing/free.c
 void		free_tokens(t_token **t);
 
+//parsing/lexer.c.c
+void		start_lexer(char *input, size_t end);
+
 //execution/start_execution
 void		start_exec(void);
+
 #endif

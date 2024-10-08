@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 20:07:16 by fforster          #+#    #+#             */
-/*   Updated: 2024/06/19 19:11:25 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:09:06 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,8 @@ void	f_puthex(unsigned int n, bool x, bool counted, size_t *ret)
 void	f_putpoint(unsigned long n, bool counted, size_t *ret)
 {
 	const char		*hexdex;
-	unsigned long	save;
 
 	hexdex = "0123456789abcdef";
-	save = n;
 	if (counted == false)
 	{
 		write(1, "0x", 2);

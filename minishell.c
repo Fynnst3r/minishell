@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/01 20:08:44 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:14:36 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,40 +38,27 @@
 // 	}
 // }
 
-size_t	token_len(t_token *t, char *input)
-{
-	size_t	i;
-	size_t	l;
+// void	start_lexer(const char *input)
+// {
+// 	t_token	*token;
+// 	t_token	*token_top;
 
-	i = 0;
-	l = 0;
-	while (input[i] != 0 && !ft_isspace(input[i]))
-	{
-		l++;
-	}
-}
-
-static void	start_lexer(const char *input)
-{
-	t_token	*token;
-	t_token	*token_top;
-
-	token = NULL;
-	add_history(input);
-	while (*input)
-	{
-		while (ft_isspace(*input))
-			input++;
-		token = new_token();
-		token->str = ft_strdup(input);
-		token->type = set_type();
-		token_add_back(&token_top, token);
-	}
-}
+// 	token = NULL;
+// 	add_history(input);
+// 	while (*input)
+// 	{
+// 		while (ft_isspace(*input))
+// 			input++;
+// 		search_command(input, token);
+// 		token = new_token();
+// 		token->type = set_type();
+// 		token_add_back(&token_top, token);
+// 	}
+// }
 
 int	main(int ac, char **av)
 {
-	const char	*input;
+	char	*input;
 
 	(void)ac, (void)av;
 	while (1)
@@ -83,10 +70,10 @@ int	main(int ac, char **av)
 			continue ;
 		if (input)
 		{
-			scan_lexer(input);
+			start_lexer(input, ft_strlen(input));
 			// fake_exec(tokens);
 		}
-		// tokens = NULL;  delete cmd list and maybe other leftover we dont need anymore data
+		// tokens = NULL;  delete cmd list and maybe other leftover we dont need anymore to reuse for next cmd
 	}
 	// free_tokens(&tokens);
 }

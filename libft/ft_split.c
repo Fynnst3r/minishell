@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:17:37 by fforster          #+#    #+#             */
-/*   Updated: 2024/04/06 18:04:01 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/08 19:00:21 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ char	**ft_split(char const *s, char c)
 // #include <stdio.h>
 // int main()
 // {
-// 	char *string = "!hello";
+// 	char *string = "       ";
 // 	//char **expected = 
 // 	// 	((char*[6]){"split", "this", "for", "me", "!", ((void *)0)});
 // 	char **result = ft_split(string, ' ');

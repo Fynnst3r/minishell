@@ -5,9 +5,9 @@ CC = cc
 FLAGS = -Wall -Wextra -Werror -lreadline 
 
 SRCS = 	minishell.c\
-		token_utils.c\
-		free.c\
-		new_split.c
+		parsing/token_utils.c\
+		parsing/lexer.c\
+		parsing/free.c\
 
 OBJS = $(SRCS:.c=.o)
 

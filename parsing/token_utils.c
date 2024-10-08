@@ -6,11 +6,26 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/01 20:39:17 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:13:21 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+
+void	print_token_data(t_token *top)
+{
+	t_token	*tmp;
+
+	static int	count = 0;
+	tmp = top;
+	while (tmp)
+	{
+		printf("STRING[%d]=%s\n", count, tmp->str);
+		printf("TYPE[%d]=%c\n", count, tmp->type);
+		count++;
+		tmp = tmp->next;
+	}
+}
 
 int	ft_isspace(char c)
 {
@@ -38,7 +53,8 @@ t_token	*make_token(void)
 
 	new = malloc(sizeof(t_token));
 	if (!new)
-		return ;
+		return (NULL);
+		printf("1\n");
 	return (new);
 }
 
@@ -46,17 +62,24 @@ void	token_add_back(t_token **last, t_token *new)
 {
 	t_token	*tmp;
 
+	printf("\n7\n");
 	if (!*last)
 	{
-		(*last)->next = new;
+		*last = new;
+		printf("\nfirsttoken\n");
 		return ;
 	}
 	if (!last || !new)
+	{
+		printf("this bitch empty\n");	
 		return ;
+	}
 	tmp = *last;
+	printf("WHY\n");
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = new;
+	printf("\nadded back\n");
 }
 // void	make_token(t_token **token, char *str, int flag, int id)
 // {
