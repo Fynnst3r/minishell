@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/09/25 17:24:36 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/08 15:03:56 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ typedef struct s_token
 
 typedef struct s_pipe
 {
-	t_shell_elements	*left_side;
-	t_shell_elements	*right_side;
+	// t_shell	*left;
+	// t_shell	*righ;
 }t_pipe;
 
 typedef struct s_red
@@ -82,11 +82,11 @@ typedef union s_command
 	t_heredoc	heredoc;
 }t_command;
 
-typedef struct s_shell_elements
+typedef struct s_shell
 {
-	t_obj			typ;
+	t_obj			type;
 	t_command		command;
-}t_shell_elements;
+}t_shell;
 
 typedef enum s_obj
 {
