@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/10 09:50:13 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/10 11:43:54 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_token
 
 typedef struct s_data
 {
+	struct cmd	*st_node;
 	const char	*input;
 	int			argc;
 	char		**env;
@@ -68,40 +69,34 @@ typedef enum s_obj
 	HEREDOC
 }t_obj;
 
+typedef struct s_cmd
+{
+	t_obj	type;
+}t_cmd;
+
 typedef struct s_exec
 {
-	char	**argv;
+	t_obj		type;
+	char		**argv;
 }t_exec;
 
 typedef struct s_pipe
 {
+	t_obj			type;
 	struct t_shell	*left;
 	struct t_shell	*righ;
 }t_pipe;
 
 typedef struct s_red
 {
-	
+	t_obj	type;
 }t_red;
 
 typedef struct s_here_d
 {
-	
+	t_obj	type;
 }t_hered;
 
-typedef union s_command
-{
-	t_pipe		pipe;
-	t_red		redi;
-	t_exec		execu;
-	t_hered		heredoc;
-}t_command;
-
-typedef struct s_shell
-{
-	t_obj		type;
-	t_command	command;
-}t_shell;
 
 //minishell.c
 void		fill_env(t_data *data, char **env);
