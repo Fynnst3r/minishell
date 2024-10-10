@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/10 11:43:54 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/10 15:59:01 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ typedef struct s_token
 
 typedef struct s_data
 {
-	struct cmd	*st_node;
-	const char	*input;
-	int			argc;
-	char		**env;
+	struct s_cmd	*st_node;
+	const char		*input;
+	int				argc;
+	char			**env;
 }t_data;
 
 typedef enum s_obj
@@ -110,6 +110,10 @@ void		free_tokens(t_token **t);
 
 //execution/start_execution
 void		start_exec(t_data *data);
-void		exec_exec(t_shell *elements, t_data *data);
+void		exec_execu(t_exec *exec_node, t_data *data);
+
+//execution/help_execution
+char		*find_path(t_data *data, t_exec *st_node);
+void		free_dp(char **str);
 
 #endif

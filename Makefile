@@ -1,7 +1,7 @@
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -lreadline
-SRC = src/minishell.c src/parsing/token_utils.c src/parsing/free.c src/exec/start_execution.c
+SRC = src/minishell.c src/parsing/token_utils.c src/parsing/free.c src/exec/start_execution.c src/exec/help_execution.c
 OBJS = $(SRC:.c=.o)
 LIBFT = lib/libft
 
