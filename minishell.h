@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/08 15:03:56 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/10 09:50:13 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,40 +53,12 @@ typedef struct s_token
 
 }			t_token;
 
-typedef struct s_pipe
+typedef struct s_data
 {
-	// t_shell	*left;
-	// t_shell	*righ;
-}t_pipe;
-
-typedef struct s_red
-{
-	
-}t_red;
-
-typedef struct s_exe
-{
-	
-}t_exe;
-
-typedef struct s_here_doc
-{
-	
-}t_heredoc;
-
-typedef union s_command
-{
-	t_pipe		pipe;
-	t_red		red;
-	t_exe		exe;
-	t_heredoc	heredoc;
-}t_command;
-
-typedef struct s_shell
-{
-	t_obj			type;
-	t_command		command;
-}t_shell;
+	const char	*input;
+	int			argc;
+	char		**env;
+}t_data;
 
 typedef enum s_obj
 {
@@ -96,6 +68,44 @@ typedef enum s_obj
 	HEREDOC
 }t_obj;
 
+typedef struct s_exec
+{
+	char	**argv;
+}t_exec;
+
+typedef struct s_pipe
+{
+	struct t_shell	*left;
+	struct t_shell	*righ;
+}t_pipe;
+
+typedef struct s_red
+{
+	
+}t_red;
+
+typedef struct s_here_d
+{
+	
+}t_hered;
+
+typedef union s_command
+{
+	t_pipe		pipe;
+	t_red		redi;
+	t_exec		execu;
+	t_hered		heredoc;
+}t_command;
+
+typedef struct s_shell
+{
+	t_obj		type;
+	t_command	command;
+}t_shell;
+
+//minishell.c
+void		fill_env(t_data *data, char **env);
+
 //parsing/token_utils.c
 void		make_token(t_token **token);
 t_token		*find_last_token(t_token *t);
@@ -104,5 +114,7 @@ t_token		*find_last_token(t_token *t);
 void		free_tokens(t_token **t);
 
 //execution/start_execution
-void		start_exec(void);
+void		start_exec(t_data *data);
+void		exec_exec(t_shell *elements, t_data *data);
+
 #endif

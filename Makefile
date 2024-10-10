@@ -1,6 +1,7 @@
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror
-SRC = minishell.c src/parsing/token_utils.c src/parsing/free.c src/exec/start_execution.c
+LDFLAGS = -lreadline
+SRC = src/minishell.c src/parsing/token_utils.c src/parsing/free.c src/exec/start_execution.c
 OBJS = $(SRC:.c=.o)
 LIBFT = lib/libft
 
@@ -17,12 +18,12 @@ $(NAME): $(OBJS)
 	@echo $(B)"Compiling libft..."$(DC)
 	@cd $(LIBFT) && $(MAKE) --silent
 	@echo $(G)"minishell..."$(DC)
-	@cc $(OBJS) $(INLIBFT) -o $(NAME)
+	@cc $(OBJS) $(INLIBFT) -o $(NAME) $(LDFLAGS) -fsanitize=address
 
 all: $(NAME)
 
 %.o : %.c
-	@cc $(CFLAGS) -c $< -o $@
+	@cc $(CFLAGS)  -c $< -o $@
 
 clean:
 	@rm -f $(OBJS)

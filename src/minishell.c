@@ -6,81 +6,51 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/09/25 13:29:16 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/10 10:33:36 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	fake_exec(t_token *t)
-{
-	char	*ret;
-
-	if (!t)
-		return ;
-	if (t->flag == BUILTIN)
-	{
-		if (ft_strncmp(t->str, "pwd", 4) == 0)
-		{
-			// printf("pwd ATTEMPT\n");
-			ret = getcwd(NULL, 0);
-			printf("%s\n", ret);
-			free(t->str);
-			// printf("pwd end\n");
-		}
-	}
-	else
-	{
-		// printf("STR ATTEMPT\n");
-		printf("%s", t->str);
-		free(t->str);
-		// printf("STR end\n");
-	}
-}
-
-void	scan_start(const char *input, t_token **token)
-{
-	size_t	i;
-	size_t	l;
-	// char	**split;
-
-	i = 0;
-	l = 0;
-
-	if (ft_strncmp(input, "pwd", 4) == 0)
-	{
-		make_token(token);
-		// printf("kill\n");
-		(*token)->flag = BUILTIN;
-		(*token)->str = (char *)input;
-	}
-	else
-	{
-		// printf("kill else\n");
-		make_token(token);
-		(*token)->str = (char *)input;
-	}
-}
-
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **env)
 {
 	const char	*prompt;
-	const char	*input;
-	t_token		*tokens;
+	t_data		data;
 
-	ac = 0;
+	data.argc = ac;
 	av = NULL;
 	prompt = "YM_FF_SHELL: ";
-	input = NULL;
-	tokens = NULL;
+	fill_env(&data, env);
 	while (1)
 	{
-		input = readline(prompt);
+		data.input = readline(prompt);
+		printf("input: %s\n", data.input);
 		// scan_start(input, &tokens);
 		// fake_exec(tokens);
-		start_exec();
+		// start_exec(&data);
 		// tokens = NULL;
 	}
 	// free_tokens(&tokens);
+	return (0);
 }
-// printf("kill3\n");
+
+//filling the data->env variable with the content of char **env
+void	fill_env(t_data *data, char **env)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (env[i] != NULL)
+		i++;
+	data->env = (char **) malloc ((i + 1) * (sizeof(char *)));
+	if (!data->env)
+		printf("error!");
+	j = 0;
+	while (j < i)
+	{
+		data->env[j] = ft_strdup(env[j]);
+		j++;
+	}
+	data->env[i] = NULL;
+}

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:30:37 by fforster          #+#    #+#             */
-/*   Updated: 2024/09/24 18:46:54 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/09 11:55:17 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../minishell.h"
 
 // void	free_split(char **split)
 // {
