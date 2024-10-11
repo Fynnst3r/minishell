@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/10 11:45:37 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/11 17:29:35 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,17 @@
 int	main(int ac, char **av, char **env)
 {
 	t_data		data;
+	const char	*prompt;
 
+	prompt = "YM_FF_SHELL: ";
 	data.argc = ac;
 	av = NULL;
-	// setting_data
+	// setting_data(&data);
 	fill_env(&data, env);
+	fill_test_struct(&data);
 	while (1)
 	{
-		data.input = readline("YM_FF_SHELL: ");
+		data.input = readline(prompt);
 		start_exec(&data);
 	}
 	return (0);

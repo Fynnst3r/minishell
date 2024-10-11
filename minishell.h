@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/10 15:59:01 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/11 17:34:09 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ typedef struct s_pipe
 {
 	t_obj			type;
 	struct t_shell	*left;
-	struct t_shell	*righ;
+	struct t_shell	*right;
 }t_pipe;
 
 typedef struct s_red
@@ -99,6 +99,7 @@ typedef struct s_here_d
 
 
 //minishell.c
+int			main(int ac, char **av, char **env);
 void		fill_env(t_data *data, char **env);
 
 //parsing/token_utils.c
@@ -110,10 +111,16 @@ void		free_tokens(t_token **t);
 
 //execution/start_execution
 void		start_exec(t_data *data);
-void		exec_execu(t_exec *exec_node, t_data *data);
+void		exec_execu(t_exec *st_node, t_data *data);
+void		exec_pipe(t_pipe *st_node, t_data *data);
+void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
 
 //execution/help_execution
 char		*find_path(t_data *data, t_exec *st_node);
 void		free_dp(char **str);
+
+//execution/pipe
+void	pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
+void	pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
 
 #endif
