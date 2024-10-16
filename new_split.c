@@ -6,57 +6,24 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 17:22:18 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/08 19:44:59 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:46:50 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "githubrepo/minishell.h"
+#include "minishell.h"
 
-// static char	*ex_substr(char const *s, unsigned int start, size_t len, bool p)
-// {
-// 	char	*sub;
-// 	size_t	i;
-
-// 	i = 0;
-// 	if (start >= ft_strlen(s))
-// 		return (ft_strdup(""));
-// 	if (len > ft_strlen(s) - start)
-// 		len = ft_strlen(s) - start;
-// 	sub = (char *)malloc(len + 1 * sizeof(const char));
-// 	if (!sub)
-// 		return (0);
-// 	while (len > 0)
-// 	{
-// 		sub[i] = s[start];
-// 		i++;
-// 		start++;
-// 		len--;
-// 	}
-// 	sub[i] = 0;
-// 	if (p)
-// 		free(sub);
-// 	return (sub);
-// }
-
-static void	f_free_strs(char **split)
+void	f_free_split_strs(char **split)
 {
 	size_t	k;
 
 	k = 0;
-	printf("FREED\n");
+	printf("\n!ATTEMPTING SPLIT FREE!\n");
 	while (split[k] != NULL)
 	{
 		free(split[k]);
 		k++;
 	}
 	free(split);
-}
-
-static int	is_whitespc(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f')
-		return (1);
-	return (0);
 }
 
 static size_t	f_count_words(const char *s1)
@@ -70,55 +37,64 @@ static size_t	f_count_words(const char *s1)
 	word_flag = 0;
 	while (s1[i])
 	{
-		if (!is_whitespc(s1[i]) && word_flag == 0)
+		if (!ft_isspace(s1[i]) && word_flag == 0)
 		{
 			word_flag = 1;
-			count++;
+			if (s1[i] != '|')
+				count++;
 		}
-		else if (is_whitespc(s1[i]))
+		else if (ft_isspace(s1[i]))
 			word_flag = 0;
 		if (s1[i] == '|')
+		{
 			count++;
+			word_flag = 0;
+		}
 		i++;
 	}
-	printf("cnt = %zu\n", count);
 	return (count);
 }
 
+static int	fill_strings(char const *s, char **split, size_t i, size_t *l)
+{
+	size_t	k;
 
-static int	f_fill_str(char const *s, char **split)
+	k = 0;
+	while (split[k])
+		k++;
+	split[k] = ft_substr(s, i, *l - i);
+	if (s[*l] == '|')
+	{
+		split[++k] = ft_strdup("|");
+		(*l)++;
+	}
+	if (split[k] == 0)
+		return (f_free_split_strs(split), 0);
+	// printf("fillmeupbabey k = %zu\n", k);
+	return (1);
+}
+
+static int	prepare_fill(char const *s, char **split)
 {
 	size_t	i;
 	size_t	l;
 	size_t	k;
-	// char	*tmp;
 
 	i = 0;
 	k = 0;
 	while (s[i] != 0)
 	{
-		while (is_whitespc(s[i]) && s[i] != 0)
+		while (ft_isspace(s[i]) && s[i] != 0)
 			i++;
 		l = i;
-		while (!is_whitespc(s[l]) && s[l] != 0 && s[l] != '|')
+		while (!ft_isspace(s[l]) && s[l] != 0
+			&& !((s[l] == '|' && i < l) || s[i] == '|' && l != i))
 			l++;
 		if (i < l)
-		{
-			// tmp = ft_substr(s, i, l - i);
-			if (s[l] == '|' && !is_whitespc(s[l + 1]))
-			{
-				l++;
-				split[k++] = ft_strdup("|");
-			}
-			split[k] = ft_substr(s, i, l - i);
-			printf("%s\n", split[k]);
-			if (split[k] == 0)
-				return (f_free_strs(split), 0);
-			k++;
-		}
+			if (!fill_strings(s, split, i, &l))
+				return (0);
 		i = l;
 	}
-	printf("uhhh\n");
 	return (1);
 }
 
@@ -126,32 +102,37 @@ char	**new_split(char const *s)
 {
 	char	**split;
 	size_t	word_count;
+	// size_t	i;
 
+	// i = 0;
 	word_count = f_count_words(s);
-	printf("counted\n");
 	split = ft_calloc(word_count + 1, sizeof(char *));
 	if (!split)
 		return (NULL);
-	if (!(f_fill_str(s, split)))
+	if (!(prepare_fill(s, split)))
 		return (NULL);
-	printf("filled\n");
+	// while (split[i])
+	// 	i++;
+	// printf("count %zu\ni %zu\n", word_count, i);
+	// split[word_count + 1] = NULL;
 	return (split);
 }
 
-int	main()
-{
-	size_t	i;
-	char	**split;
-	char *in = "one|asd | f";
-	i = 0;
+// int	main(void)
+// {
+// 	size_t	i;
+// 	char	**split;
+// 	char	*in;
 
-	split = new_split(in);
-	printf("WTF");
-	while (split[i])
-	{
-		printf("splt = %s\n", split[i]);
-		i++;
-	}
-	
-}
-
+// 	in = "\"|\'| ls|| ls c\\$&\n()at \"|\'|cat echo ||\" echo kill||kill ||why||\"";
+// 	i = 0;
+// 	split = new_split(in);
+// 	printf("WTF IT SPLIT\n");
+// 	while (split[i])
+// 	{
+// 		printf("splt = %s\n", split[i]);
+// 		i++;
+// 	}
+// 	f_free_split_strs(split);
+// 	system("leaks a.out");
+// }

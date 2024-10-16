@@ -8,6 +8,7 @@ SRCS = 	minishell.c\
 		parsing/token_utils.c\
 		parsing/lexer.c\
 		parsing/free.c\
+		new_split.c
 
 OBJS = $(SRCS:.c=.o)
 

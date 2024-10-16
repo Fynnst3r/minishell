@@ -6,26 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:30:37 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/08 18:07:02 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/09 18:00:56 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-// void	free_split(char **split)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (split[i])
-// 	{
-// 		free(split[i]);
-// 		split[i] = NULL;
-// 		i++;
-// 	}
-// 	free(split);
-// 	split = NULL;
-// }
 
 void	free_tokens(t_token **t)
 {
@@ -47,3 +32,4 @@ void	free_tokens(t_token **t)
 	free(tmp);
 	*t = NULL;
 }
+

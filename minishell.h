@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/08 18:52:11 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:14:27 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,19 @@ typedef struct s_shell_elements	t_shell_elements;
 // identifiers or values to do something.
 // O_PARANT is short for "opening parentheses." Parentheses are ( and ).
 // C_PARANT is short for "closing parentheses."
-// enum e_flags
-// {
-// 	WORD,
-// 	NUMBER,
-// 	O_PARANT,
-// 	C_PARANT,
-// 	SINGLE_QUOTE,
-// 	T_PIPE,
-// 	REDIR_IN,
-// 	REDIR_OUT,
-// 	REDIR_APP,
-// 	OTHER
-// };
+enum e_flags
+{
+	WORD,
+	O_PARANT,
+	C_PARANT,
+	SINGLE_Q,
+	DOUBLE_Q,
+	T_PIPE,
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APP,
+	OTHER
+};
 
 typedef struct s_token
 {
@@ -54,34 +54,13 @@ typedef struct s_token
 	struct s_token	*previous;
 }			t_token;
 
-typedef struct s_pipe
+typedef struct s_data
 {
-	t_shell_elements	*left_side;
-	t_shell_elements	*right_side;
-}t_pipe;
-
-typedef struct s_red
-{
-	
-}t_red;
-
-typedef struct s_exe
-{
-	
-}t_exe;
-
-typedef struct s_here_doc
-{
-	
-}t_heredoc;
-
-typedef union s_command
-{
-	t_pipe		pipe;
-	t_red		red;
-	t_exe		exe;
-	t_heredoc	heredoc;
-}t_command;
+	struct s_cmd	*st_node;
+	const char		*input;
+	int				argc;
+	char			**env;
+}t_data;
 
 typedef enum s_obj
 {
@@ -91,11 +70,37 @@ typedef enum s_obj
 	HEREDOC
 }t_obj;
 
-typedef struct s_shell_elements
+typedef struct s_cmd
 {
-	t_obj			typ;
-	t_command		command;
-}t_shell_elements;
+	t_obj	type;
+}t_cmd;
+
+typedef struct s_exec
+{
+	t_obj		type;
+	char		**argv;
+}t_exec;
+
+typedef struct s_pipe
+{
+	t_obj			type;
+	struct t_shell	*left;
+	struct t_shell	*right;
+}t_pipe;
+
+typedef struct s_red
+{
+	t_obj	type;
+}t_red;
+
+typedef struct s_here_d
+{
+	t_obj	type;
+}t_hered;
+
+//minishell.c
+int			main(int ac, char **av, char **env);
+void		fill_env(t_data *data, char **env);
 
 //parsing/token_utils.c
 // void		make_token(t_token **token, char *str, int flag, int id);
@@ -108,10 +113,23 @@ t_token		*find_last_token(t_token *t);
 //parsing/free.c
 void		free_tokens(t_token **t);
 
-//parsing/lexer.c.c
-void		start_lexer(char *input, size_t end);
+//parsing/lexer.c
+void		start_lexer(char *input);
+//parsing/newsplit.c
+char		**new_split(char const *s);
+void		f_free_split_strs(char **split);
 
 //execution/start_execution
-void		start_exec(void);
+void		start_exec(t_data *data);
+void		exec_execu(t_exec *st_node, t_data *data);
+void		exec_pipe(t_pipe *st_node, t_data *data);
+void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
 
+//execution/help_execution
+char		*find_path(t_data *data, t_exec *st_node);
+void		free_dp(char **str);
+
+//execution/pipe
+void	pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
+void	pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
 #endif
