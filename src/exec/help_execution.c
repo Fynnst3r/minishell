@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/10 17:11:02 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/18 15:42:07 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*find_path(t_data *data, t_exec *st_node)
 
 	i = -1;
 	cmd = ft_strjoin("/", st_node->argv[0]);
-	path = ft_strchr(data->env[4], '/');
+	path = ft_strchr(data->env[2], '/');
 	mul_p = ft_split(path, ':');
 	while (mul_p[++i] != NULL)
 	{

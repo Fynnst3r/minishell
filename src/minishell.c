@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/11 17:29:35 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/18 15:24:04 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,14 @@ int	main(int ac, char **av, char **env)
 	// setting_data(&data);
 	fill_env(&data, env);
 	fill_test_struct(&data);
+	data.origin_stdin = dup(STDIN_FILENO);
+	data.origin_stdout = dup(STDOUT_FILENO);
+	int	i = 0;
 	while (1)
 	{
 		data.input = readline(prompt);
 		start_exec(&data);
+		i++;
 	}
 	return (0);
 }

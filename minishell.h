@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/11 17:34:09 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/18 16:52:51 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "lib/libft/libft.h"
@@ -59,6 +60,9 @@ typedef struct s_data
 	const char		*input;
 	int				argc;
 	char			**env;
+	char			*cmd_path;
+	int				origin_stdin;
+	int				origin_stdout;
 }t_data;
 
 typedef enum s_obj
@@ -83,8 +87,8 @@ typedef struct s_exec
 typedef struct s_pipe
 {
 	t_obj			type;
-	struct t_shell	*left;
-	struct t_shell	*right;
+	t_cmd			*left;
+	t_cmd			*right;
 }t_pipe;
 
 typedef struct s_red
@@ -111,16 +115,18 @@ void		free_tokens(t_token **t);
 
 //execution/start_execution
 void		start_exec(t_data *data);
-void		exec_execu(t_exec *st_node, t_data *data);
+void		exec_execu(t_exec *st_node, t_data *data, int need_child);
 void		exec_pipe(t_pipe *st_node, t_data *data);
 void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
+void		check_pipe(t_pipe *st_node, t_data *data, int last);
+void		run_pipe(t_exec *st_node, t_data *data, int last);
 
 //execution/help_execution
 char		*find_path(t_data *data, t_exec *st_node);
 void		free_dp(char **str);
 
 //execution/pipe
-void	pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
-void	pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
+// void		pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
+// void		pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
 
 #endif
