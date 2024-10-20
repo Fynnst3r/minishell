@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/16 17:15:51 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:22:41 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_token	*make_token(void)
 	new = malloc(sizeof(t_token));
 	if (!new)
 		return (NULL);
-		printf("1\n");
+		printf("made token\n");
 	return (new);
 }
 

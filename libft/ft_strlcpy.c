@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 16:19:17 by fforster          #+#    #+#             */
-/*   Updated: 2024/03/14 20:19:43 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/17 20:20:18 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 // {
 // 	char a[] = "123";
 // 	const char b[] = "456";
-// 	size_t s = 4;
-// 	printf("mine %lu\nofic %lu", ft_strlcpy(a, b, s), strlcpy(a, b, s));
+// 	char a2[] = "123";
+// 	const char b2[] = "456";
+// 	size_t s = 2;
+// 	printf("mine %lu\nofic %lu", ft_strlcpy(a, b, s), strlcpy(a2, b2, s));
 // 	printf("\n%s\n%s",a ,b);
+// 	printf("\n%s\n%s",a2 ,b2);
 // }

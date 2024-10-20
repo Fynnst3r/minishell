@@ -6,25 +6,43 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 17:22:18 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/16 16:46:50 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/19 18:52:27 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	f_free_split_strs(char **split)
+int	is_special_char(char c)
 {
-	size_t	k;
-
-	k = 0;
-	printf("\n!ATTEMPTING SPLIT FREE!\n");
-	while (split[k] != NULL)
-	{
-		free(split[k]);
-		k++;
-	}
-	free(split);
+	if (c == '|' || c == '>' || c == '<' || c == '\"' || c == '\'')
+		return (1);
+	return (0);
 }
+
+// static size_t	f_count_words(char const *s)
+// {
+// 	size_t	counter;
+// 	size_t	i;
+
+// 	counter = 0;
+// 	i = 0;
+// 	while (s[i] != '\0')
+// 	{
+// 		while (ft_isspace(s[i]) && s[i] != '\0')
+// 			i++;
+// 		if (s[i] != '\0')
+// 		{
+// 			counter++;
+// 			while (!ft_isspace(s[i]) && s[i] != '\0')
+// 			{
+// 				if (is_special_char(s[i]) || (s[i] == '$' && s[i + 1] == '$'))
+// 					counter++;
+// 				i++;
+// 			}
+// 		}
+// 	}
+// 	return (counter);
+// }
 
 static size_t	f_count_words(const char *s1)
 {
@@ -40,12 +58,12 @@ static size_t	f_count_words(const char *s1)
 		if (!ft_isspace(s1[i]) && word_flag == 0)
 		{
 			word_flag = 1;
-			if (s1[i] != '|')
+			if (!is_special_char(s1[i]))
 				count++;
 		}
 		else if (ft_isspace(s1[i]))
 			word_flag = 0;
-		if (s1[i] == '|')
+		if (is_special_char(s1[i]))
 		{
 			count++;
 			word_flag = 0;
@@ -55,22 +73,21 @@ static size_t	f_count_words(const char *s1)
 	return (count);
 }
 
-static int	fill_strings(char const *s, char **split, size_t i, size_t *l)
+static int	fill_strings(char const *s, char **split, size_t i, size_t l)
 {
 	size_t	k;
 
 	k = 0;
 	while (split[k])
 		k++;
-	split[k] = ft_substr(s, i, *l - i);
-	if (s[*l] == '|')
-	{
-		split[++k] = ft_strdup("|");
-		(*l)++;
-	}
+	// if (catch_dollar_num(s))
+	// 	split[*k] = found_dollar_signs(s);
+	// else
+	split[k] = ft_substr(s, i, l - i);
+	// printf("filled = %s\n", split[k]);
+	// (*k)++;
 	if (split[k] == 0)
 		return (f_free_split_strs(split), 0);
-	// printf("fillmeupbabey k = %zu\n", k);
 	return (1);
 }
 
@@ -78,20 +95,21 @@ static int	prepare_fill(char const *s, char **split)
 {
 	size_t	i;
 	size_t	l;
-	size_t	k;
+	// size_t	k;
 
 	i = 0;
-	k = 0;
+	// k = 0;
 	while (s[i] != 0)
 	{
 		while (ft_isspace(s[i]) && s[i] != 0)
 			i++;
 		l = i;
 		while (!ft_isspace(s[l]) && s[l] != 0
-			&& !((s[l] == '|' && i < l) || s[i] == '|' && l != i))
+			&& !((is_special_char(s[l]) && i < l)
+				|| is_special_char(s[i]) && l != i))
 			l++;
 		if (i < l)
-			if (!fill_strings(s, split, i, &l))
+			if (!fill_strings(s, split, i, l))
 				return (0);
 		i = l;
 	}
@@ -104,27 +122,34 @@ char	**new_split(char const *s)
 	size_t	word_count;
 	// size_t	i;
 
-	// i = 0;
 	word_count = f_count_words(s);
+	printf("wordc = %zu\n", word_count);
 	split = ft_calloc(word_count + 1, sizeof(char *));
 	if (!split)
 		return (NULL);
 	if (!(prepare_fill(s, split)))
 		return (NULL);
-	// while (split[i])
-	// 	i++;
-	// printf("count %zu\ni %zu\n", word_count, i);
-	// split[word_count + 1] = NULL;
+	// REALLOC SPLIT ARRAY AND THEN FREE OLD ONE
+	// i = 0;
+	// while (word_count + 1 != i)
+	// {
+	// 	free(split[i]);
+	// 	split[i++] = NULL;
+	// }
 	return (split);
 }
-
+// WORDCOUNT COUNTS TOO MANY DUE TO $, sadly $$ is an valid env var... and you can chain like this $test$test2 
 // int	main(void)
 // {
 // 	size_t	i;
 // 	char	**split;
 // 	char	*in;
 
-// 	in = "\"|\'| ls|| ls c\\$&\n()at \"|\'|cat echo ||\" echo kill||kill ||why||\"";
+// 	// in = "\"|\'| ls|| ls c\\$&\n(< >)at \"|\'|$cat$echo <  < << > > >>||\" echo kill||kill ||why||\"";
+// 	// in = "\"|\'| ls|| ls c\\&\n(< >)at \"|\'|catecho <  < << > > >>||\" echo kill||kill ||why||\"";
+// 	// in = "$ e cho $asd$asd  $$ $";
+// 	in = " $ $$sdfgdsf $? asdasd$ada $$ $$$ ";
+// 	printf("input %s\n", in);
 // 	i = 0;
 // 	split = new_split(in);
 // 	printf("WTF IT SPLIT\n");
@@ -133,6 +158,7 @@ char	**new_split(char const *s)
 // 		printf("splt = %s\n", split[i]);
 // 		i++;
 // 	}
+// 		printf("splt = %s\nsplitcount %zu\n", split[i], i);
 // 	f_free_split_strs(split);
-// 	system("leaks a.out");
+// 	// system("leaks a.out");
 // }

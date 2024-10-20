@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 20:31:26 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/16 17:15:46 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/19 19:29:21 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,46 +46,46 @@
 // 	return (ret);
 // }
 
-static int	check_type2(char *s)
-{
-	if (*s == '<')
-	{
-		if (*(s + 1) == '<')
-			return ('e');
-		else
-			return ('<');
-	}
-	else if (*s == '>')
-	{
-		if (*(s + 1) == '>')
-			return ('+');
-		else
-			return ('>');
-	}
-	else if (*s == '$')
-		return ('$');
-	else if (*s == '\'')
-		return ('\'');
-	else if (*s == '\"')
-		return ('\"');
-	else
-		return (*s);
-}
+// static int	check_type2(char *s)
+// {
+// 	if (*s == '<')
+// 	{
+// 		if (*(s + 1) == '<')
+// 			return ('e');
+// 		else
+// 			return ('<');
+// 	}
+// 	else if (*s == '>')
+// 	{
+// 		if (*(s + 1) == '>')
+// 			return ('+');
+// 		else
+// 			return ('>');
+// 	}
+// 	else if (*s == '$')
+// 		return ('$');
+// 	else if (*s == '\'')
+// 		return ('\'');
+// 	else if (*s == '\"')
+// 		return ('\"');
+// 	else
+// 		return (*s);
+// }
 
-static char	check_type(char *s)
-{
-	if (*s == '\0')
-		return (0);
-	else if (*s == '|')
-		return ('|');
-	else if (*s == '(')
-		return ('(');
-	else if (*s == ')')
-		return (')');
-	else if (*s == '&')
-		return ('&');
-	return (check_type2(s));
-}
+// static char	check_type(char *s)
+// {
+// 	if (*s == '\0')
+// 		return (0);
+// 	else if (*s == '|')
+// 		return ('|');
+// 	else if (*s == '(')
+// 		return ('(');
+// 	else if (*s == ')')
+// 		return (')');
+// 	else if (*s == '&')
+// 		return ('&');
+// 	return (check_type2(s));
+// }
 
 static void	ft_tokenizer(t_token **token)
 {
@@ -107,6 +107,7 @@ void	start_lexer(char *input)
 	token_top = NULL;
 	add_history(input);
 	split = new_split(input);
+	procces_split(split);
 	while (split[i])
 	{
 	// printf("hey\n");

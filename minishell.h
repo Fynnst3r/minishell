@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/16 17:14:27 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:16:54 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+// OWN LIBS
 # include "libft/libft.h"
+# include "garbage_collector/garbage_collector.h"
 
 typedef struct s_shell_elements	t_shell_elements;
 // IDENTIFIER An identifier is things like a variable or a function name.
@@ -99,7 +101,7 @@ typedef struct s_here_d
 }t_hered;
 
 //minishell.c
-int			main(int ac, char **av, char **env);
+// int			main(int ac, char **av, char **env);
 void		fill_env(t_data *data, char **env);
 
 //parsing/token_utils.c
@@ -112,13 +114,25 @@ t_token		*find_last_token(t_token *t);
 
 //parsing/free.c
 void		free_tokens(t_token **t);
+char		**new_split(char const *s);
 
 //parsing/lexer.c
 void		start_lexer(char *input);
-//parsing/newsplit.c
-char		**new_split(char const *s);
-void		f_free_split_strs(char **split);
 
+//parsing/newsplit.c
+void		f_free_split_strs(char **split);
+int			is_special_char(char c);
+//parsing/newsplit_utils.c
+int			catch_dollar_num(char *s);
+char		*ft_strndup(char *s, size_t n);
+char		*found_dollar_sign(char *s, size_t k);
+char		*ft_strjoin_at(char *s1, char *s2, size_t start);
+//parsing/proccess_split.c
+int			proccess_split(char **split);
+char		*get_env_value(char *str, size_t l);
+int			quote_status(char c, int ignore);
+
+// 
 //execution/start_execution
 void		start_exec(t_data *data);
 void		exec_execu(t_exec *st_node, t_data *data);
@@ -130,6 +144,6 @@ char		*find_path(t_data *data, t_exec *st_node);
 void		free_dp(char **str);
 
 //execution/pipe
-void	pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
-void	pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
+void		pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
+void		pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
 #endif

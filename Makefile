@@ -7,8 +7,11 @@ FLAGS = -Wall -Wextra -Werror -lreadline
 SRCS = 	minishell.c\
 		parsing/token_utils.c\
 		parsing/lexer.c\
-		parsing/free.c\
-		new_split.c
+		parsing/new_split.c\
+		parsing/new_split_utils.c\
+		garbage_collector/garbage_start.c
+		garbage_collector/ft_malloc.c
+		garbage_collector/free.c
 
 OBJS = $(SRCS:.c=.o)
 

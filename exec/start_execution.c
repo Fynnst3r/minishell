@@ -3,71 +3,80 @@
 /*                                                        :::      ::::::::   */
 /*   start_execution.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/11 17:32:10 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/19 19:23:24 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	fill_test_struct(t_data *data)
+void fill_test_struct(t_data *data)
 {
-	t_exec *exec_ls = malloc(sizeof(t_exec));
-    exec_ls->type = EXECUTE;
-    exec_ls->argv = malloc(3 * sizeof(char *));
-    exec_ls->argv[0] = strdup("ls");
-    exec_ls->argv[1] = strdup("-l");
-    exec_ls->argv[2] = NULL;
+// Erstellen des 'ls -l' Befehls
+t_exec *exec_ls = malloc(sizeof(t_exec));
+exec_ls->type = EXECUTE;
+exec_ls->argv = malloc(3 * sizeof(char *));
+exec_ls->argv[0] = strdup("ls");
+exec_ls->argv[1] = strdup("-l");
+exec_ls->argv[2] = NULL;
 
-	t_exec *exec_grep = malloc(sizeof(t_exec));
-    exec_grep->type = EXECUTE;
-    exec_grep->argv = malloc(3 * sizeof(char *));
-    exec_grep->argv[0] = strdup("grep");
-    exec_grep->argv[1] = strdup("txt");
-    exec_grep->argv[2] = NULL;
+// Erstellen des 'grep txt' Befehls
+t_exec *exec_grep_txt = malloc(sizeof(t_exec));
+exec_grep_txt->type = EXECUTE;
+exec_grep_txt->argv = malloc(3 * sizeof(char *));
+exec_grep_txt->argv[0] = strdup("grep");
+exec_grep_txt->argv[1] = strdup("Makefile");
+exec_grep_txt->argv[2] = NULL;
 
-	t_exec *exec_sort = malloc(sizeof(t_exec));
-    exec_sort->type = EXECUTE;
-    exec_sort->argv = malloc(2 * sizeof(char *));
-    exec_sort->argv[0] = strdup("sort");
-    exec_sort->argv[1] = NULL;
+// Erstellen des 'cut -d " " -f 1' Befehls
+t_exec *exec_cut = malloc(sizeof(t_exec));
+exec_cut->type = EXECUTE;
+exec_cut->argv = malloc(5 * sizeof(char *));
+exec_cut->argv[0] = strdup("cut");
+exec_cut->argv[1] = strdup("-d");
+exec_cut->argv[2] = strdup(" ");
+exec_cut->argv[3] = strdup("-f");
+exec_cut->argv[4] = strdup("1");
+exec_cut->argv[5] = NULL;
 
-	t_exec *exec_wc = malloc(sizeof(t_exec));
-    exec_wc->type = EXECUTE;
-    exec_wc->argv = malloc(3 * sizeof(char *));
-    exec_wc->argv[0] = strdup("wc");
-    exec_wc->argv[1] = strdup("-l");
-    exec_wc->argv[2] = NULL;
+// Erstellen des 'wc -l' Befehls
+t_exec *exec_wc = malloc(sizeof(t_exec));
+exec_wc->type = EXECUTE;
+exec_wc->argv = malloc(3 * sizeof(char *));
+exec_wc->argv[0] = strdup("wc");
+exec_wc->argv[1] = strdup("-l");
+exec_wc->argv[2] = NULL;
 
-	// 5. Erstellen der Pipe für 'ls -l | grep txt'
-    t_pipe *pipe_ls_grep = malloc(sizeof(t_pipe));
-    pipe_ls_grep->type = PIPE;
-    pipe_ls_grep->left = (struct t_shell *)exec_ls;
-    pipe_ls_grep->right = (struct t_shell *)exec_grep;
+// Erste Pipe zwischen 'ls -l' und 'grep txt'
+t_pipe *pipe_ls_grep = malloc(sizeof(t_pipe));
+pipe_ls_grep->type = PIPE;
+pipe_ls_grep->left = (t_cmd *)exec_ls;
+pipe_ls_grep->right = (t_cmd *)exec_grep_txt;
 
-    // 6. Erstellen der Pipe für '(ls -l | grep txt) | sort'
-    t_pipe *pipe_grep_sort = malloc(sizeof(t_pipe));
-    pipe_grep_sort->type = PIPE;
-    pipe_grep_sort->left = (struct t_shell *)pipe_ls_grep;
-    pipe_grep_sort->right = (struct t_shell *)exec_sort;
+// Zweite Pipe zwischen dem Ergebnis der ersten Pipe und 'cut -d " " -f 1'
+t_pipe *pipe_grep_cut = malloc(sizeof(t_pipe));
+pipe_grep_cut->type = PIPE;
+pipe_grep_cut->left = (t_cmd *)pipe_ls_grep;
+pipe_grep_cut->right = (t_cmd *)exec_cut;
 
-    // 7. Erstellen der Pipe für '((ls -l | grep txt) | sort) | wc -l'
-    t_pipe *pipe_sort_wc = malloc(sizeof(t_pipe));
-    pipe_sort_wc->type = PIPE;
-    pipe_sort_wc->left = (struct t_shell *)pipe_grep_sort;
-    pipe_sort_wc->right = (struct t_shell *)exec_wc;
+// Dritte Pipe zwischen dem Ergebnis der zweiten Pipe und 'wc -l'
+t_pipe *pipe_cut_wc = malloc(sizeof(t_pipe));
+pipe_cut_wc->type = PIPE;
+pipe_cut_wc->left = (t_cmd *)pipe_grep_cut;
+pipe_cut_wc->right = (t_cmd *)exec_wc;
 
-    // 8. Setzen der Wurzel des AST in die Datenstruktur
-    data->st_node = (t_cmd *)pipe_sort_wc;
+// Setzen der Wurzel des AST in die Datenstruktur
+data->st_node = (t_cmd *)pipe_cut_wc;
 }
+
 
 void	start_exec(t_data *data)
 {
 	if (data->st_node->type == EXECUTE)
 	{
-		exec_execu((t_exec *)data->st_node, data);
+		exec_execu((t_exec *)data->st_node, data, 1);
 	}
 	if (data->st_node->type == PIPE)
 	{
@@ -77,23 +86,89 @@ void	start_exec(t_data *data)
 
 void	exec_pipe(t_pipe *st_node, t_data *data)
 {
-	int		pipefd[2];
-
-	if (pipe(pipefd) == -1)
-		exit(1);
-	pipe_left((t_exec *)st_node->left, pipefd, data);
-	pipe_right((t_exec *)st_node->right, pipefd, data);
+	if (st_node->left->type == PIPE)
+	{
+		check_pipe((t_pipe *)st_node->left, data, 0);
+	}
+	else
+		run_pipe((t_exec *)st_node->left, data, 0);
+	dup2(data->origin_stdout, STDOUT_FILENO);
+	run_pipe((t_exec *)st_node->right, data, 1);
 }
 
-void	exec_execu(t_exec *st_node, t_data *data)
+void	check_pipe(t_pipe *st_node, t_data *data, int last)
 {
-	char	*cmd_path;
+	if (st_node->type == PIPE)
+	{
+		check_pipe((t_pipe *)st_node->left, data, 0);
+		check_pipe((t_pipe *)st_node->right, data, last);
+	}
+	else
+	{
+		run_pipe((t_exec *)st_node, data, last);
+		return ;
+	}
+	return ;
+}
 
-	cmd_path = NULL;
-	cmd_path = find_path(data, st_node);
-	if (cmd_path == 0)
+void	run_pipe(t_exec *st_node, t_data *data, int last)
+{
+	int		pipefd[2];
+	pid_t	pid1;
+
+	if (pipe(pipefd) == -1)
+		exit(-1);
+	pid1 = fork();
+	if (pid1 == -1)
 		exit(1);
-	if (execve(cmd_path, st_node->argv, data->env) == -1)
+	if (pid1 == 0)
+	{
+		close(pipefd[0]);
+		if (last == 0)
+			dup2(pipefd[1], STDOUT_FILENO);
+		else
+		{
+			close(pipefd[1]);
+			// dup2(data->origin_stdout, STDOUT_FILENO);
+		}
+		exec_execu((t_exec *)st_node, data, 0);
+	}
+	if (pid1 > 0)
+	{
+		waitpid(pid1, NULL, 0);
+		close(pipefd[1]);
+		if (last == 0)
+			dup2(pipefd[0], STDIN_FILENO);
+		else
+		{
+			close(pipefd[0]);
+			dup2(data->origin_stdin, STDIN_FILENO);
+		}
+	}
+	return ;
+}
+
+void	exec_execu(t_exec *st_node, t_data *data, int need_child)
+{
+	pid_t	pid;
+
+	data->cmd_path = find_path(data, st_node);
+	if (data->cmd_path == 0)
 		exit(1);
-	free (cmd_path);
+	if (need_child == 1)
+	{
+		pid = fork();
+		if (pid == -1)
+			exit(1);
+		if (pid == 0)
+		{
+			if (execve(data->cmd_path, st_node->argv, data->env) == -1)
+				exit(1);
+		}
+		waitpid(pid, NULL, 0);
+	}
+	else
+		if (execve(data->cmd_path, st_node->argv, data->env) == -1)
+			exit(1);
+	// free (cmd_path); //funktioniert nicht
 }
