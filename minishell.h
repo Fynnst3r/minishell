@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/18 16:52:51 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/22 11:12:44 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,15 +118,15 @@ void		start_exec(t_data *data);
 void		exec_execu(t_exec *st_node, t_data *data, int need_child);
 void		exec_pipe(t_pipe *st_node, t_data *data);
 void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
+
+//execution/pipe
 void		check_pipe(t_pipe *st_node, t_data *data, int last);
 void		run_pipe(t_exec *st_node, t_data *data, int last);
+void		child(t_exec *st_node, t_data *data, int last, int pipefd[2]);
 
 //execution/help_execution
 char		*find_path(t_data *data, t_exec *st_node);
 void		free_dp(char **str);
-
-//execution/pipe
-// void		pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
-// void		pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
+char		**find_path_help(t_data *data);
 
 #endif

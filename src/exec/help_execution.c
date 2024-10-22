@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/18 15:42:07 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/22 11:15:01 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,13 @@
 char	*find_path(t_data *data, t_exec *st_node)
 {
 	int		i;
-	char	*path;
 	char	**mul_p;
 	char	*cmd;
 	char	*full_p;
 
-	i = -1;
 	cmd = ft_strjoin("/", st_node->argv[0]);
-	path = ft_strchr(data->env[2], '/');
-	mul_p = ft_split(path, ':');
+	mul_p = find_path_help(data);
+	i = -1;
 	while (mul_p[++i] != NULL)
 	{
 		full_p = ft_strjoin(mul_p[i], cmd);
@@ -39,6 +37,22 @@ char	*find_path(t_data *data, t_exec *st_node)
 	free(cmd);
 	free_dp(mul_p);
 	return (0);
+}
+
+char	**find_path_help(t_data *data)
+{
+	char	*path;
+	char	**mul;
+	int		i;
+
+	i = 0;
+	while (data->env[i] != ft_strnstr(data->env[i], "PATH=/", 6))
+	{
+		i++;
+		path = ft_strchr(data->env[i], '/');
+	}
+	mul = ft_split(path, ':');
+	return (mul);
 }
 
 void	free_dp(char **str)
