@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/22 15:55:28 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/22 17:48:23 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,19 +123,30 @@ void	fill_test_struct(t_data *data)
     exec_ls->argv[1] = strdup("-l");
     exec_ls->argv[2] = NULL;
 
-    // 2. Erstellen der Ausgabeumleitung '> test.txt'
+    // 2. Erstellen des 'grep "txt"' Befehls
+    t_exec *exec_grep = malloc(sizeof(t_exec));
+    exec_grep->type = EXECUTE;
+    exec_grep->argv = malloc(3 * sizeof(char *));
+    exec_grep->argv[0] = strdup("grep");
+    exec_grep->argv[1] = strdup("txt");
+    exec_grep->argv[2] = NULL;
+
+    // 3. Erstellen der Ausgabeumleitung '> txt_files.txt' für 'grep "txt"'
     t_red *redir = malloc(sizeof(t_red));
     redir->type = RED;
-	// redir->mode = O_RDONLY; // steht fúr '<'
-    // redir->mode = O_WRONLY | O_CREAT | O_TRUNC; // steht fúr '>'
-	redir->mode = O_WRONLY | O_CREAT | O_APPEND; // steht fúr '>>'
-    redir->file = strdup("test.txt");
-	// redir->fd = STDIN_FILENO; // Standard-Ausgabe = 0
-    redir->fd = STDOUT_FILENO; // Standard-Ausgabe = 1
-    redir->cmd = (t_cmd *)exec_ls; // Verweisen auf den 'ls -l' Befehl
+    redir->mode = O_WRONLY | O_CREAT | O_TRUNC; // steht für '>'
+    redir->file = strdup("txt_files.txt");
+    redir->fd = STDOUT_FILENO; // Standard-Ausgabe
+    redir->cmd = (t_cmd *)exec_grep; // Verweisen auf den 'grep "txt"' Befehl
 
-    // 3. Setzen der Wurzel des AST in die Datenstruktur
-    data->st_node = (t_cmd *)redir;
+    // 4. Erstellen des PIPE-Knotens zwischen 'ls -l' und 'grep "txt" > txt_files.txt'
+    t_pipe *pipe_cmd = malloc(sizeof(t_pipe));
+    pipe_cmd->type = PIPE;
+    pipe_cmd->left = (t_cmd *)exec_ls;
+    pipe_cmd->right = (t_cmd *)redir;
+
+    // 5. Setzen der Wurzel des AST in die Datenstruktur
+    data->st_node = (t_cmd *)pipe_cmd;
 }
 
 void	start_exec(t_data *data)
@@ -158,7 +169,6 @@ void	exec_red(t_red *st_node, t_data *data)
 {
 	int	fd_orig;
 
-	fd_orig = 0;
 	if (st_node->fd > 0)
 	{
 		fd_orig = open(st_node->file, st_node->mode, 0644);
@@ -173,19 +183,22 @@ void	exec_red(t_red *st_node, t_data *data)
 	}
 	exec_execu((t_exec *)st_node->cmd, data, 1);
 	dup2(data->origin_stdout, STDOUT_FILENO);
-	// dup2(data->origin_stdin, STDIN_FILENO);
+	dup2(data->origin_stdin, STDIN_FILENO);
 }
 
 void	exec_pipe(t_pipe *st_node, t_data *data)
 {
 	if (st_node->left->type == PIPE)
-	{
 		check_pipe((t_pipe *)st_node->left, data, 0);
-	}
-	else
+	else if (st_node->left->type == EXECUTE)
 		run_pipe((t_exec *)st_node->left, data, 0);
+	else if (st_node->left->type == RED)
+		exec_red((t_red *)st_node->left, data);
 	dup2(data->origin_stdout, STDOUT_FILENO);
-	run_pipe((t_exec *)st_node->right, data, 1);
+	if (st_node->right->type == EXECUTE)
+		run_pipe((t_exec *)st_node->right, data, 1); //unklar da es ja das letzte ist
+	else if (st_node->right->type == RED)
+		exec_red((t_red *)st_node->right, data);
 }
 
 void	exec_execu(t_exec *st_node, t_data *data, int need_child)
