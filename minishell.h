@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/22 11:12:44 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/22 13:54:13 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include <fcntl.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -94,6 +95,10 @@ typedef struct s_pipe
 typedef struct s_red
 {
 	t_obj	type;
+	int		mode;
+	char	*file;
+	int		fd;
+	t_cmd	*cmd;
 }t_red;
 
 typedef struct s_here_d
@@ -117,6 +122,7 @@ void		free_tokens(t_token **t);
 void		start_exec(t_data *data);
 void		exec_execu(t_exec *st_node, t_data *data, int need_child);
 void		exec_pipe(t_pipe *st_node, t_data *data);
+void		exec_red(t_red *st_node, t_data *data);
 void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
 
 //execution/pipe

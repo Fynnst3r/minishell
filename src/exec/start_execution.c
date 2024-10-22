@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/22 11:20:35 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/22 15:55:28 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,47 +71,71 @@
 // 	data->st_node = (t_cmd *)pipe_cut_wc;
 // }
 
-void fill_test_struct(t_data *data)
+// void fill_test_struct(t_data *data)
+// {
+// 	// Erstellen des 'cat Makefile' Befehls
+// 	t_exec *exec_cat = malloc(sizeof(t_exec));
+// 	exec_cat->type = EXECUTE;
+// 	exec_cat->argv = malloc(3 * sizeof(char *));
+// 	exec_cat->argv[0] = strdup("cat");
+// 	exec_cat->argv[1] = strdup("Makefile");
+// 	exec_cat->argv[2] = NULL;
+
+// 	// Erstellen des 'grep all' Befehls
+// 	t_exec *exec_grep = malloc(sizeof(t_exec));
+// 	exec_grep->type = EXECUTE;
+// 	exec_grep->argv = malloc(3 * sizeof(char *));
+// 	exec_grep->argv[0] = strdup("grep");
+// 	exec_grep->argv[1] = strdup("all");
+// 	exec_grep->argv[2] = NULL;
+
+// 	// Erstellen des 'wc -l' Befehls
+// 	t_exec *exec_wc = malloc(sizeof(t_exec));
+// 	exec_wc->type = EXECUTE;
+// 	exec_wc->argv = malloc(3 * sizeof(char *));
+// 	exec_wc->argv[0] = strdup("wc");
+// 	exec_wc->argv[1] = strdup("-l");
+// 	exec_wc->argv[2] = NULL;
+
+// 	// Erste Pipe zwischen 'cat Makefile' und 'grep all'
+// 	t_pipe *pipe_cat_grep = malloc(sizeof(t_pipe));
+// 	pipe_cat_grep->type = PIPE;
+// 	pipe_cat_grep->left = (t_cmd *)exec_cat;
+// 	pipe_cat_grep->right = (t_cmd *)exec_grep;
+
+// 	// Zweite Pipe zwischen dem Ergebnis der ersten Pipe und 'wc -l'
+// 	t_pipe *pipe_grep_wc = malloc(sizeof(t_pipe));
+// 	pipe_grep_wc->type = PIPE;
+// 	pipe_grep_wc->left = (t_cmd *)pipe_cat_grep;
+// 	pipe_grep_wc->right = (t_cmd *)exec_wc;
+
+// 	// Setzen der Wurzel des AST in die Datenstruktur
+// 	data->st_node = (t_cmd *)pipe_grep_wc;
+// }
+
+void	fill_test_struct(t_data *data)
 {
-	// Erstellen des 'cat Makefile' Befehls
-	t_exec *exec_cat = malloc(sizeof(t_exec));
-	exec_cat->type = EXECUTE;
-	exec_cat->argv = malloc(3 * sizeof(char *));
-	exec_cat->argv[0] = strdup("cat");
-	exec_cat->argv[1] = strdup("Makefile");
-	exec_cat->argv[2] = NULL;
+	// 1. Erstellen des 'ls -l' Befehls
+    t_exec *exec_ls = malloc(sizeof(t_exec));
+    exec_ls->type = EXECUTE;
+    exec_ls->argv = malloc(3 * sizeof(char *));
+    exec_ls->argv[0] = strdup("ls");
+    exec_ls->argv[1] = strdup("-l");
+    exec_ls->argv[2] = NULL;
 
-	// Erstellen des 'grep all' Befehls
-	t_exec *exec_grep = malloc(sizeof(t_exec));
-	exec_grep->type = EXECUTE;
-	exec_grep->argv = malloc(3 * sizeof(char *));
-	exec_grep->argv[0] = strdup("grep");
-	exec_grep->argv[1] = strdup("all");
-	exec_grep->argv[2] = NULL;
+    // 2. Erstellen der Ausgabeumleitung '> test.txt'
+    t_red *redir = malloc(sizeof(t_red));
+    redir->type = RED;
+	// redir->mode = O_RDONLY; // steht fúr '<'
+    // redir->mode = O_WRONLY | O_CREAT | O_TRUNC; // steht fúr '>'
+	redir->mode = O_WRONLY | O_CREAT | O_APPEND; // steht fúr '>>'
+    redir->file = strdup("test.txt");
+	// redir->fd = STDIN_FILENO; // Standard-Ausgabe = 0
+    redir->fd = STDOUT_FILENO; // Standard-Ausgabe = 1
+    redir->cmd = (t_cmd *)exec_ls; // Verweisen auf den 'ls -l' Befehl
 
-	// Erstellen des 'wc -l' Befehls
-	t_exec *exec_wc = malloc(sizeof(t_exec));
-	exec_wc->type = EXECUTE;
-	exec_wc->argv = malloc(3 * sizeof(char *));
-	exec_wc->argv[0] = strdup("wc");
-	exec_wc->argv[1] = strdup("-l");
-	exec_wc->argv[2] = NULL;
-
-	// Erste Pipe zwischen 'cat Makefile' und 'grep all'
-	t_pipe *pipe_cat_grep = malloc(sizeof(t_pipe));
-	pipe_cat_grep->type = PIPE;
-	pipe_cat_grep->left = (t_cmd *)exec_cat;
-	pipe_cat_grep->right = (t_cmd *)exec_grep;
-
-	// Zweite Pipe zwischen dem Ergebnis der ersten Pipe und 'wc -l'
-	t_pipe *pipe_grep_wc = malloc(sizeof(t_pipe));
-	pipe_grep_wc->type = PIPE;
-	pipe_grep_wc->left = (t_cmd *)pipe_cat_grep;
-	pipe_grep_wc->right = (t_cmd *)exec_wc;
-
-	// Setzen der Wurzel des AST in die Datenstruktur
-	data->st_node = (t_cmd *)pipe_grep_wc;
-
+    // 3. Setzen der Wurzel des AST in die Datenstruktur
+    data->st_node = (t_cmd *)redir;
 }
 
 void	start_exec(t_data *data)
@@ -124,6 +148,32 @@ void	start_exec(t_data *data)
 	{
 		exec_pipe((t_pipe *)data->st_node, data);
 	}
+	if (data->st_node->type == RED)
+	{
+		exec_red((t_red *)data->st_node, data);
+	}
+}
+
+void	exec_red(t_red *st_node, t_data *data)
+{
+	int	fd_orig;
+
+	fd_orig = 0;
+	if (st_node->fd > 0)
+	{
+		fd_orig = open(st_node->file, st_node->mode, 0644);
+		dup2(fd_orig, st_node->fd);
+		close(fd_orig);
+	}
+	else
+	{
+		fd_orig = open(st_node->file, st_node->mode);
+		dup2(fd_orig, st_node->fd);
+		close(fd_orig);
+	}
+	exec_execu((t_exec *)st_node->cmd, data, 1);
+	dup2(data->origin_stdout, STDOUT_FILENO);
+	// dup2(data->origin_stdin, STDIN_FILENO);
 }
 
 void	exec_pipe(t_pipe *st_node, t_data *data)
