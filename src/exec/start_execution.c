@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/22 17:48:23 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/23 18:10:15 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,45 @@
 // 	data->st_node = (t_cmd *)pipe_grep_wc;
 // }
 
+// void	fill_test_struct(t_data *data)
+// {
+// 	// 1. Erstellen des 'ls -l' Befehls
+//     t_exec *exec_ls = malloc(sizeof(t_exec));
+//     exec_ls->type = EXECUTE;
+//     exec_ls->argv = malloc(3 * sizeof(char *));
+//     exec_ls->argv[0] = strdup("ls");
+//     exec_ls->argv[1] = strdup("-l");
+//     exec_ls->argv[2] = NULL;
+
+//     // 2. Erstellen des 'grep "txt"' Befehls
+//     t_exec *exec_grep = malloc(sizeof(t_exec));
+//     exec_grep->type = EXECUTE;
+//     exec_grep->argv = malloc(3 * sizeof(char *));
+//     exec_grep->argv[0] = strdup("grep");
+//     exec_grep->argv[1] = strdup("txt");
+//     exec_grep->argv[2] = NULL;
+
+//     // 3. Erstellen der Ausgabeumleitung '> txt_files.txt' für 'grep "txt"'
+//     t_red *redir = malloc(sizeof(t_red));
+//     redir->type = RED;
+//     redir->mode = O_WRONLY | O_CREAT | O_TRUNC; // steht für '>'
+//     redir->file = strdup("txt_files.txt");
+//     redir->fd = STDOUT_FILENO; // Standard-Ausgabe
+//     redir->cmd = (t_cmd *)exec_grep; // Verweisen auf den 'grep "txt"' Befehl
+
+//     // 4. Erstellen des PIPE-Knotens zwischen 'ls -l' und 'grep "txt" > txt_files.txt'
+//     t_pipe *pipe_cmd = malloc(sizeof(t_pipe));
+//     pipe_cmd->type = PIPE;
+//     pipe_cmd->left = (t_cmd *)exec_ls;
+//     pipe_cmd->right = (t_cmd *)redir;
+
+//     // 5. Setzen der Wurzel des AST in die Datenstruktur
+//     data->st_node = (t_cmd *)pipe_cmd;
+// }
+
 void	fill_test_struct(t_data *data)
 {
-	// 1. Erstellen des 'ls -l' Befehls
+    // 1. Erstellen des 'ls -l' Befehls
     t_exec *exec_ls = malloc(sizeof(t_exec));
     exec_ls->type = EXECUTE;
     exec_ls->argv = malloc(3 * sizeof(char *));
@@ -123,82 +159,56 @@ void	fill_test_struct(t_data *data)
     exec_ls->argv[1] = strdup("-l");
     exec_ls->argv[2] = NULL;
 
-    // 2. Erstellen des 'grep "txt"' Befehls
-    t_exec *exec_grep = malloc(sizeof(t_exec));
-    exec_grep->type = EXECUTE;
-    exec_grep->argv = malloc(3 * sizeof(char *));
-    exec_grep->argv[0] = strdup("grep");
-    exec_grep->argv[1] = strdup("txt");
-    exec_grep->argv[2] = NULL;
-
-    // 3. Erstellen der Ausgabeumleitung '> txt_files.txt' für 'grep "txt"'
+    // 2. Erstellen der Ausgabeumleitung '>> test.txt' für 'ls -l'
     t_red *redir = malloc(sizeof(t_red));
     redir->type = RED;
-    redir->mode = O_WRONLY | O_CREAT | O_TRUNC; // steht für '>'
-    redir->file = strdup("txt_files.txt");
+    redir->mode = O_WRONLY | O_CREAT | O_APPEND; // '>>' steht für anhängen
+    redir->file = strdup("test.txt");
     redir->fd = STDOUT_FILENO; // Standard-Ausgabe
-    redir->cmd = (t_cmd *)exec_grep; // Verweisen auf den 'grep "txt"' Befehl
+    redir->cmd = (t_cmd *)exec_ls; // Verweisen auf den 'ls -l' Befehl
 
-    // 4. Erstellen des PIPE-Knotens zwischen 'ls -l' und 'grep "txt" > txt_files.txt'
-    t_pipe *pipe_cmd = malloc(sizeof(t_pipe));
-    pipe_cmd->type = PIPE;
-    pipe_cmd->left = (t_cmd *)exec_ls;
-    pipe_cmd->right = (t_cmd *)redir;
-
-    // 5. Setzen der Wurzel des AST in die Datenstruktur
-    data->st_node = (t_cmd *)pipe_cmd;
+    // 3. Setzen der Wurzel des AST in die Datenstruktur
+    data->st_node = (t_cmd *)redir;
 }
 
 void	start_exec(t_data *data)
 {
-	if (data->st_node->type == EXECUTE)
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+		exit(1);
+	if (pid == 0)
 	{
-		exec_execu((t_exec *)data->st_node, data, 1);
+		if (data->st_node->type == EXECUTE)
+		{
+			exec_execu((t_exec *)data->st_node, data, 1);
+		}
+		if (data->st_node->type == PIPE)
+		{
+			exec_pipe((t_pipe *)data->st_node, data);
+		}
+		if (data->st_node->type == RED)
+		{
+			exec_red((t_red *)data->st_node, data);
+		}
+		exit(0);
 	}
-	if (data->st_node->type == PIPE)
-	{
-		exec_pipe((t_pipe *)data->st_node, data);
-	}
-	if (data->st_node->type == RED)
-	{
-		exec_red((t_red *)data->st_node, data);
-	}
+	waitpid(pid, NULL, 0);
 }
 
 void	exec_red(t_red *st_node, t_data *data)
 {
-	int	fd_orig;
+	int		fd_orig;
 
-	if (st_node->fd > 0)
-	{
-		fd_orig = open(st_node->file, st_node->mode, 0644);
-		dup2(fd_orig, st_node->fd);
-		close(fd_orig);
-	}
-	else
-	{
-		fd_orig = open(st_node->file, st_node->mode);
-		dup2(fd_orig, st_node->fd);
-		close(fd_orig);
-	}
+	fd_orig = open(st_node->file, st_node->mode, 0644);
+	if (fd_orig == -1)
+		exit(1);
+	if (dup2(fd_orig, st_node->fd) == -1)
+		exit(1);
+	close(fd_orig);
 	exec_execu((t_exec *)st_node->cmd, data, 1);
 	dup2(data->origin_stdout, STDOUT_FILENO);
-	dup2(data->origin_stdin, STDIN_FILENO);
-}
-
-void	exec_pipe(t_pipe *st_node, t_data *data)
-{
-	if (st_node->left->type == PIPE)
-		check_pipe((t_pipe *)st_node->left, data, 0);
-	else if (st_node->left->type == EXECUTE)
-		run_pipe((t_exec *)st_node->left, data, 0);
-	else if (st_node->left->type == RED)
-		exec_red((t_red *)st_node->left, data);
-	dup2(data->origin_stdout, STDOUT_FILENO);
-	if (st_node->right->type == EXECUTE)
-		run_pipe((t_exec *)st_node->right, data, 1); //unklar da es ja das letzte ist
-	else if (st_node->right->type == RED)
-		exec_red((t_red *)st_node->right, data);
 }
 
 void	exec_execu(t_exec *st_node, t_data *data, int need_child)
@@ -224,4 +234,12 @@ void	exec_execu(t_exec *st_node, t_data *data, int need_child)
 		if (execve(data->cmd_path, st_node->argv, data->env) == -1)
 			exit(1);
 	// free (cmd_path); //funktioniert nicht
+}
+
+void	exec_pipe(t_pipe *st_node, t_data *data)
+{
+	if (st_node->left->type == PIPE)
+		check_pipe((t_pipe *)st_node->left, data, 0);
+	dup2(data->origin_stdout, STDOUT_FILENO);
+	run_pipe((t_exec *)st_node->right, data, 1);
 }
