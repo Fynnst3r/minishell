@@ -5,8 +5,10 @@ SRC = src/minishell.c src/parsing/token_utils.c src/parsing/free.c src/exec/star
 OBJ_DIR = obj
 OBJS = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 LIBFT = lib/libft
+GET_NEXT_LINE = lib/get_next_line
 
 INLIBFT = -L $(LIBFT) -lft
+INGET_NEXT_LINE = -L $(GET_NEXT_LINE) -lget_next_line
 
 B := "\033[0;34m"
 P := "\033[0;35m"
@@ -18,8 +20,9 @@ DC := "\033[0;39m"
 $(NAME): $(OBJS)
 	@echo $(B)"Compiling libft..."$(DC)
 	@cd $(LIBFT) && $(MAKE) --silent
+	@cd $(GET_NEXT_LINE) && $(MAKE) --silent
 	@echo $(G)"Compiling minishell..."$(DC)
-	@cc $(OBJS) $(INLIBFT) -o $(NAME) $(LDFLAGS)
+	@cc $(OBJS) $(INLIBFT) $(IN_GETNEXTLINE) -o $(NAME) $(LDFLAGS)
 	@echo $(Y)"Lets Go Minishell!!!"$(DC)
 
 $(OBJ_DIR)/%.o: %.c | create_dirs
@@ -33,11 +36,13 @@ all: $(NAME)
 clean:
 	@rm -f $(OBJS)
 	@cd $(LIBFT) && $(MAKE) clean --silent
+	@cd $(GET_NEXT_LINE) && $(MAKE) clean --silent
 
 fclean: clean
 	@rm -f $(NAME)
 	@rm -rf $(OBJ_DIR)
 	@cd $(LIBFT) && $(MAKE) fclean --silent
+	@cd $(GET_NEXT_LINE) && $(MAKE) fclean --silent
 	@echo $(Y)"\nEverything is properly cleaned!\n"$(DC)
 
 re: fclean all

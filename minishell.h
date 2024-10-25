@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/23 15:14:40 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/25 16:35:30 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-#include <fcntl.h>
+# include <fcntl.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "lib/libft/libft.h"
+# include "lib/get_next_line/get_next_line.h"
 
 // IDENTIFIER An identifier is things like a variable or a function name.
 // They are referencing something.
@@ -101,10 +102,12 @@ typedef struct s_red
 	t_cmd	*cmd;
 }t_red;
 
-typedef struct s_here_d
+typedef struct s_herd
 {
 	t_obj	type;
-}t_hered;
+	t_cmd	*cmd;
+	char	*del;
+}t_herd;
 
 
 //minishell.c
@@ -123,6 +126,7 @@ void		start_exec(t_data *data);
 void		exec_execu(t_exec *st_node, t_data *data, int need_child);
 void		exec_pipe(t_pipe *st_node, t_data *data);
 void		exec_red(t_red *st_node, t_data *data);
+void		exec_heredoc(t_herd *st_node, t_data *data);
 void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
 
 //execution/pipe
@@ -134,5 +138,6 @@ void		child(t_exec *st_node, t_data *data, int last, int pipefd[2]);
 char		*find_path(t_data *data, t_exec *st_node);
 void		free_dp(char **str);
 char		**find_path_help(t_data *data);
+int			write_in_file(int fd, t_herd *st_node);
 
 #endif

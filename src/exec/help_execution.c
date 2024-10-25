@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/22 11:15:01 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/25 16:33:21 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,22 @@ void	free_dp(char **str)
 	free (str);
 }
 
-// void	free_all(t_data data)
-// {
-	
-// }
+int	write_in_file(int fd, t_herd *st_node)
+{
+	ssize_t	bytes;
+	char	buffer[1024];
+
+	while (1)
+	{
+		write(STDOUT_FILENO, "heredoc> ", 9);
+		bytes = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
+		if (bytes > 0)
+		{
+			// buffer[bytes] = '\0';
+			if (ft_strncmp(buffer, st_node->del, 3) == 0)
+				break ;
+			write (fd, buffer, bytes);
+		}
+	}
+	return (fd);
+}

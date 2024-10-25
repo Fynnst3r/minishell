@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/23 18:10:15 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/25 16:52:43 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,26 +149,45 @@
 //     data->st_node = (t_cmd *)pipe_cmd;
 // }
 
+// void	fill_test_struct(t_data *data)
+// {
+//     // 1. Erstellen des 'ls -l' Befehls
+//     t_exec *exec_ls = malloc(sizeof(t_exec));
+//     exec_ls->type = EXECUTE;
+//     exec_ls->argv = malloc(3 * sizeof(char *));
+//     exec_ls->argv[0] = strdup("ls");
+//     exec_ls->argv[1] = strdup("-l");
+//     exec_ls->argv[2] = NULL;
+
+//     // 2. Erstellen der Ausgabeumleitung '>> test.txt' für 'ls -l'
+//     t_red *redir = malloc(sizeof(t_red));
+//     redir->type = RED;
+//     redir->mode = O_WRONLY | O_CREAT | O_APPEND; // '>>' steht für anhängen
+//     redir->file = strdup("test.txt");
+//     redir->fd = STDOUT_FILENO; // Standard-Ausgabe
+//     redir->cmd = (t_cmd *)exec_ls; // Verweisen auf den 'ls -l' Befehl
+
+//     // 3. Setzen der Wurzel des AST in die Datenstruktur
+//     data->st_node = (t_cmd *)redir;
+// }
+
 void	fill_test_struct(t_data *data)
 {
-    // 1. Erstellen des 'ls -l' Befehls
-    t_exec *exec_ls = malloc(sizeof(t_exec));
-    exec_ls->type = EXECUTE;
-    exec_ls->argv = malloc(3 * sizeof(char *));
-    exec_ls->argv[0] = strdup("ls");
-    exec_ls->argv[1] = strdup("-l");
-    exec_ls->argv[2] = NULL;
+    // 1. Erstellen des 'cat' Befehls für den Heredoc
+    t_exec *exec_cat = malloc(sizeof(t_exec));
+    exec_cat->type = EXECUTE;
+    exec_cat->argv = malloc(2 * sizeof(char *));
+    exec_cat->argv[0] = strdup("sort");
+    exec_cat->argv[1] = NULL;
 
-    // 2. Erstellen der Ausgabeumleitung '>> test.txt' für 'ls -l'
-    t_red *redir = malloc(sizeof(t_red));
-    redir->type = RED;
-    redir->mode = O_WRONLY | O_CREAT | O_APPEND; // '>>' steht für anhängen
-    redir->file = strdup("test.txt");
-    redir->fd = STDOUT_FILENO; // Standard-Ausgabe
-    redir->cmd = (t_cmd *)exec_ls; // Verweisen auf den 'ls -l' Befehl
+    // 2. Erstellen des Heredoc-Kommandos '<< EOF' für 'cat'
+    t_herd *heredoc = malloc(sizeof(t_herd));
+    heredoc->type = HEREDOC;
+    heredoc->cmd = (t_cmd *)exec_cat;  // Der `cat`-Befehl als Heredoc-Kommando
+    heredoc->del = strdup("EOF");      // Delimiter für den Heredoc
 
     // 3. Setzen der Wurzel des AST in die Datenstruktur
-    data->st_node = (t_cmd *)redir;
+    data->st_node = (t_cmd *)heredoc;
 }
 
 void	start_exec(t_data *data)
@@ -192,6 +211,33 @@ void	start_exec(t_data *data)
 		{
 			exec_red((t_red *)data->st_node, data);
 		}
+		if (data->st_node->type == HEREDOC)
+		{
+			exec_heredoc((t_herd *)data->st_node, data);
+		}
+		exit(0);
+	}
+	waitpid(pid, NULL, 0);
+}
+
+void	exec_heredoc(t_herd *st_node, t_data *data)
+{
+	pid_t	pid;
+	int		fd;
+
+	data->argc = 3;
+	fd = open("heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	write_in_file(fd, (t_herd *)st_node);
+	close (fd);
+	fd = open("heredoc.txt", O_RDONLY);
+	pid = fork();
+	if (pid == -1)
+		exit(1);
+	if (pid == 0)
+	{
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+		exec_execu((t_exec *)st_node->cmd, data, 1);
 		exit(0);
 	}
 	waitpid(pid, NULL, 0);
