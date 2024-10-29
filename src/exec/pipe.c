@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/29 14:03:17 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/29 15:14:20 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	check_pipe(t_pipe *st_node, t_data *data, int last)
 {
-	// printf("st_node type: %d\n", st_node->type);
 	if (st_node->type == PIPE)
 	{
 		check_pipe((t_pipe *)st_node->left, data, 0);
@@ -57,7 +56,6 @@ void	run_pipe(t_cmd *st_node, t_data *data, int last)
 
 void	child(t_cmd *st_node, t_data *data, int last, int pipefd[2])
 {
-	// printf("st_node type: %d\n", st_node->type);
 	data->argc = 4;
 	close(pipefd[0]);
 	if (last == 0)
