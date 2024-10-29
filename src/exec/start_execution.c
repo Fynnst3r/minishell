@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/29 15:55:20 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/29 16:05:57 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,12 +323,12 @@ void	fill_test_struct(t_data *data)
     // 2. Erstellen der Ausgabeumleitung '>> test.txt' für 'ls -l'
     t_red *redir = malloc(sizeof(t_red));
     redir->type = RED;
-    // redir->mode = O_WRONLY | O_CREAT | O_APPEND; // '>>' steht für anhängen
+    redir->mode = O_WRONLY | O_CREAT | O_APPEND; // '>>' steht für anhängen
 	// redir->mode = O_WRONLY | O_CREAT | O_TRUNC; // steht für '>'
-	redir->mode = O_RDONLY; // steht für '<'
+	// redir->mode = O_RDONLY; // steht für '<'
     redir->file = strdup("test.txt");
-    // redir->fd = STDOUT_FILENO; // Standard-Ausgabe
-	redir->fd = STDIN_FILENO; // Standard-Ausgabe
+    redir->fd = STDOUT_FILENO; // Standard-Ausgabe
+	// redir->fd = STDIN_FILENO; // Standard-Ausgabe
     redir->cmd = (t_cmd *)exec_ls; // Verweisen auf den 'ls -l' Befehl
 
     // 3. Setzen der Wurzel des AST in die Datenstruktur
@@ -380,29 +380,16 @@ void	exec_red(t_red *st_node, t_data *data)
 	if (pid == 0)
 	{
 		if (st_node->fd > 0)
-		{
 			fd_orig = open(st_node->file, st_node->mode, 0644);
-			if (fd_orig == -1)
-				exit(1);
-			if (dup2(fd_orig, st_node->fd) == -1)
-				exit(1);
-			close(fd_orig);
-			exec_execu((t_exec *)st_node->cmd, data);
-			if (dup2(data->origin_stdout, STDOUT_FILENO) == -1)
-				exit (0);
-		}
 		else
-		{
 			fd_orig = open(st_node->file, st_node->mode);
-			if (fd_orig == -1)
-				exit(1);
-			if (dup2(fd_orig, st_node->fd) == -1)
-				exit(1);
-			close(fd_orig);
-			exec_execu((t_exec *)st_node->cmd, data);
-			if (dup2(data->origin_stdout, STDIN_FILENO) == -1)
-				exit (0);
-		}
+		if (fd_orig == -1)
+			exit(1);
+		if (dup2(fd_orig, st_node->fd) == -1)
+			exit(1);
+		close(fd_orig);
+		exec_execu((t_exec *)st_node->cmd, data);
+		exit (0);
 	}
 	waitpid(pid, NULL, 0);
 }
