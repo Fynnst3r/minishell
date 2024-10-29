@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/25 16:52:43 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/29 14:37:00 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,76 +171,138 @@
 //     data->st_node = (t_cmd *)redir;
 // }
 
-void	fill_test_struct(t_data *data)
-{
-    // 1. Erstellen des 'cat' Befehls für den Heredoc
-    t_exec *exec_cat = malloc(sizeof(t_exec));
-    exec_cat->type = EXECUTE;
-    exec_cat->argv = malloc(2 * sizeof(char *));
-    exec_cat->argv[0] = strdup("sort");
-    exec_cat->argv[1] = NULL;
+// void	fill_test_struct(t_data *data)
+// {
+//     // 1. Erstellen des 'cat' Befehls für den Heredoc
+//     t_exec *exec_cat = malloc(sizeof(t_exec));
+//     exec_cat->type = EXECUTE;
+//     exec_cat->argv = malloc(3 * sizeof(char *));
+//     exec_cat->argv[0] = strdup("grep");
+// 	exec_cat->argv[1] = strdup("Zeile");
+//     exec_cat->argv[2] = NULL;
 
-    // 2. Erstellen des Heredoc-Kommandos '<< EOF' für 'cat'
+//     // 2. Erstellen des Heredoc-Kommandos '<< EOF' für 'cat'
+//     t_herd *heredoc = malloc(sizeof(t_herd));
+//     heredoc->type = HEREDOC;
+//     heredoc->cmd = (t_cmd *)exec_cat;  // Der `cat`-Befehl als Heredoc-Kommando
+//     heredoc->del = strdup("EOF");      // Delimiter für den Heredoc
+
+//     // 3. Setzen der Wurzel des AST in die Datenstruktur
+//     data->st_node = (t_cmd *)heredoc;
+// }
+
+// void fill_test_struct(t_data *data)
+// {
+//     // 1. Erstellen des `grep "Zeile"` Kommandos
+//     t_exec *exec_grep = malloc(sizeof(t_exec));
+//     exec_grep->type = EXECUTE;
+//     exec_grep->argv = malloc(3 * sizeof(char *));
+//     exec_grep->argv[0] = strdup("grep");
+//     exec_grep->argv[1] = strdup("Zeile");
+//     exec_grep->argv[2] = NULL;
+
+//     // 2. Erstellen des Here-Documents '<< EOF' für `grep`
+//     t_herd *heredoc = malloc(sizeof(t_herd));
+//     heredoc->type = HEREDOC;
+//     heredoc->cmd = (t_cmd *)exec_grep;  // Verweist auf `grep`-Kommando
+//     heredoc->del = strdup("EOF");       // Delimiter für das Heredoc
+
+//     // 3. Erstellen des `sort` Kommandos
+//     t_exec *exec_sort = malloc(sizeof(t_exec));
+//     exec_sort->type = EXECUTE;
+//     exec_sort->argv = malloc(2 * sizeof(char *));
+//     exec_sort->argv[0] = strdup("sort");
+//     exec_sort->argv[1] = NULL;
+
+//     // 4. Verbindung des Heredoc-Kommandos und `sort` mit einer Pipe
+//     t_pipe *pipe = malloc(sizeof(t_pipe));
+//     pipe->type = PIPE;
+//     pipe->left = (t_cmd *)heredoc;     // Linkes Kommando: `grep "Zeile" << EOF`
+//     pipe->right = (t_cmd *)exec_sort;  // Rechtes Kommando: `sort`
+
+//     // 5. Setzen der Wurzel des AST in die Datenstruktur
+//     data->st_node = (t_cmd *)pipe;
+// }
+
+void fill_test_struct(t_data *data)
+{
+    // 1. Erstellen des `grep "Zeile"` Kommandos
+    t_exec *exec_grep = malloc(sizeof(t_exec));
+    exec_grep->type = EXECUTE;
+    exec_grep->argv = malloc(3 * sizeof(char *));
+    exec_grep->argv[0] = strdup("grep");
+    exec_grep->argv[1] = strdup("Zeile");
+    exec_grep->argv[2] = NULL;
+
+    // 2. Erstellen des Here-Documents '<< EOF' für `grep`
     t_herd *heredoc = malloc(sizeof(t_herd));
     heredoc->type = HEREDOC;
-    heredoc->cmd = (t_cmd *)exec_cat;  // Der `cat`-Befehl als Heredoc-Kommando
-    heredoc->del = strdup("EOF");      // Delimiter für den Heredoc
+    heredoc->cmd = (t_cmd *)exec_grep;  // Verweist auf `grep`-Kommando
+    heredoc->del = strdup("EOF");       // Delimiter für das Heredoc
 
-    // 3. Setzen der Wurzel des AST in die Datenstruktur
-    data->st_node = (t_cmd *)heredoc;
+    // 3. Erstellen des `sort` Kommandos
+    t_exec *exec_sort = malloc(sizeof(t_exec));
+    exec_sort->type = EXECUTE;
+    exec_sort->argv = malloc(2 * sizeof(char *));
+    exec_sort->argv[0] = strdup("sort");
+    exec_sort->argv[1] = NULL;
+
+    // 4. Erstellen des `uniq` Kommandos
+    t_exec *exec_uniq = malloc(sizeof(t_exec));
+    exec_uniq->type = EXECUTE;
+    exec_uniq->argv = malloc(2 * sizeof(char *));
+    exec_uniq->argv[0] = strdup("uniq");
+    exec_uniq->argv[1] = NULL;
+
+    // 5. Verbindung des Here-Documents und `grep` Kommandos mit `sort` in der ersten Pipe
+    t_pipe *pipe1 = malloc(sizeof(t_pipe));
+    pipe1->type = PIPE;
+    pipe1->left = (t_cmd *)heredoc;     // Linkes Kommando: `grep "Zeile" << EOF`
+    pipe1->right = (t_cmd *)exec_sort;  // Rechtes Kommando: `sort`
+
+    // 6. Verbindung der ersten Pipe (`grep | sort`) mit `uniq` in der zweiten Pipe
+    t_pipe *pipe2 = malloc(sizeof(t_pipe));
+    pipe2->type = PIPE;
+    pipe2->left = (t_cmd *)pipe1;       // Linkes Kommando: `grep "Zeile" << EOF | sort`
+    pipe2->right = (t_cmd *)exec_uniq;  // Rechtes Kommando: `uniq`
+
+    // 7. Setzen der Wurzel des AST in die Datenstruktur
+    data->st_node = (t_cmd *)pipe2;
 }
 
-void	start_exec(t_data *data)
-{
-	pid_t	pid;
 
-	pid = fork();
-	if (pid == -1)
-		exit(1);
-	if (pid == 0)
+void	start_exec(t_data *data, t_cmd *cmd)
+{
+	if (cmd->type == EXECUTE)
 	{
-		if (data->st_node->type == EXECUTE)
-		{
-			exec_execu((t_exec *)data->st_node, data, 1);
-		}
-		if (data->st_node->type == PIPE)
-		{
-			exec_pipe((t_pipe *)data->st_node, data);
-		}
-		if (data->st_node->type == RED)
-		{
-			exec_red((t_red *)data->st_node, data);
-		}
-		if (data->st_node->type == HEREDOC)
-		{
-			exec_heredoc((t_herd *)data->st_node, data);
-		}
-		exit(0);
+		exec_execu((t_exec *)cmd, data);
 	}
-	waitpid(pid, NULL, 0);
+	if (cmd->type == PIPE)
+	{
+		exec_pipe((t_pipe *)cmd, data);
+	}
+	if (cmd->type == RED)
+	{
+		exec_red((t_red *)cmd, data);
+	}
+	if (cmd->type == HEREDOC)
+	{
+		exec_heredoc((t_herd *)cmd, data);
+	}
 }
 
 void	exec_heredoc(t_herd *st_node, t_data *data)
 {
-	pid_t	pid;
 	int		fd;
 
-	data->argc = 3;
 	fd = open("heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	write_in_file(fd, (t_herd *)st_node);
 	close (fd);
 	fd = open("heredoc.txt", O_RDONLY);
-	pid = fork();
-	if (pid == -1)
+	if (dup2(fd, STDIN_FILENO) == -1)
 		exit(1);
-	if (pid == 0)
-	{
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-		exec_execu((t_exec *)st_node->cmd, data, 1);
-		exit(0);
-	}
-	waitpid(pid, NULL, 0);
+	close(fd);
+	exec_execu((t_exec *)st_node->cmd, data);
 }
 
 void	exec_red(t_red *st_node, t_data *data)
@@ -253,39 +315,25 @@ void	exec_red(t_red *st_node, t_data *data)
 	if (dup2(fd_orig, st_node->fd) == -1)
 		exit(1);
 	close(fd_orig);
-	exec_execu((t_exec *)st_node->cmd, data, 1);
-	dup2(data->origin_stdout, STDOUT_FILENO);
+	exec_execu((t_exec *)st_node->cmd, data);
+	if (dup2(data->origin_stdout, STDOUT_FILENO) == -1)
+		exit (1);
 }
 
-void	exec_execu(t_exec *st_node, t_data *data, int need_child)
+void	exec_execu(t_exec *st_node, t_data *data)
 {
-	pid_t	pid;
-
 	data->cmd_path = find_path(data, st_node);
 	if (data->cmd_path == 0)
 		exit(1);
-	if (need_child == 1)
-	{
-		pid = fork();
-		if (pid == -1)
-			exit(1);
-		if (pid == 0)
-		{
-			if (execve(data->cmd_path, st_node->argv, data->env) == -1)
-				exit(1);
-		}
-		waitpid(pid, NULL, 0);
-	}
-	else
-		if (execve(data->cmd_path, st_node->argv, data->env) == -1)
-			exit(1);
+	if (execve(data->cmd_path, st_node->argv, data->env) == -1)
+		exit(1);
 	// free (cmd_path); //funktioniert nicht
 }
 
 void	exec_pipe(t_pipe *st_node, t_data *data)
 {
-	if (st_node->left->type == PIPE)
-		check_pipe((t_pipe *)st_node->left, data, 0);
+	// if (st_node->left->type == PIPE)
+	check_pipe((t_pipe *)st_node->left, data, 0);
 	dup2(data->origin_stdout, STDOUT_FILENO);
-	run_pipe((t_exec *)st_node->right, data, 1);
+	run_pipe((t_cmd *)st_node->right, data, 1);
 }

@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/23 17:28:04 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/29 11:08:40 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	main(int ac, char **av, char **env)
 {
 	t_data		data;
 	const char	*prompt;
+	pid_t		pid;
 
 	prompt = "YM_FF_SHELL: ";
 	data.argc = ac;
@@ -25,13 +26,19 @@ int	main(int ac, char **av, char **env)
 	fill_test_struct(&data);
 	data.origin_stdin = dup(STDIN_FILENO);
 	data.origin_stdout = dup(STDOUT_FILENO);
-	int	i = 0;
-	while (1)
+	pid = fork();
+	if (pid == -1)
+		exit(1);
+	if (pid == 0)
 	{
-		data.input = readline(prompt);
-		start_exec(&data);
-		i++;
+		while (1)
+		{
+			data.input = readline(prompt);
+			start_exec(&data, data.st_node);
+		}
+		exit(0);
 	}
+	waitpid(pid, NULL, 0);
 	return (0);
 }
 

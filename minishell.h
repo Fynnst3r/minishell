@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/25 16:35:30 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/29 11:08:53 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,8 @@ t_token		*find_last_token(t_token *t);
 void		free_tokens(t_token **t);
 
 //execution/start_execution
-void		start_exec(t_data *data);
-void		exec_execu(t_exec *st_node, t_data *data, int need_child);
+void		start_exec(t_data *data, t_cmd *cmd);
+void		exec_execu(t_exec *st_node, t_data *data);
 void		exec_pipe(t_pipe *st_node, t_data *data);
 void		exec_red(t_red *st_node, t_data *data);
 void		exec_heredoc(t_herd *st_node, t_data *data);
@@ -131,8 +131,8 @@ void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da bef
 
 //execution/pipe
 void		check_pipe(t_pipe *st_node, t_data *data, int last);
-void		run_pipe(t_exec *st_node, t_data *data, int last);
-void		child(t_exec *st_node, t_data *data, int last, int pipefd[2]);
+void		run_pipe(t_cmd *st_node, t_data *data, int last);
+void		child(t_cmd *st_node, t_data *data, int last, int pipefd[2]);
 
 //execution/help_execution
 char		*find_path(t_data *data, t_exec *st_node);
