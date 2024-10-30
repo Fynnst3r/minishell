@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/29 11:08:53 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/30 15:36:16 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_token
 	struct s_token	*previous;
 
 }			t_token;
+
+extern int	g_signal;
 
 typedef struct s_data
 {

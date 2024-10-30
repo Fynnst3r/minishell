@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/29 14:58:55 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/30 12:49:07 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int	write_in_file(int fd, t_herd *st_node)
 	ssize_t	bytes;
 	char	buffer[1024];
 
-	// int i = 0;
 	while (1)
 	{
 		write(STDERR_FILENO, "heredoc> ", 9);
@@ -87,7 +86,6 @@ int	write_in_file(int fd, t_herd *st_node)
 			}
 			write (fd, buffer, bytes);
 		}
-		// i++;
 	}
 	return (fd);
 }

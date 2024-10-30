@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/30 12:46:51 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/30 15:42:08 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	check_pipe(t_pipe *st_node, t_data *data, int last)
 void	run_pipe(t_cmd *st_node, t_data *data, int last)
 {
 	int		pipefd[2];
+	int		status;
 	pid_t	pid1;
 
 	if (pipe(pipefd) == -1)
@@ -41,7 +42,8 @@ void	run_pipe(t_cmd *st_node, t_data *data, int last)
 		child(st_node, data, last, pipefd);
 	if (pid1 > 0)
 	{
-		waitpid(pid1, NULL, 0);
+		waitpid(pid1, &status, 0);
+		g_signal = WIFEXITED(status);
 		close(pipefd[1]);
 		if (last == 0)
 			dup2(pipefd[0], STDIN_FILENO);

@@ -6,17 +6,20 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/30 12:09:59 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/30 15:42:04 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+int	g_signal = 0;
+
 int	main(int ac, char **av, char **env)
 {
 	t_data		data;
-	const char	*prompt;
 	pid_t		pid;
+	int			status;
+	const char	*prompt;
 
 	prompt = "YM_FF_SHELL: ";
 	data.argc = ac;
@@ -36,7 +39,8 @@ int	main(int ac, char **av, char **env)
 		{
 			start_exec(&data, data.st_node);
 		}
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
+		g_signal = WIFEXITED(status);
 	}
 	return (0);
 }
