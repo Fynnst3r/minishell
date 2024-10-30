@@ -1,7 +1,7 @@
 NAME = minishell
 CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -lreadline
-SRC = src/minishell.c src/parsing/token_utils.c src/parsing/free.c src/exec/start_execution.c src/exec/help_execution.c src/exec/pipe.c
+SRC = src/minishell.c src/parsing/token_utils.c src/parsing/free.c src/exec/start_execution.c src/exec/help_execution.c src/exec/pipe.c src/builtins/builtins1.c
 OBJ_DIR = obj
 OBJS = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 LIBFT = lib/libft
@@ -29,7 +29,7 @@ $(OBJ_DIR)/%.o: %.c | create_dirs
 	@cc $(CFLAGS) -c $< -o $@
 
 create_dirs:
-	@mkdir -p $(OBJ_DIR)/src $(OBJ_DIR)/src/parsing $(OBJ_DIR)/src/exec
+	@mkdir -p $(OBJ_DIR)/src $(OBJ_DIR)/src/parsing $(OBJ_DIR)/src/exec $(OBJ_DIR)/src/builtins
 
 all: $(NAME)
 

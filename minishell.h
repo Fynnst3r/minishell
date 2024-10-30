@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/30 15:36:16 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/30 18:03:28 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,5 +141,10 @@ char		*find_path(t_data *data, t_exec *st_node);
 void		free_dp(char **str);
 char		**find_path_help(t_data *data);
 int			write_in_file(int fd, t_herd *st_node);
+
+//builtins/builtins1
+int		check_builtins(t_data *data, char **cmd);
+void	exec_echo(char **cmd);
+int		check_n_flag(char **cmd, int *newline);
 
 #endif
