@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/19 19:23:24 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:31:19 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,25 @@
 void fill_test_struct(t_data *data)
 {
 // Erstellen des 'ls -l' Befehls
-t_exec *exec_ls = malloc(sizeof(t_exec));
+t_exec *exec_ls = ft_malloc(sizeof(t_exec));
 exec_ls->type = EXECUTE;
-exec_ls->argv = malloc(3 * sizeof(char *));
+exec_ls->argv = ft_malloc(3 * sizeof(char *));
 exec_ls->argv[0] = strdup("ls");
 exec_ls->argv[1] = strdup("-l");
 exec_ls->argv[2] = NULL;
 
 // Erstellen des 'grep txt' Befehls
-t_exec *exec_grep_txt = malloc(sizeof(t_exec));
+t_exec *exec_grep_txt = ft_malloc(sizeof(t_exec));
 exec_grep_txt->type = EXECUTE;
-exec_grep_txt->argv = malloc(3 * sizeof(char *));
+exec_grep_txt->argv = ft_malloc(3 * sizeof(char *));
 exec_grep_txt->argv[0] = strdup("grep");
 exec_grep_txt->argv[1] = strdup("Makefile");
 exec_grep_txt->argv[2] = NULL;
 
 // Erstellen des 'cut -d " " -f 1' Befehls
-t_exec *exec_cut = malloc(sizeof(t_exec));
+t_exec *exec_cut = ft_malloc(sizeof(t_exec));
 exec_cut->type = EXECUTE;
-exec_cut->argv = malloc(5 * sizeof(char *));
+exec_cut->argv = ft_malloc(5 * sizeof(char *));
 exec_cut->argv[0] = strdup("cut");
 exec_cut->argv[1] = strdup("-d");
 exec_cut->argv[2] = strdup(" ");
@@ -42,27 +42,27 @@ exec_cut->argv[4] = strdup("1");
 exec_cut->argv[5] = NULL;
 
 // Erstellen des 'wc -l' Befehls
-t_exec *exec_wc = malloc(sizeof(t_exec));
+t_exec *exec_wc = ft_malloc(sizeof(t_exec));
 exec_wc->type = EXECUTE;
-exec_wc->argv = malloc(3 * sizeof(char *));
+exec_wc->argv = ft_malloc(3 * sizeof(char *));
 exec_wc->argv[0] = strdup("wc");
 exec_wc->argv[1] = strdup("-l");
 exec_wc->argv[2] = NULL;
 
 // Erste Pipe zwischen 'ls -l' und 'grep txt'
-t_pipe *pipe_ls_grep = malloc(sizeof(t_pipe));
+t_pipe *pipe_ls_grep = ft_malloc(sizeof(t_pipe));
 pipe_ls_grep->type = PIPE;
 pipe_ls_grep->left = (t_cmd *)exec_ls;
 pipe_ls_grep->right = (t_cmd *)exec_grep_txt;
 
 // Zweite Pipe zwischen dem Ergebnis der ersten Pipe und 'cut -d " " -f 1'
-t_pipe *pipe_grep_cut = malloc(sizeof(t_pipe));
+t_pipe *pipe_grep_cut = ft_malloc(sizeof(t_pipe));
 pipe_grep_cut->type = PIPE;
 pipe_grep_cut->left = (t_cmd *)pipe_ls_grep;
 pipe_grep_cut->right = (t_cmd *)exec_cut;
 
 // Dritte Pipe zwischen dem Ergebnis der zweiten Pipe und 'wc -l'
-t_pipe *pipe_cut_wc = malloc(sizeof(t_pipe));
+t_pipe *pipe_cut_wc = ft_malloc(sizeof(t_pipe));
 pipe_cut_wc->type = PIPE;
 pipe_cut_wc->left = (t_cmd *)pipe_grep_cut;
 pipe_cut_wc->right = (t_cmd *)exec_wc;

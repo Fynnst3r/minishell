@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:36:09 by fforster          #+#    #+#             */
-/*   Updated: 2024/04/04 19:07:58 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:19:13 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strdup(const char *s1)
 	size_t	i;
 
 	i = 0;
-	dup = (char *)malloc(sizeof(*s1) * ft_strlen(s1) + 1);
+	dup = (char *)ft_malloc(sizeof(*s1) * ft_strlen(s1) + 1);
 	if (dup == 0)
 		return (0);
 	while (s1[i])

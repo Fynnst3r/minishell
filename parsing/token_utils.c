@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/18 18:22:41 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:57:20 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	print_token_data(t_token *top)
 	while (tmp)
 	{
 		printf("STRING[%d]=%s\n", count, tmp->str);
-		printf("TYPE[%d]=%d\n", count, tmp->type);
+		printf("TYPE[%d]=%d\n\n", count, tmp->type);
 		count++;
 		tmp = tmp->next;
 	}
@@ -51,10 +51,10 @@ t_token	*make_token(void)
 {
 	t_token	*new;
 
-	new = malloc(sizeof(t_token));
+	new = ft_malloc(sizeof(t_token));
 	if (!new)
 		return (NULL);
-		printf("made token\n");
+		// printf("made token\n");
 	return (new);
 }
 
@@ -62,24 +62,24 @@ void	token_add_back(t_token **last, t_token *new)
 {
 	t_token	*tmp;
 
-	printf("\n7\n");
+	// printf("\n7\n");
 	if (!*last)
 	{
 		*last = new;
-		printf("\nfirsttoken\n");
+		// printf("\nfirsttoken\n");
 		return ;
 	}
 	if (!last || !new)
 	{
-		printf("this bitch empty\n");	
+		// printf("this bitch empty\n");	
 		return ;
 	}
 	tmp = *last;
-	printf("WHY\n");
+	// printf("WHY\n");
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = new;
-	printf("\nadded back\n");
+	// printf("\nadded back\n");
 }
 // void	make_token(t_token **token, char *str, int flag, int id)
 // {

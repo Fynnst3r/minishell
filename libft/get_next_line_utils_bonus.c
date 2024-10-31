@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 19:43:04 by fforster          #+#    #+#             */
-/*   Updated: 2024/07/30 15:26:35 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:19:45 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*f_strjoin(char *s1, char *s2)
 	size_t	i;
 	size_t	l;
 
-	jnd = (char *)malloc(sizeof(*s1) * (f_strlen(s1) + f_strlen(s2) + 1));
+	jnd = (char *)ft_malloc(sizeof(*s1) * (f_strlen(s1) + f_strlen(s2) + 1));
 	if (jnd == 0)
 		return (0);
 	i = 0;
@@ -56,7 +56,7 @@ char	*f_strdup(const char *s1)
 	size_t	i;
 
 	i = 0;
-	dup = (char *)malloc(sizeof(*s1) * f_strlen(s1) + 1);
+	dup = (char *)ft_malloc(sizeof(*s1) * f_strlen(s1) + 1);
 	if (dup == 0)
 		return (0);
 	while (s1[i])
@@ -98,7 +98,7 @@ char	*f_substr(char const *s, unsigned int start, size_t len)
 		return (f_strdup(""));
 	if (len > f_strlen(s) - start)
 		len = f_strlen(s) - start;
-	sub = (char *)malloc(len + 1 * sizeof(const char));
+	sub = (char *)ft_malloc(len + 1 * sizeof(const char));
 	if (!sub)
 		return (0);
 	if (start >= f_strlen(s))

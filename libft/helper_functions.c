@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 16:12:35 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/08 15:08:32 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 20:10:28 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	f_putnbr_unsig(unsigned int n, size_t *ret)
 {
 	char	c;
 
-	if (n >= 0 && n <= 9)
+	if (n <= 9)
 	{
 		c = n + '0';
 		write(1, &c, 1);

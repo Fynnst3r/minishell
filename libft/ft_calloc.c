@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 11:34:43 by fforster          #+#    #+#             */
-/*   Updated: 2024/04/03 17:11:49 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:18:48 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	*ft_calloc(size_t count, size_t size)
 {
 	char	*m;
 
-	m = malloc(size * count);
+	m = ft_malloc(size * count);
 	if (!m)
 		return (NULL);
 	ft_bzero(m, size * count);

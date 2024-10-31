@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/20 16:16:54 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/31 16:28:26 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ typedef struct s_data
 	const char		*input;
 	int				argc;
 	char			**env;
+	char			*cmd_path;
+	int				origin_stdin;
+	int				origin_stdout;
 }t_data;
 
 typedef enum s_obj
@@ -85,15 +88,18 @@ typedef struct s_exec
 
 typedef struct s_pipe
 {
-	t_obj			type;
-	struct t_shell	*left;
-	struct t_shell	*right;
+	t_obj	type;
+	t_cmd	*left;
+	t_cmd	*right;
 }t_pipe;
 
 typedef struct s_red
 {
 	t_obj	type;
-}t_red;
+	int		mode;
+	char	*file;
+	int		fd;
+	t_cmd	*cmd;}t_red;
 
 typedef struct s_here_d
 {
@@ -123,14 +129,18 @@ void		start_lexer(char *input);
 void		f_free_split_strs(char **split);
 int			is_special_char(char c);
 //parsing/newsplit_utils.c
-int			catch_dollar_num(char *s);
-char		*ft_strndup(char *s, size_t n);
-char		*found_dollar_sign(char *s, size_t k);
-char		*ft_strjoin_at(char *s1, char *s2, size_t start);
+// int			catch_dollar_num(char *s);
+// char		*ft_strndup(char *s, size_t n);
+// char		*found_dollar_sign(char *s, size_t k);
+// char		*ft_strjoin_at(char *s1, char *s2, size_t start);
+
 //parsing/proccess_split.c
-int			proccess_split(char **split);
+int			process_split(char **split);
 char		*get_env_value(char *str, size_t l);
 int			quote_status(char c, int ignore);
+int	is_special_char(char c);
+bool	isemptystring(const char *s);
+void	skip_quote(const char *s, size_t *i, size_t *count);
 
 // 
 //execution/start_execution

@@ -10,7 +10,7 @@
 // 		return (ft_strdup(""));
 // 	if (len > ft_strlen(s) - start)
 // 		len = ft_strlen(s) - start;
-// 	sub = (char *)malloc(len + 1 * sizeof(const char));
+// 	sub = (char *)ft_malloc(len + 1 * sizeof(const char));
 // 	if (!sub)
 // 		return (0);
 // 	while (len > 0)

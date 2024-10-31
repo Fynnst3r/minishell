@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   procces_split.c                                    :+:      :+:    :+:   */
+/*   process_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 19:30:09 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/20 18:45:03 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:44:58 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,17 @@ char	*get_env_value(char *str, size_t l)
 	size_t	k;
 
 	env_start = ft_substr(str, l, ft_strlen(str) - l);
+	ret = ft_strdup("");
 	l = 0;
 	k = 0;
 	while (env_start[l])
 	{
 		if (env_start[l] == '$')
 		{
-		printf("l++\n");
-			k = l + 1;
-			if (env_start[k] == '?')
-				return (ft_strdup("$?"));
-			while (env_start[k + 1] != '$' && env_start[k + 1])
-				k++;
-			tmp = ft_substr(env_start, l + 1, k - l);
-			printf("tmp %s\n", tmp);
+			tmp = ft_strdup(&env_start[++l]);
 			val = getenv(tmp);
-			printf("val %s\n", val);
-			// free(tmp);
-			// tmp =
-			// ret = ft_strjoin_at(ret, val, l);
-			l = k;
+			ret = ft_strjoin(ret, val);
 		}
-		l++;
 	}
 	return (ret);
 }
@@ -61,7 +50,7 @@ int	quote_status(char c, int ignore)
 	return (ignore);
 }
 
-int	proccess_split(char **split)
+int	process_split(char **split)
 {
 	size_t	i;
 	size_t	l;
@@ -71,30 +60,32 @@ int	proccess_split(char **split)
 	i = 0;
 	l = 0;
 	ignore = 0;
+	value = NULL;
 	while (split[i])
 	{
 		while (split[i][l])
 		{
 			ignore = quote_status(split[i][l], ignore);
+
 			if (split[i][l] == '$' && (ignore == 0 || ignore == 2))
 				value = get_env_value(split[i], l);
-		printf("value %s\n", value);
 			l++;
 		}
 		i++;
+		printf("i++\n");
 	}
 	return (0);
 }
 
-int main ()
-{
-	char *s = "hey$USER$PATH";
-	char *ret;
-	int i = 0;
-	while (s[i] && s[i] != '$')
-		i++;
-	ret = get_env_value(s, i);
-	printf("%s", ret);
-	// printf("HEY%s", ft_strdup(&s[i]));
-	// printf("gettest %s\n", getenv("\'USER\'"));
-}
+// int main ()
+// {
+// 	char *s = "hey$USER$PATH";
+// 	char *ret;
+// 	int i = 0;
+// 	while (s[i] && s[i] != '$')
+// 		i++;
+// 	ret = get_env_value(s, i);
+// 	printf("%s", ret);
+// 	// printf("HEY%s", ft_strdup(&s[i]));
+// 	// printf("gettest %s\n", getenv("\'USER\'"));
+// }

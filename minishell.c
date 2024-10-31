@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/16 17:14:09 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/23 20:42:57 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,13 @@ int	main(int ac, char **av, char**env)
 			continue ;
 		if (input)
 		{
+			init_garbage_collector();
 			start_lexer(input);
 			// fake_exec(tokens);
+			// free(input);
+			delete_trash();
+			ft_bzero(get_workers(), sizeof(t_trashman));
+			// system("leaks minishell");
 		}
 		// tokens = NULL;  delete cmd list and maybe other leftover we dont need anymore to reuse for next cmd
 	}
@@ -44,7 +49,7 @@ void	fill_env(t_data *data, char **env)
 	i = 0;
 	while (env[i] != NULL)
 		i++;
-	data->env = (char **)malloc((i + 1) * (sizeof(char *)));
+	data->env = (char **)ft_malloc((i + 1) * (sizeof(char *)));
 	if (!data->env)
 		printf("error!");
 	j = 0;

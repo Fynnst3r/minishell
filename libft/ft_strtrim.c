@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:53:45 by fforster          #+#    #+#             */
-/*   Updated: 2024/04/04 19:10:40 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:19:29 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 		i++;
 	while (f_check_set(s1[l - 1], set) && l > i)
 		l--;
-	trimmed = (char *)malloc((l - i + 1) * sizeof(char));
+	trimmed = (char *)ft_malloc((l - i + 1) * sizeof(char));
 	if (trimmed == 0)
 		return (0);
 	while (i < l)

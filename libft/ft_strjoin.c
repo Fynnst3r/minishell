@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 22:13:21 by fforster          #+#    #+#             */
-/*   Updated: 2024/04/16 21:11:55 by fforster         ###   ########.fr       */
+/*   Updated: 2024/10/20 19:33:03 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char		*jnd;
 	size_t		i;
 
-	jnd = (char *)malloc(sizeof(*s1) * ft_strlen(s1) + ft_strlen(s2) + 1);
+	jnd = (char *)ft_malloc(sizeof(*s1) * ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (jnd == 0)
 		return (0);
 	i = 0;
