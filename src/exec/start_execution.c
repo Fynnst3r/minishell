@@ -3,30 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   start_execution.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: yannismauk <yannismauk@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/30 18:12:23 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/31 21:05:41 by yannismauk       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void fill_test_struct(t_data *data)
+void fill_test_struct(t_data *data) // pwd
 {
-    // 1. Erstellen des `echo hallo` Kommandos
-    t_exec *exec_echo = malloc(sizeof(t_exec));
-    exec_echo->type = EXECUTE;
-    exec_echo->argv = malloc(6 * sizeof(char *));
-    exec_echo->argv[0] = strdup("echo");   // Das Kommando `echo`
-    exec_echo->argv[1] = strdup("-nnn-nnn");  // Das Argument `hallo`
-    exec_echo->argv[2] = strdup("-nnnn");  // Das Argument `hallo`
-    exec_echo->argv[3] = strdup("hallo");  // Das Argument `hallo`
-    exec_echo->argv[4] = strdup("maus");  // Das Argument `hallo`
-    exec_echo->argv[5] = NULL;             // Null-Terminierung für exec-Kompatibilität
-    // 2. Setzen des Kommandos als Wurzel des AST in die Datenstruktur
-    data->st_node = (t_cmd *)exec_echo;
+    t_exec *exec_pwd = malloc(sizeof(t_exec));
+    exec_pwd->type = EXECUTE;
+    exec_pwd->argv = malloc(2 * sizeof(char *));
+    exec_pwd->argv[0] = strdup("exit");  // Das Kommando `pwd`
+    exec_pwd->argv[1] = NULL;           // Null-Terminierung für exec-Kompatibilität
+    data->st_node = (t_cmd *)exec_pwd;
 }
+
+// void fill_test_struct(t_data *data) // echo hallo maus
+// {
+//     // 1. Erstellen des `echo hallo` Kommandos
+//     t_exec *exec_echo = malloc(sizeof(t_exec));
+//     exec_echo->type = EXECUTE;
+//     exec_echo->argv = malloc(6 * sizeof(char *));
+//     exec_echo->argv[0] = strdup("echo");   // Das Kommando `echo`
+//     exec_echo->argv[1] = strdup("-nnnnnn");  // Das Argument `hallo`
+//     exec_echo->argv[2] = strdup("-nnnn");  // Das Argument `hallo`
+//     exec_echo->argv[3] = strdup("hallo");  // Das Argument `hallo`
+//     exec_echo->argv[4] = strdup("maus");  // Das Argument `hallo`
+//     exec_echo->argv[5] = NULL;             // Null-Terminierung für exec-Kompatibilität
+//     // 2. Setzen des Kommandos als Wurzel des AST in die Datenstruktur
+//     data->st_node = (t_cmd *)exec_echo;
+// }
 
 // void fill_test_struct(t_data *data) // ls -l | grep Makefile | cut -d " " -f 1 | wc -l
 // {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: yannismauk <yannismauk@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/30 18:03:28 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/10/31 21:09:19 by yannismauk       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <readline/history.h>
 # include "lib/libft/libft.h"
 # include "lib/get_next_line/get_next_line.h"
+# include <string.h>
 
 // IDENTIFIER An identifier is things like a variable or a function name.
 // They are referencing something.
@@ -145,6 +146,9 @@ int			write_in_file(int fd, t_herd *st_node);
 //builtins/builtins1
 int		check_builtins(t_data *data, char **cmd);
 void	exec_echo(char **cmd);
-int		check_n_flag(char **cmd, int *newline);
+// void	exec_cd(char **cmd);
+void	exec_pwd(t_data *data);
+void	exec_env(t_data *data);
+void	exec_exit(char **cmd);
 
 #endif
