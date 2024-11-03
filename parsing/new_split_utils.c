@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:37:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/31 16:27:52 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/03 21:36:56 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void	skip_quote(const char *s, size_t *i, size_t *count)
 			(*i)++;
 		(*count)++;
 		(*i)++;
+		if (s[*i] == '\'' || s[*i] == '\"')
+			skip_quote(s, i, count);
 		return ;
 	}
 	if (s[*i] == '\"')
@@ -52,6 +54,8 @@ void	skip_quote(const char *s, size_t *i, size_t *count)
 			(*i)++;
 		(*count)++;
 		(*i)++;
+		if (s[*i] == '\'' || s[*i] == '\"')
+			skip_quote(s, i, count);
 		return ;
 	}
 }

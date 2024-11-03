@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/31 16:28:26 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/03 18:13:48 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,6 @@
 # include "libft/libft.h"
 # include "garbage_collector/garbage_collector.h"
 
-typedef struct s_shell_elements	t_shell_elements;
-// IDENTIFIER An identifier is things like a variable or a function name.
-// They are referencing something.
-// ASSIGNMENT An assignment just means that this is an operator that is used
-// to assign a value. An operator is a symbol placed between
-// identifiers or values to do something.
-// O_PARANT is short for "opening parentheses." Parentheses are ( and ).
-// C_PARANT is short for "closing parentheses."
 enum e_flags
 {
 	WORD,
@@ -99,11 +91,14 @@ typedef struct s_red
 	int		mode;
 	char	*file;
 	int		fd;
-	t_cmd	*cmd;}t_red;
+	t_cmd	*cmd;
+}t_red;
 
 typedef struct s_here_d
 {
 	t_obj	type;
+	t_cmd	*cmd;
+	char	*del;
 }t_hered;
 
 //minishell.c
@@ -138,9 +133,9 @@ int			is_special_char(char c);
 int			process_split(char **split);
 char		*get_env_value(char *str, size_t l);
 int			quote_status(char c, int ignore);
-int	is_special_char(char c);
-bool	isemptystring(const char *s);
-void	skip_quote(const char *s, size_t *i, size_t *count);
+int			is_special_char(char c);
+bool		isemptystring(const char *s);
+void		skip_quote(const char *s, size_t *i, size_t *count);
 
 // 
 //execution/start_execution

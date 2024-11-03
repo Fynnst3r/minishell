@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 15:34:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/20 18:51:05 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/03 19:04:42 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,6 @@ t_trashnode	*create_trash_node(void *pointer);
 
 //free.c
 void		delete_trash(void);
+void		ft_free(void *pointer);
 
 #endif

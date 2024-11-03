@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 15:28:09 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/20 18:52:23 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/03 20:32:15 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,21 @@ t_trashman	*init_garbage_collector(void)
 // }
 // int main()
 // {
-// 	char	*s1 = "Hello ";
-// 	char	*s2 = "World!";
+// 	// char	*s1 = "Hello ";
+// 	// char	*s2 = "World!";
 // 	char 	*ret;
-// 	// ret	= ft_strnjoin(s1, s2, 8);
-// 	ret = ft_strjoin_at(s1, s2, 2);
-// 	printf("%s", ret);
+// 	char 	*ret2;
+// 	char 	*ret42;
+// 	// // ret	= ft_strnjoin(s1, s2, 8);
+// 	// ret = ft_strjoin_at(s1, s2, 2);
+// 	ret = ft_strdup("duplicate");
+// 	ret2 = ft_strdup("duplicate2");
+// 	ret42 = ft_strdup("duplicate3");
+// 	// printf("%s\n", ret);
 // 	// free(ret);
+// 	ft_free(ret42);
+// 	ft_free(ret);
+// 	ft_free(ret2);
 // 	delete_trash();
 // 	ft_bzero(get_workers(), sizeof(t_trashman));
 // 	// system("leaks a.out");

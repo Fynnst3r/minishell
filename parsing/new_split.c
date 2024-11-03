@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 17:22:18 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/31 16:29:00 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/03 21:54:53 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static size_t	f_count_words(const char *s, size_t i, size_t count)
 	return (count);
 }
 
-static char	*fill_quote(char const *s, size_t *realL)
+static char	*fill_quote(char const *s, size_t *pl, char q)
 {
 	size_t	i;
 	size_t	l;
@@ -48,13 +48,18 @@ static char	*fill_quote(char const *s, size_t *realL)
 
 	i = 0;
 	l = 0;
-	while (s[i] != '\"' && s[i] != '\'')
+	while (s[i] != q && s[i])
 		i++;
 	l = i + 1;
-	while (s[l] != '\"' && s[l] != '\'')
+	while (s[l] != q && s[l])
 		l++;
+	if (s[i] == 0 || s[l] == 0)
+	{
+		printf("WHOOOOPS!\n");
+		exit(1);
+	}
 	ret = ft_substr(s, i, l);
-	*realL = l + 1;
+	*pl = l + 1;
 	return (ret);
 }
 
@@ -63,11 +68,19 @@ static int	fill_strings(char const *s, char **split, size_t i, size_t *l)
 	size_t	k;
 
 	k = 0;
+	printf("fill it up\n");
 	while (split[k])
 		k++;
 	if (s[i] == '\'' || s[i] == '\"')
 	{
-		split[k] = fill_quote(s, l);
+		printf("here\n");
+		printf("str = %s\n", &s[i]);
+		split[k] = fill_quote(s, l, s[i]);
+		if (s[*l] == '\'' || s[*l] == '\"')
+		{
+			i = *l;
+			fill_strings(s, split, i, l);
+		}
 		return (1);
 	}
 	split[k] = ft_substr(s, i, *l - i);
@@ -106,6 +119,8 @@ char	**new_split(char const *s)
 	size_t	word_count;
 
 	word_count = f_count_words(s, -1, 0);
+	printf("wc = %zu\n", word_count);
+	// exit(1);
 	split = ft_calloc(word_count + 1, sizeof(char *));
 	if (!split)
 		return (NULL);
@@ -113,24 +128,26 @@ char	**new_split(char const *s)
 		return (NULL);
 	return (split);
 }
+// cant fill but count string when quoted after quoted happens
+int	main (void)
+{
+	size_t	i;
+	char	**split;
+	char	*in;
 
-// int	main (void)
-// {
-// 	size_t	i;
-// 	char	**split;
-// 	char	*in;
-
-// 	in = ft_strdup("echo \"echo ||<><  ceho\"");
-// 	printf("input %s\n", in);
-// 	split = new_split(in);
-// 	printf("WTF IT SPLIT\n\n");
-// 	i = 0;
-// 	while (split[i])
-// 	{
-// 		printf("splt = %s\n", split[i]);
-// 		i++;
-// 	}
-// 		printf("\nsplt = %s\n\nsplitcount %zu\n", split[i], i);
-// 	// f_free_split_strs(split);
-// 	// system("leaks a.out");
-// }
+	init_garbage_collector();
+	in = ft_strdup("echo \"why ist \'es\' not\" ass \'  ");
+	printf("input %s\n", in);
+	split = new_split(in);
+	printf("WTF IT SPLIT\n\n");
+	i = 0;
+	while (split[i])
+	{
+		printf("splt = %s\n", split[i]);
+		i++;
+	}
+	printf("\nsplt = %s\n\nsplitcount %zu\n", split[i], i);
+	delete_trash();
+	ft_bzero(get_workers(), sizeof(t_trashman));
+	// system("leaks a.out");
+}
