@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/03 18:13:48 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/14 19:00:21 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@
 enum e_flags
 {
 	WORD,
-	O_PARANT,
-	C_PARANT,
 	SINGLE_Q,
 	DOUBLE_Q,
 	T_PIPE,
@@ -36,6 +34,15 @@ enum e_flags
 	REDIR_APP,
 	OTHER
 };
+
+typedef struct s_lexer
+{
+	char		*str;
+	size_t		position;
+	size_t		read_cursor;
+	char		last_c;
+	char		curr_c;
+}					t_lexer;
 
 typedef struct s_token
 {
@@ -46,7 +53,7 @@ typedef struct s_token
 
 	struct s_token	*next;
 	struct s_token	*previous;
-}			t_token;
+}						t_token;
 
 typedef struct s_data
 {
@@ -57,7 +64,7 @@ typedef struct s_data
 	char			*cmd_path;
 	int				origin_stdin;
 	int				origin_stdout;
-}t_data;
+}						t_data;
 
 typedef enum s_obj
 {
@@ -65,79 +72,63 @@ typedef enum s_obj
 	RED,
 	EXECUTE,
 	HEREDOC
-}t_obj;
+}					t_obj;
 
 typedef struct s_cmd
 {
-	t_obj	type;
-}t_cmd;
+	t_obj		type;
+}					t_cmd;
 
 typedef struct s_exec
 {
 	t_obj		type;
 	char		**argv;
-}t_exec;
+}					t_exec;
 
 typedef struct s_pipe
 {
-	t_obj	type;
-	t_cmd	*left;
-	t_cmd	*right;
-}t_pipe;
+	t_obj		type;
+	t_cmd		*left;
+	t_cmd		*right;
+}					t_pipe;
 
 typedef struct s_red
 {
-	t_obj	type;
-	int		mode;
-	char	*file;
-	int		fd;
-	t_cmd	*cmd;
-}t_red;
+	t_obj		type;
+	int			mode;
+	char		*file;
+	int			fd;
+	t_cmd		*cmd;
+}					t_red;
 
 typedef struct s_here_d
 {
-	t_obj	type;
-	t_cmd	*cmd;
-	char	*del;
-}t_hered;
+	t_obj		type;
+	t_cmd		*cmd;
+	char		*del;
+}					t_hered;
 
 //minishell.c
-// int			main(int ac, char **av, char **env);
 void		fill_env(t_data *data, char **env);
 
-//parsing/token_utils.c
-// void		make_token(t_token **token, char *str, int flag, int id);
+//parsing/new_lex.c
+void		start_lexer(char *input);
+char		*get_str(t_lexer *lex);
+
+//parsing/new_lex_utils.c
+int			is_special_char(char c);
 int			ft_isspace(char c);
-void		print_token_data(t_token *top);
-t_token		*make_token(void);
-void		token_add_back(t_token **last, t_token *new);
+bool		isemptystring(const char *s);
+void		skip_quote(const char *s, size_t *i);
+
+//parsing/token_utils.c
+void		make_token(t_token **tok, t_lexer *lexer);
 t_token		*find_last_token(t_token *t);
+void		print_token_data(t_token *top);
 
 //parsing/free.c
 void		free_tokens(t_token **t);
-char		**new_split(char const *s);
 
-//parsing/lexer.c
-void		start_lexer(char *input);
-
-//parsing/newsplit.c
-void		f_free_split_strs(char **split);
-int			is_special_char(char c);
-//parsing/newsplit_utils.c
-// int			catch_dollar_num(char *s);
-// char		*ft_strndup(char *s, size_t n);
-// char		*found_dollar_sign(char *s, size_t k);
-// char		*ft_strjoin_at(char *s1, char *s2, size_t start);
-
-//parsing/proccess_split.c
-int			process_split(char **split);
-char		*get_env_value(char *str, size_t l);
-int			quote_status(char c, int ignore);
-int			is_special_char(char c);
-bool		isemptystring(const char *s);
-void		skip_quote(const char *s, size_t *i, size_t *count);
-
-// 
 //execution/start_execution
 void		start_exec(t_data *data);
 void		exec_execu(t_exec *st_node, t_data *data);

@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_split_utils.c                                  :+:      :+:    :+:   */
+/*   new_lex_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:37:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/03 21:36:56 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/14 18:56:56 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
 int	is_special_char(char c)
 {
 	if (c == '|' || c == '>' || c == '<')
+		return (1);
+	return (0);
+}
+
+int	ft_isspace(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\v'
+		|| c == '\r' || c == '\n')
 		return (1);
 	return (0);
 }
@@ -34,17 +41,19 @@ bool	isemptystring(const char *s)
 	return (1);
 }
 
-void	skip_quote(const char *s, size_t *i, size_t *count)
+void	skip_quote(const char *s, size_t *i)
 {
 	if (s[*i] == '\'')
 	{
 		(*i)++;
 		while (s[*i] != '\'' && s[*i])
 			(*i)++;
-		(*count)++;
-		(*i)++;
-		if (s[*i] == '\'' || s[*i] == '\"')
-			skip_quote(s, i, count);
+
+		if (s[*i] == 0)
+		{
+			printf("FALSCH!!!!!!!!!!!!!!one \' too much man!!!!!!!!!!!!\n");
+			exit(1);
+		}
 		return ;
 	}
 	if (s[*i] == '\"')
@@ -52,10 +61,11 @@ void	skip_quote(const char *s, size_t *i, size_t *count)
 		(*i)++;
 		while (s[*i] != '\"' && s[*i])
 			(*i)++;
-		(*count)++;
-		(*i)++;
-		if (s[*i] == '\'' || s[*i] == '\"')
-			skip_quote(s, i, count);
+		if (s[*i] == 0)
+		{
+			printf("FALSCH!!!!!!!!!!!!!!one \" too much man!!!!!!!!!!!!\n");
+			exit(1);
+		}
 		return ;
 	}
 }
@@ -107,31 +117,35 @@ void	skip_quote(const char *s, size_t *i, size_t *count)
 // // 	return (dup);
 // // }
 
-// char	*ft_strjoin_at(char *s1, char *s2, size_t start)
-// {
-// 	size_t	i;
-// 	size_t	l;
-// 	char	*join;
+char	*ft_strjoin_at(char *s1, char *s2, size_t start)
+{
+	size_t	i;
+	size_t	l;
+	char	*join;
 
-// 	i = 0;
-// 	l = 0;
-// 	join = ft_malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1 - start));
-// 	if (!join)
-// 		return (NULL);
-// 	while (s1[i] && i != start - 1)
-// 	{
-// 		join[i] = s1[i];
-// 		i++;
-// 	}
-// 	while (s2[l])
-// 	{
-// 		join[i] = s2[l];
-// 		i++;
-// 		l++;
-// 	}
-// 	join[i] = 0;
-// 	return (join);
-// }
+	i = 0;
+	l = 0;
+	if (!s1 || !s2)
+		return (NULL);
+	join = ft_malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1 - start));
+	if (!join)
+		return (NULL);
+	while (s1[i] && i != start - 1)
+	{
+		join[i] = s1[i];
+		i++;
+	}
+	while (s2[l])
+	{
+		join[i] = s2[l];
+		i++;
+		l++;
+	}
+	free(s1);
+	free(s2);
+	join[i] = 0;
+	return (join);
+}
 
 // char	*found_dollar_sign(char *s, size_t k)
 // {
