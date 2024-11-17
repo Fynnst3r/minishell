@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/14 18:56:51 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/17 22:13:05 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,46 @@ void	print_token_data(t_token *top)
 	tmp = top;
 	while (tmp)
 	{
-		printf("STRING[%d]=%s\n", count, tmp->str);
-		printf("TYPE[%d]=%d\n\n", count, tmp->type);
+		// if (tmp->previous)
+		// 	printf("PREVIOUSSTRING[%d]=%s\n", count, tmp->previous->str);
+		printf(ANSI_GREEN"STRING	[%d]=%s\n"ANSI_RESET, count, tmp->str);
+		// if (tmp->next)
+		// 	printf("NEXTSTRING[%d]=%s\n", count, tmp->next->str);
+		printf(ANSI_YELLOW"LEN	[%d]=%zu\n"ANSI_RESET, count, tmp->len);
+		printf(ANSI_RED"TYPE	[%d]=%d\n"ANSI_RESET, count, tmp->type);
+		printf(ANSI_BLUE"ID	[%d] = %i\n\n"ANSI_RESET, count, tmp->id);
 		count++;
+		tmp = tmp->next;
+	}
+}
+
+t_token	*find_id(t_token *t, int find)
+{
+	t_token	*tmp;
+
+	if (!t)
+		return (NULL);
+	tmp = t;
+	while (tmp && find != tmp->id)
+	{
+		tmp = tmp->next;
+	}
+	return (tmp);
+}
+
+void	set_token_id(t_token *t)
+{
+	t_token	*tmp;
+	int		id;
+
+	if (!t)
+		return ;
+	tmp = t;
+	id = 0;
+	while (tmp)
+	{
+		id++;
+		tmp->id = id;
 		tmp = tmp->next;
 	}
 }
@@ -39,12 +76,12 @@ t_token	*find_last_token(t_token *t)
 	return (tmp);
 }
 
-void	make_token(t_token **tok, t_lexer *lexer)
+void	make_token(t_token **toktop, t_lexer *lexer)
 {
 	t_token	*node;
 	t_token	*last_node;
 
-	if (!tok)
+	if (!toktop)
 		return ;
 	node = ft_malloc(sizeof(t_token));
 	if (!node)
@@ -54,13 +91,41 @@ void	make_token(t_token **tok, t_lexer *lexer)
 	if (node->str)
 		node->len = ft_strlen(node->str);
 	node->next = NULL;
-	if (*tok == NULL)
+	if (*toktop == NULL)
 	{
-		*tok = node;
+		node->id = 0;
+		*toktop = node;
 		node->previous = NULL;
 		return ;
 	}
-	last_node = find_last_token(*tok);
+	last_node = find_last_token(*toktop);
+	last_node->next = node;
+	node->previous = last_node;
+}
+
+void	make_special_token(t_token **toktop, char *str, int e_flag)
+{
+	t_token	*node;
+	t_token	*last_node;
+
+	if (!toktop)
+		return ;
+	node = ft_malloc(sizeof(t_token));
+	if (!node)
+		return ;
+	ft_bzero(node, sizeof(t_token));
+	node->str = ft_strdup(str);
+	node->type = e_flag;
+	if (node->str)
+		node->len = ft_strlen(node->str);
+	node->next = NULL;
+	if (*toktop == NULL)
+	{
+		*toktop = node;
+		node->previous = NULL;
+		return ;
+	}
+	last_node = find_last_token(*toktop);
 	last_node->next = node;
 	node->previous = last_node;
 }

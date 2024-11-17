@@ -6,23 +6,21 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/14 18:55:01 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/17 21:56:51 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+		// printf("HUH?!?\n c = %c\n", lex->str[l]);
+	// printf("get_str sutaato\n position %zu\n", l);
 char	*get_str(t_lexer *lex)
 {
 	char	*ret;
-	char	*value;
-	char	*tmp;
 	size_t	l;
-	char	*getenvalue;
 
 	l = lex->position;
 	ret = NULL;
-	printf("get_str sutaato\n position %zu\n", l);
 	while (lex->str[l])
 	{
 		lex->read_cursor = l;
@@ -31,7 +29,6 @@ char	*get_str(t_lexer *lex)
 			skip_quote(lex->str, &l);
 		lex->last_c = lex->str[l];
 		l++;
-		// printf("HUH?!?\n c = %c\n", lex->str[l]);
 		if (is_special_char(lex->str[l]) || ft_isspace(lex->str[l]))
 		{
 			printf("BREAK ; \n");
@@ -61,18 +58,39 @@ t_lexer	init_lex(char *input)
 void	start_lexer(char *input)
 {
 	t_token	*token_top;
-	size_t	i;
 	t_lexer	lexer;
+	t_ast	*ast;
+	bool	skip;
 
 	token_top = NULL;
 	add_history(input);
-	i = 0;
 	lexer = init_lex(input);
-	while (input[i])
+	skip = false;
+	while (input[lexer.position])
 	{
-		i = lexer.position;
-		make_token(&token_top, &lexer);
+		while (is_special_char(input[lexer.position]))
+		{
+			printf("XDDDDDDDDD\n");
+			skip = true;
+			if (handle_special(input, &lexer, &token_top, lexer.position))
+			{
+				printf("HANDLE ERROR!\n");
+				// exit(1);
+			}
+		}
+		while (ft_isspace(input[lexer.position]))
+			lexer.position++;
+		if (!skip)
+			make_token(&token_top, &lexer);
+		skip = false;
 	}
+	// start makin ast nodes "s_node"
+	// scan for pipes
+	// assign type and scan for args and redirs
+	// convert $
+	// ?check syntax?
+	set_token_id(token_top);
+	ast = make_ast(&token_top);
 	printf("*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n");
 	print_token_data(token_top);
 	printf("*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n");

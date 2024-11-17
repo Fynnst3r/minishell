@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/06 14:45:08 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/17 19:09:18 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 int	main(int ac, char **av, char**env)
 {
 	char	*input;
-	t_data	data;
+	// t_data	data;
 
-	data.argc = ac;
+	// data.argc = ac;
 	(void)av;
 	while (1)
 	{
@@ -41,22 +41,22 @@ int	main(int ac, char **av, char**env)
 	// free_tokens(&tokens);
 }
 
-void	fill_env(t_data *data, char **env)
-{
-	size_t	i;
-	size_t	j;
+// void	fill_env(t_data *data, char **env)
+// {
+// 	size_t	i;
+// 	size_t	j;
 
-	i = 0;
-	while (env[i] != NULL)
-		i++;
-	data->env = (char **)ft_malloc((i + 1) * (sizeof(char *)));
-	if (!data->env)
-		printf("error!");
-	j = 0;
-	while (j < i)
-	{
-		data->env[j] = ft_strdup(env[j]);
-		j++;
-	}
-	data->env[i] = NULL;
-}
+// 	i = 0;
+// 	while (env[i] != NULL)
+// 		i++;
+// 	data->env = (char **)ft_malloc((i + 1) * (sizeof(char *)));
+// 	if (!data->env)
+// 		printf("error!");
+// 	j = 0;
+// 	while (j < i)
+// 	{
+// 		data->env[j] = ft_strdup(env[j]);
+// 		j++;
+// 	}
+// 	data->env[i] = NULL;
+// }

@@ -8,6 +8,7 @@ SRCS = 	minishell.c\
 		parsing/new_lex.c\
 		parsing/new_lex_utils.c\
 		parsing/token_utils.c\
+		parsing/make_ast.c\
 		garbage_collector/garbage_start.c\
 		garbage_collector/ft_malloc.c\
 		garbage_collector/free.c
