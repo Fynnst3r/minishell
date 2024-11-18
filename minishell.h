@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/17 22:09:27 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/18 22:36:43 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ enum e_flags
 	T_OUT,
 	T_APP,
 	T_HERE,
-	ETC
+	PATH
 };
 
 typedef struct s_lexer
@@ -99,11 +99,11 @@ typedef struct s_ast
 
 typedef enum e_redirtype
 {
-	T_CREATE,// efg. SHELL: > filename		makes a new file and asks for a string to put in to file.
-	T_REDIN,
-	T_REDOUT,
-	T_APPEND,
-	T_HEREDOC
+	// T_CREATE,// efg. SHELL: > filename		makes a new file and asks for a string to put in to file.
+	T_REDIN = 4,
+	T_REDOUT = 5,
+	T_APPEND = 6,
+	T_HEREDOC = 7
 }	t_redirtype;
 
 typedef struct s_redir 	t_redir;
@@ -113,10 +113,10 @@ typedef struct s_redir 	t_redir;
 */
 typedef struct s_redir
 {
-	t_redir		*next;
 	t_redirtype	type;
 	char		*file;
 	char		*delimeter;
+	t_redir		*next;
 }	t_redir;
 
 typedef struct s_pipe
@@ -138,7 +138,7 @@ typedef struct s_command
 // void		fill_env(t_data *data, char **env);
 
 //parsing/new_lex.c
-void		start_lexer(char *input);
+t_ast		*start_lexer(char *input);
 char		*get_str(t_lexer *lex);
 t_lexer		init_lex(char *input);
 
@@ -147,12 +147,14 @@ int			is_special_char(char c);
 int			ft_isspace(char c);
 bool		isemptystring(const char *s);
 void		skip_quote(const char *s, size_t *i);
-int	handle_special(char *input, t_lexer *lex, t_token **toktop, size_t start);
+int			handle_special(char *input, t_lexer *lex, t_token **toktop,
+				size_t start);
 
 //parsing/token_utils.c
 void		print_token_data(t_token *top);
-void		set_token_id(t_token *t);
 t_token		*find_id(t_token *t, int find);
+void		set_token_id(t_token *t);
+void		set_token_types(t_token *t);
 t_token		*find_last_token(t_token *t);
 void		make_token(t_token **tok, t_lexer *lexer);
 void		make_special_token(t_token **toktop, char *str, int e_flag);
@@ -229,3 +231,5 @@ void		free_tokens(t_token **t);//??????
 // void		pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
 // void		pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
 #endif
+
+// echo -n nigger aahaahahahahAHAHHAAHAHH AHHAH AHAH AHAHA HAHA HH AHAHHAAHAHAHHAH >ass 

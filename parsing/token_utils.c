@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/17 22:13:05 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/18 21:52:38 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	print_token_data(t_token *top)
 	static int	count = 0;
 
 	tmp = top;
+	printf("*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n");
 	while (tmp)
 	{
 		// if (tmp->previous)
@@ -31,6 +32,7 @@ void	print_token_data(t_token *top)
 		count++;
 		tmp = tmp->next;
 	}
+	printf("*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n");
 }
 
 t_token	*find_id(t_token *t, int find)
@@ -62,6 +64,25 @@ void	set_token_id(t_token *t)
 		tmp->id = id;
 		tmp = tmp->next;
 	}
+}
+
+void	set_token_types(t_token *t)
+{
+	if (!t)
+		return ;
+	if (t->str)
+	{
+		if (t->str[0] == '\'')
+			t->type = SINGLE_Q;
+		else if (t->str[0] == '\"')
+			t->type = DOUBLE_Q;
+		else
+			t->type = WORD;
+	}
+	if (t->previous)
+		if (t->previous->type == T_APP || t->previous->type == T_IN
+			|| t->previous->type == T_OUT || t->previous->type == T_HERE)
+			t->type = PATH;
 }
 
 t_token	*find_last_token(t_token *t)
@@ -101,6 +122,7 @@ void	make_token(t_token **toktop, t_lexer *lexer)
 	last_node = find_last_token(*toktop);
 	last_node->next = node;
 	node->previous = last_node;
+	set_token_types(node);
 }
 
 void	make_special_token(t_token **toktop, char *str, int e_flag)

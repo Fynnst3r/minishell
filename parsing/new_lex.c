@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/17 21:56:51 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/18 19:03:52 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_lexer	init_lex(char *input)
 	return (lex);
 }
 
-void	start_lexer(char *input)
+t_ast	*start_lexer(char *input)
 {
 	t_token	*token_top;
 	t_lexer	lexer;
@@ -70,13 +70,9 @@ void	start_lexer(char *input)
 	{
 		while (is_special_char(input[lexer.position]))
 		{
-			printf("XDDDDDDDDD\n");
 			skip = true;
 			if (handle_special(input, &lexer, &token_top, lexer.position))
-			{
-				printf("HANDLE ERROR!\n");
-				// exit(1);
-			}
+				printf(ANSI_RED"!!!!!!!!HANDLE ERROR!!!!!!!!!\n"ANSI_RESET);
 		}
 		while (ft_isspace(input[lexer.position]))
 			lexer.position++;
@@ -84,18 +80,17 @@ void	start_lexer(char *input)
 			make_token(&token_top, &lexer);
 		skip = false;
 	}
+	set_token_id(token_top);
+	print_token_data(token_top);
+	ast = make_ast(&token_top);
+	token_top = NULL; //put at end of token use (and free them)
+	return (ast);
+}
 	// start makin ast nodes "s_node"
 	// scan for pipes
 	// assign type and scan for args and redirs
 	// convert $
 	// ?check syntax?
-	set_token_id(token_top);
-	ast = make_ast(&token_top);
-	printf("*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n");
-	print_token_data(token_top);
-	printf("*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n");
-	token_top = NULL;
-}
 
 // int main()
 // {
