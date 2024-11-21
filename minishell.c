@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/17 19:09:18 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/21 18:45:26 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,22 @@
 int	main(int ac, char **av, char**env)
 {
 	char	*input;
-	// t_data	data;
+	t_data	data;
+	t_ast	*ast;
 
-	// data.argc = ac;
+	data.argc = ac;
 	(void)av;
 	while (1)
 	{
-		input = readline("YM_FF_SHELL: ");
-		if (!input)
+		data.input = readline("YM_FF_SHELL: ");
+		if (!data.input)
 			exit(1); //unfinished
-		if (!*input)
+		if (!*data.input)
 			continue ;
-		if (input)
+		if (data.input)
 		{
 			init_garbage_collector();
-			start_lexer(input);
+			ast = start_lexer(data.input);
 			// fake_exec(tokens);
 			// free(input);
 			delete_trash();

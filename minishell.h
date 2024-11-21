@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/18 22:36:43 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/21 20:31:44 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct s_lexer
 {
 	char		*str;
 	size_t		position;
-	size_t		read_cursor;
+	size_t		read;
 	char		last_c;
 	char		curr_c;
 }					t_lexer;
@@ -81,6 +81,18 @@ typedef struct s_token
 */
 
 //type um 'data' in t_node auf anderes struct zu casten
+// yannisdata
+typedef struct s_data
+{
+	struct s_cmd	*st_node;
+	char			*input;
+	int				argc;
+	char			**env;
+	char			*cmd_path;
+	int				origin_stdin;
+	int				origin_stdout;
+}						t_data;
+// yannisdata
 typedef enum s_type
 {
 	PIPE,
@@ -167,7 +179,7 @@ void		free_tokens(t_token **t);//??????
 // typedef struct s_data
 // {
 // 	struct s_cmd	*st_node;
-// 	const char		*input;
+// 	char		*input;
 // 	int				argc;
 // 	char			**env;
 // 	char			*cmd_path;
@@ -231,5 +243,3 @@ void		free_tokens(t_token **t);//??????
 // void		pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
 // void		pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
 #endif
-
-// echo -n nigger aahaahahahahAHAHHAAHAHH AHHAH AHAH AHAHA HAHA HH AHAHHAAHAHAHHAH >ass 

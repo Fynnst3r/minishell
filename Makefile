@@ -2,8 +2,7 @@ NAME = minishell
 
 CC = cc
 
-FLAGS = -Wall -Wextra -Werror -lreadline 
-#  -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -lreadline -g -fsanitize=address
 SRCS = 	minishell.c\
 		parsing/new_lex.c\
 		parsing/new_lex_utils.c\

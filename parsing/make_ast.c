@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 19:17:36 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/18 22:50:48 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/21 19:44:20 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,10 @@ void	make_redir_node(t_redir **redirtop, t_token *tok, int type)
 
 	if (!redirtop)
 		return ;
-	node = ft_malloc(sizeof(t_redir));
+	node = ft_calloc(sizeof(t_redir), 1);
 	if (!node)
 		return ;
-	print_token_data(tok);
-	ft_bzero(node, sizeof(t_redir));
+	// print_token_data(tok);
 	node->file = NULL;
 	node->type = type;
 	if (node->type == T_HERE)
@@ -93,12 +92,11 @@ t_command	*create_cmd_ast(t_token *toktop)
 	size_t		i;
 
 	tok = toktop;
-	cmd = ft_malloc(sizeof(t_command));
+	cmd = ft_calloc(sizeof(t_command), 1);
 	cmd->redirs = NULL;
 	cmd->name = set_cmd_name(tok->str, tok->type);
 	tok = tok->next;
-	cmd->argv = ft_malloc(sizeof(char *) * (count_args(tok) + 1)); // NOT NULL TERMINATED!
-	ft_bzero(cmd->argv, count_args(tok) + 1);
+	cmd->argv = ft_calloc(sizeof(char *), (count_args(tok) + 1)); // NOT NULL TERMINATED!
 	red = NULL;
 	i = 0;
 	while (tok)
@@ -110,7 +108,6 @@ t_command	*create_cmd_ast(t_token *toktop)
 		else if (tok->type == PATH)
 			make_redir_node(&red, tok, tok->previous->type);
 		tok = tok->next;
-	printf("sexy and i know it\n");
 	}
 	cmd->redirs = red;
 	return (cmd);
@@ -156,6 +153,7 @@ t_ast	*make_ast(t_token **toktop)
 		
 	// 	tokentmp = find_id(*toktop, id);
 	// }
+	printf(ANSI_BRIGHT_MAGENTA"NAME = %s\n"ANSI_RESET, cmd->name);
 	while (cmd->argv[id])
 	{
 		printf("argv = %s\n", cmd->argv[id]);

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/18 21:52:38 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/21 20:43:57 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	set_token_id(t_token *t)
 	}
 }
 
+// sets all non redirection types to their suitable word type.
 void	set_token_types(t_token *t)
 {
 	if (!t)
@@ -104,10 +105,9 @@ void	make_token(t_token **toktop, t_lexer *lexer)
 
 	if (!toktop)
 		return ;
-	node = ft_malloc(sizeof(t_token));
+	node = ft_calloc(sizeof(t_token), 1);
 	if (!node)
 		return ;
-	ft_bzero(node, sizeof(t_token));
 	node->str = get_str(lexer);
 	if (node->str)
 		node->len = ft_strlen(node->str);
@@ -132,7 +132,7 @@ void	make_special_token(t_token **toktop, char *str, int e_flag)
 
 	if (!toktop)
 		return ;
-	node = ft_malloc(sizeof(t_token));
+	node = ft_calloc(sizeof(t_token), 1);
 	if (!node)
 		return ;
 	ft_bzero(node, sizeof(t_token));
