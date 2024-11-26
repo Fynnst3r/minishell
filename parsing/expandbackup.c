@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expander.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/26 23:54:08 by fforster         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 static int	ft_isspace2(char c)
 {
@@ -54,44 +42,55 @@ static char	*add_char(char *ret, char add)
 	return (added);
 }
 
-static char	*stop_expand(char *s, char *ret, t_lexer *l, int type)
-{
-	l->position += 1;
-	while (s[l->position] != '\''&& s[l->position])
-	{
-		if (type != DOUBLE_Q)
-			ret = add_char(ret, s[l->position]);
-		l->position++;
-	}
-	// if (type == DOUBLE_Q)
-		// l->position -= 1;
-	return (ret);
-}
-
 char	*ft_strjoin_at(char *s1, char *s2, t_lexer *l)
 {
 	size_t	i;
 	size_t	x;
 	char	*join;
 
-	i = -1;
+	i = 0;
 	x = 0;
+	// printf(ANSI_MAGENTA"JOINSTART\n");
 	if (*s1 == 0)
 	{
 		ft_free(s1);
 		s1 = l->str;
+		// printf("l.str = %s\n", l->str);
 	}
+		// printf("s1 = %s\n", s1);
 	if (!s1 || !s2)
 		return (NULL);
+	// printf("len s1 = %zu, len s2 = %zu === %zu\n", ft_strlen(s1), ft_strlen(s2), (ft_strlen(s1) + ft_strlen(s2)));
+	// printf("at position %zu and c = %c\n", l->position, s1[l->position]);
+	// printf("l.read = %zu\n", l->read);
 	join = ft_calloc(sizeof(char), (ft_strlen(s1) + ft_strlen(s2) + 1));
-	while (s1[++i])
+	while (s1[i]) //this makes it stop from the input str NOT the ret str...
+	// how do i keep track of curr $ position, how will i fill ret without losing input str
+	{
 		join[i] = s1[i];
+		// printf("join[i = %zu] == %c\n", i, join[i]);
+		i++;
+	}
 	while (s2[x])
-		join[i++] = s2[x++];
+	{
+		// printf("join s2 '%c'\n", s2[x]);
+		join[i] = s2[x];
+		i++;
+		x++;
+	}
+	// printf("stopped at '%c'\n", s2[x]);
 	ft_free(s1);
 	ft_free(s2);
 	s1 = NULL;
 	s2 = NULL;
+	// l->position = l->read;
+	// l->read = 0;
+	// join[i] = 0;
+		// printf("stopped iter '%zu'\n", i);
+		// printf("join len '%zu'\n", ft_strlen(join));
+		// printf("l.pos = %zu\n", l->position);
+		// printf("l.read = %zu\n", l->read);
+	// printf("JOIN END\n"ANSI_RESET);
 	return (join);
 }
 
@@ -114,9 +113,6 @@ char	*check_val(char *s, t_lexer *l)
 
 	l->read = l->position + 1;
 	while (s[l->read] != '$' && s[l->read] != ' ' && s[l->read] != 0)
-		// && s[l->read] != '\'' && s[l->read] != '\"')  sometimes the ' stays...
-		// in a DOUBLE_Q e.g. echo "hi '$USER$shit'so what"
-				// should be bash:hi 'fforster'so what		but it is stopping at '
 	{
 		printf("read++\n");
 		l->read++;
@@ -139,22 +135,29 @@ char	*get_exp_str(char *s, int type)
 	t_lexer	l;
 	char	*val;
 	char	*ret;
+	bool	sq;
 
 	l = init_lexs(s);
 	ret = ft_strdup("");
+	if (type == SINGLE_Q)
+		sq = true;
 	while (s[l.position])
 	{
-		if (s[l.position] == '\'')
-			ret = stop_expand(s, ret, &l, type);
-		else if (s[l.position] == '$' && type != SINGLE_Q)
+		if (s[l.position] == '$' && !sq)
 		{
 			// printf(ANSI_RED"$$$$$$$$$WARUM?!?!?!?\n"ANSI_RESET);
-			// printf("at position %zu and c = \'%c\'\n", l.position, s[l.position]);
-			// printf("l.read = %zu\n", l.read);
+			printf("at position %zu and c = \'%c\'\n", l.position, s[l.position]);
+			printf("l.read = %zu\n", l.read);
 			val = check_val(s, &l);
 			if (val)
 				ret = ft_strjoin_at(ret, val, &l);
-			l.position = l.read;
+			// else
+			// {
+			// 	printf(ANSI_BG_BRIGHT_BLUE"HELLOOO we are at pos %zu\n"ANSI_RESET, l.position);
+				l.position = l.read;
+			// 	printf("no val, at position %zu and c = \'%c\'\n", l.position, s[l.position]);
+			// 	printf("l.read = %zu\n", l.read);
+			// }
 		}
 		else
 		{
@@ -162,11 +165,11 @@ char	*get_exp_str(char *s, int type)
 			printf(ANSI_BRIGHT_YELLOW"curr ret = \"%s\"\n"ANSI_RESET, ret);
 			l.position++;
 		}
-		// printf("strjoin RET = %s\n", ret);
+		printf("strjoin RET = %s\n", ret);
 			// else remove $ and subtring
 		// printf(ANSI_RED"WARUM?!?!?!?\n"ANSI_RESET);
 	}
-	printf(ANSI_MAGENTA"\n\nEXP STR RET = %s\n"ANSI_RESET, ret);
+	printf("\n\nEXP STR RET = %s\n", ret);
 	return (ret);
 }
 
@@ -211,9 +214,9 @@ char	*expand_tokens(t_token **toktop)
 int main()
 {
 	init_garbage_collector();
-	char	*test = ft_strdup("hi $USER$shit so what is it \'$USER\' ?\"");
+	char	*test = ft_strdup("hi $USER$shit so what is it $USER ?");
 	// t_lexer l = init_lexs(test);
-	get_exp_str(test, DOUBLE_Q);
+	get_exp_str(test, WORD);
 	delete_trash();
 	ft_bzero(get_workers(), sizeof(t_trashman));
 	// printf("test %s\n",  expand_quote(test, DOUBLE_Q));

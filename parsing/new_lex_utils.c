@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:37:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/21 18:46:07 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:52:07 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,36 +160,6 @@ int	handle_special(char *input, t_lexer *lex, t_token **toktop, size_t start)
 // // 	dup[i] = 0;
 // // 	return (dup);
 // // }
-
-char	*ft_strjoin_at(char *s1, char *s2, size_t start)
-{
-	size_t	i;
-	size_t	l;
-	char	*join;
-
-	i = 0;
-	l = 0;
-	if (!s1 || !s2)
-		return (NULL);
-	join = ft_malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1 - start));
-	if (!join)
-		return (NULL);
-	while (s1[i] && i != start - 1)
-	{
-		join[i] = s1[i];
-		i++;
-	}
-	while (s2[l])
-	{
-		join[i] = s2[l];
-		i++;
-		l++;
-	}
-	free(s1);
-	free(s2);
-	join[i] = 0;
-	return (join);
-}
 
 // char	*found_dollar_sign(char *s, size_t k)
 // {
