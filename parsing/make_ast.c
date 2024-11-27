@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 19:17:36 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/21 19:44:20 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:31:53 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ int	has_pipe(t_token *t)
 char	*set_cmd_name(char *s, int type)
 {
 	char	*ret;
-	if (type == DOUBLE_Q || type == SINGLE_Q)
-	{
-		ret = s;
-			printf(ANSI_BG_CYAN"Conversion of $ here\n"ANSI_RESET);
-	}
+	// if (type == DOUBLE_Q || type == SINGLE_Q)
+	// {
+	// 	ret = s;
+	// 		printf(ANSI_BG_CYAN"Conversion of $ here\n"ANSI_RESET);
+	// }
 	ret = s;
 	return (ret);
 }
@@ -47,7 +47,7 @@ size_t	count_args(t_token *t)
 	count = 0;
 	while (tmp)
 	{
-		if (tmp->type == WORD || tmp->type == SINGLE_Q || tmp->type == DOUBLE_Q)
+		if (tmp->type == WORD)
 			count++;
 		tmp = tmp->next;
 	}

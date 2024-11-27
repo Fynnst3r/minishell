@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/26 15:52:12 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 17:18:22 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,10 @@ t_token		*find_last_token(t_token *t);
 void		make_token(t_token **tok, t_lexer *lexer);
 void		make_special_token(t_token **toktop, char *str, int e_flag);
 
+//parsing/expander.c
+void		expand_tokens(t_token **toktop);
+char		*check_val(char *s, t_lexer *l);
+char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l);
 //make_ast.c
 t_ast		*make_ast(t_token **toktop);
 //parsing/free.c

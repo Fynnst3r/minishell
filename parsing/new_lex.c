@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/21 18:45:31 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:36:36 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ t_ast	*start_lexer(char *input)
 		skip = false;
 	}
 	set_token_id(token_top);
+	expand_tokens(&token_top);
 	print_token_data(token_top);
 	ast = make_ast(&token_top);
 	token_top = NULL; //put at end of token use (and free them)

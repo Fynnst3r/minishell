@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/21 20:43:57 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:33:40 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,13 @@ void	set_token_id(t_token *t)
 }
 
 // sets all non redirection types to their suitable word type.
+// PATH has been set in handle_special and make_special token
 void	set_token_types(t_token *t)
 {
 	if (!t)
 		return ;
 	if (t->str)
-	{
-		if (t->str[0] == '\'')
-			t->type = SINGLE_Q;
-		else if (t->str[0] == '\"')
-			t->type = DOUBLE_Q;
-		else
-			t->type = WORD;
-	}
+		t->type = WORD;
 	if (t->previous)
 		if (t->previous->type == T_APP || t->previous->type == T_IN
 			|| t->previous->type == T_OUT || t->previous->type == T_HERE)

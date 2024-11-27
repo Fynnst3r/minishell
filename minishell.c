@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/21 18:45:26 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 16:32:58 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int ac, char **av, char**env)
 	(void)av;
 	while (1)
 	{
-		data.input = readline("YM_FF_SHELL: ");
+		data.input = readline(ANSI_BOLD ANSI_CYAN"YM_FF_SHELL: "ANSI_RESET);
 		if (!data.input)
 			exit(1); //unfinished
 		if (!*data.input)
