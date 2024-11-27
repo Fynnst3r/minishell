@@ -6,13 +6,13 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 17:33:42 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 19:32:01 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*add_char(char *ret, char add)
+char	*add_char(char *ret, char add, size_t *position)
 {
 	char	*added;
 	size_t	i;
@@ -31,42 +31,8 @@ static char	*add_char(char *ret, char add)
 	added[i] = add;
 	ft_free(ret);
 	ret = NULL;
+	(*position)++;
 	return (added);
-}
-
-static char	*keep_expanding(char *s, char *ret, t_lexer *l, int type)
-{
-	char	*val;
-
-	ret = add_char(ret, s[l->position]);
-	l->position += 1;
-	while (s[l->position] != '\"' && s[l->position])
-	{
-		if (s[l->position] == '$' && type != SINGLE_Q)
-		{
-			val = check_val(s, l);
-			if (val)
-				ret = ft_strjoin_at(ret, val, l);
-			l->position = l->read;
-		}
-		else
-		{
-			ret = add_char(ret, s[l->position]);
-			l->position++;
-		}
-	}
-	return (ret);
-}
-
-static char	*stop_expanding(char *s, char *ret, t_lexer *l, int type)
-{
-	l->position += 1;
-	while (s[l->position] != '\'' && s[l->position])
-	{
-		ret = add_char(ret, s[l->position]);
-		l->position++;
-	}
-	return (ret);
 }
 
 char	*ft_strjoin_at(char *s1, char *s2, t_lexer *l)
@@ -110,7 +76,7 @@ char	*check_val(char *s, t_lexer *l)
 	return (val);
 }
 
-char	*get_exp_str(char *s, int type)
+static char	*get_exp_str(char *s, int type)
 {
 	t_lexer	l;
 	char	*val;
@@ -122,7 +88,7 @@ char	*get_exp_str(char *s, int type)
 	{
 		if (s[l.position] == '\"')
 			ret = keep_expanding(s, ret, &l, type);
-		if (s[l.position] == '\'')
+		else if (s[l.position] == '\'')
 			ret = stop_expanding(s, ret, &l, type);
 		else if (s[l.position] == '$' && type != SINGLE_Q)
 		{
@@ -132,10 +98,7 @@ char	*get_exp_str(char *s, int type)
 			l.position = l.read;
 		}
 		else
-		{
-			ret = add_char(ret, s[l.position]);
-			l.position++;
-		}
+			ret = add_char(ret, s[l.position], &l.position);
 	}
 	return (ret);
 }
@@ -147,8 +110,10 @@ void	expand_tokens(t_token **toktop)
 	tmp = *toktop;
 	while (tmp)
 	{
-		if (tmp->type == SINGLE_Q || DOUBLE_Q || WORD || PATH)
+		if (tmp->type == WORD || PATH)
 			tmp->str = get_exp_str(tmp->str, tmp->type);
+		if (tmp->str)
+			tmp->len = ft_strlen(tmp->str);
 		tmp = tmp->next;
 	}
 }

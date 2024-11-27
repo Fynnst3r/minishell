@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 16:32:58 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 20:36:40 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int ac, char **av, char**env)
 	{
 		data.input = readline(ANSI_BOLD ANSI_CYAN"YM_FF_SHELL: "ANSI_RESET);
 		if (!data.input)
-			exit(1); //unfinished
+			exit(1); //unfinished needs to free potential AST
 		if (!*data.input)
 			continue ;
 		if (data.input)

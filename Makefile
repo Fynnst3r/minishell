@@ -4,11 +4,12 @@ CC = cc
 
 FLAGS = -Wall -Wextra -Werror -lreadline -g -fsanitize=address
 SRCS = 	minishell.c\
-		parsing/new_lex.c\
-		parsing/new_lex_utils.c\
+		parsing/start_lexer.c parsing/lexer_utils.c\
+		parsing/make_token.c\
 		parsing/token_utils.c\
 		parsing/make_ast.c\
-		parsing/expander.c\
+		parsing/expander.c parsing/expander_utils.c\
+		error/error.c\
 		garbage_collector/garbage_start.c\
 		garbage_collector/ft_malloc.c\
 		garbage_collector/free.c

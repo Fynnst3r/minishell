@@ -1,16 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_lex_utils.c                                    :+:      :+:    :+:   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:37:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/26 15:52:07 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 21:08:49 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+t_lexer	init_lex(char *input)
+{
+	t_lexer	lex;
+
+	lex.str = input;
+	lex.position = 0;
+	lex.read = 0;
+	lex.last_c = 0;
+	lex.curr_c = 0;
+	return (lex);
+}
 
 // special chars are '|' '>' '<' returns 1 if so
 int	is_special_char(char c)
@@ -28,21 +40,7 @@ int	ft_isspace(char c)
 	return (0);
 }
 
-bool	isemptystring(const char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (!ft_isspace(s[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-void	skip_quote(const char *s, size_t *i)
+void	skip_quote(const char *s, size_t *i, t_token **toktop)
 {
 	if (s[*i] == '\'')
 	{
@@ -51,10 +49,7 @@ void	skip_quote(const char *s, size_t *i)
 			(*i)++;
 
 		if (s[*i] == 0)
-		{
-			printf("FALSCH!!!!!!!!!!!!!!one \' too much man!!!!!!!!!!!!\n");
-			exit(1);
-		}
+			ft_error("One \' too much!", 2, toktop);
 		return ;
 	}
 	if (s[*i] == '\"')
@@ -64,16 +59,16 @@ void	skip_quote(const char *s, size_t *i)
 			(*i)++;
 		if (s[*i] == 0)
 		{
-			printf(ANSI_RED"FALSCH!!!!!!!!!!!!!!one \" too much man!!!!!!!!!!!!\n"ANSI_RESET);
-			exit(1);
+			ft_error("One \" too much!", 3, toktop);
 		}
 		return ;
 	}
 }
+
 // makes extra token for special char and sets lex position to next unspecial char
 int	handle_special(char *input, t_lexer *lex, t_token **toktop, size_t start)
 {
-	printf("\n\nc %c\nl %zu\n\n", input[start], start);
+	// printf("\n\nc %c\nl %zu\n\n", input[start], start);
 	if (input[lex->position] == '|')
 		return (make_special_token(toktop, "|", T_PIPE), lex->position += 1, 0);
 	if (input[lex->position] == '>')
@@ -96,9 +91,6 @@ int	handle_special(char *input, t_lexer *lex, t_token **toktop, size_t start)
 		else if (lex->position == start + 2)
 			return (make_special_token(toktop, "<<", T_HERE), 0);
 	}
-	printf("strlen %zu\n", ft_strlen(input));
-	printf("\n\nRETURN 1 at c %c\nl %zu\n\n", input[lex->position], lex->position);
-	printf(ANSI_RED"TOO MANY << OR >>\n"ANSI_RESET);
 	return (1);
 }
 

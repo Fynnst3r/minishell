@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:30:37 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/03 20:27:07 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 19:22:44 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,41 +34,6 @@ void	delete_trash(void)
 		current_bag = next_bag;
 	}
 	trashmen = NULL;
-}
-
-void	free_tokens(t_token **t)
-{
-	t_token	*tmp;
-	int		count = 0;
-
-	if (!*t)
-		return ;
-	printf("free start\n");
-	tmp = *t;
-	while (tmp->next != NULL)
-	{
-		printf("count %d", count);
-		count++;
-		tmp = tmp->next;
-		free(tmp->previous);
-	}
-	printf("free end\n");
-	free(tmp);
-	*t = NULL;
-}
-
-void	f_free_split_strs(char **split)
-{
-	size_t	k;
-
-	k = 0;
-	printf("\n!ATTEMPTING SPLIT FREE!\n");
-	while (split[k] != NULL)
-	{
-		free(split[k]);
-		k++;
-	}
-	free(split);
 }
 
 static void	ft_free_head(t_trashman *trashmen)

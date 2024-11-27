@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 17:18:22 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 21:02:21 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,34 +151,44 @@ typedef struct s_command
 
 //parsing/new_lex.c
 t_ast		*start_lexer(char *input);
-char		*get_str(t_lexer *lex);
-t_lexer		init_lex(char *input);
-
+char		*get_str(t_lexer *lex, t_token **toktop);
 //parsing/new_lex_utils.c
+t_lexer		init_lex(char *input);
 int			is_special_char(char c);
 int			ft_isspace(char c);
-bool		isemptystring(const char *s);
-void		skip_quote(const char *s, size_t *i);
+void		skip_quote(const char *s, size_t *i, t_token **toktop);
 int			handle_special(char *input, t_lexer *lex, t_token **toktop,
 				size_t start);
 
+//parsing/make_token.c
+void		make_token(t_token **tok, t_lexer *lexer);
+void		make_special_token(t_token **toktop, char *str, int e_flag);
+
 //parsing/token_utils.c
 void		print_token_data(t_token *top);
+t_token		*find_last_token(t_token *t);
 t_token		*find_id(t_token *t, int find);
 void		set_token_id(t_token *t);
 void		set_token_types(t_token *t);
-t_token		*find_last_token(t_token *t);
-void		make_token(t_token **tok, t_lexer *lexer);
-void		make_special_token(t_token **toktop, char *str, int e_flag);
 
 //parsing/expander.c
 void		expand_tokens(t_token **toktop);
 char		*check_val(char *s, t_lexer *l);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l);
+char		*add_char(char *ret, char add, size_t *position);
+//..uitls.c
+char		*keep_expanding(char *s, char *ret, t_lexer *l, int type);
+char		*stop_expanding(char *s, char *ret, t_lexer *l, int type);
+
 //make_ast.c
 t_ast		*make_ast(t_token **toktop);
-//parsing/free.c
-void		free_tokens(t_token **t);//??????
+
+//error/error.c
+void		ft_error(char *message, int errcode, t_token **toktop);
+//garbage_collector/free.c
+void		free_tokens(t_token **t);
+
+
 // yannis.h ///////////////////////////////////////////////////////////////////////////////////
 // typedef struct s_data
 // {

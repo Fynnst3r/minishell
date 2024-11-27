@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 15:33:40 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/27 20:57:27 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_token_data(t_token *top)
 	static int	count = 0;
 
 	tmp = top;
-	printf("*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n");
+	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
 	while (tmp)
 	{
 		// if (tmp->previous)
@@ -32,7 +32,19 @@ void	print_token_data(t_token *top)
 		count++;
 		tmp = tmp->next;
 	}
-	printf("*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n");
+	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
+}
+
+t_token	*find_last_token(t_token *t)
+{
+	t_token	*tmp;
+
+	if (!t)
+		return (NULL);
+	tmp = t;
+	while (tmp->next != 0)
+		tmp = tmp->next;
+	return (tmp);
 }
 
 t_token	*find_id(t_token *t, int find)
@@ -66,8 +78,8 @@ void	set_token_id(t_token *t)
 	}
 }
 
-// sets all non redirection types to their suitable word type.
-// PATH has been set in handle_special and make_special token
+// sets all non redirection types to word type.
+// PATH has been set in handle_special and make_special_token
 void	set_token_types(t_token *t)
 {
 	if (!t)
@@ -78,72 +90,6 @@ void	set_token_types(t_token *t)
 		if (t->previous->type == T_APP || t->previous->type == T_IN
 			|| t->previous->type == T_OUT || t->previous->type == T_HERE)
 			t->type = PATH;
-}
-
-t_token	*find_last_token(t_token *t)
-{
-	t_token	*tmp;
-
-	if (!t)
-		return (NULL);
-	tmp = t;
-	while (tmp->next != 0)
-		tmp = tmp->next;
-	return (tmp);
-}
-
-void	make_token(t_token **toktop, t_lexer *lexer)
-{
-	t_token	*node;
-	t_token	*last_node;
-
-	if (!toktop)
-		return ;
-	node = ft_calloc(sizeof(t_token), 1);
-	if (!node)
-		return ;
-	node->str = get_str(lexer);
-	if (node->str)
-		node->len = ft_strlen(node->str);
-	node->next = NULL;
-	if (*toktop == NULL)
-	{
-		node->id = 0;
-		*toktop = node;
-		node->previous = NULL;
-		return ;
-	}
-	last_node = find_last_token(*toktop);
-	last_node->next = node;
-	node->previous = last_node;
-	set_token_types(node);
-}
-
-void	make_special_token(t_token **toktop, char *str, int e_flag)
-{
-	t_token	*node;
-	t_token	*last_node;
-
-	if (!toktop)
-		return ;
-	node = ft_calloc(sizeof(t_token), 1);
-	if (!node)
-		return ;
-	ft_bzero(node, sizeof(t_token));
-	node->str = ft_strdup(str);
-	node->type = e_flag;
-	if (node->str)
-		node->len = ft_strlen(node->str);
-	node->next = NULL;
-	if (*toktop == NULL)
-	{
-		*toktop = node;
-		node->previous = NULL;
-		return ;
-	}
-	last_node = find_last_token(*toktop);
-	last_node->next = node;
-	node->previous = last_node;
 }
 
 // t_token	*make_token(void)
