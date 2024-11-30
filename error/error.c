@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 19:51:14 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:51:40 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	free_tokens(t_token **t)
 	ft_free(tmp);
 	tmp = NULL;
 	*t = NULL;
+	t = NULL;
 }
 
 void	ft_error(char *message, int errcode, t_token **toktop)

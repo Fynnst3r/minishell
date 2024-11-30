@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 20:57:27 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:47:45 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,16 @@ void	print_token_data(t_token *top)
 	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
 	while (tmp)
 	{
-		// if (tmp->previous)
-		// 	printf("PREVIOUSSTRING[%d]=%s\n", count, tmp->previous->str);
-		printf(ANSI_GREEN"STRING	[%d]=%s\n"ANSI_RESET, count, tmp->str);
-		// if (tmp->next)
-		// 	printf("NEXTSTRING[%d]=%s\n", count, tmp->next->str);
-		printf(ANSI_YELLOW"LEN	[%d]=%zu\n"ANSI_RESET, count, tmp->len);
-		printf(ANSI_RED"TYPE	[%d]=%d\n"ANSI_RESET, count, tmp->type);
-		printf(ANSI_BLUE"ID	[%d] = %i\n\n"ANSI_RESET, count, tmp->id);
+		if (tmp->previous)
+			printf("PREVSTR[%d]=			%s	TYPE[%d]=%d\n", count, tmp->previous->str, count - 1, tmp->previous->type);
+		printf(ANSI_BOLD ANSI_GREEN"STRING[%d]=	%s\n"ANSI_RESET, count, tmp->str);
+		if (tmp->next)
+			printf("NEXTSTRING[%d]=			%s	TYPE[%d]=%d\n", count, tmp->next->str, count + 1, tmp->next->type);
+		printf(ANSI_YELLOW"LEN[%d]=%zu\n"ANSI_RESET, count, tmp->len);
+		printf(ANSI_RED"TYPE[%d]=%d\n"ANSI_RESET, count, tmp->type);
+		printf(ANSI_BLUE"ID	[%d]=%i\n\n"ANSI_RESET, count, tmp->id);
 		count++;
+	printf(ANSI_ITALIC"-----------END OF TOK [%d]---------------------\n\n"ANSI_RESET, count);
 		tmp = tmp->next;
 	}
 	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
@@ -87,9 +88,14 @@ void	set_token_types(t_token *t)
 	if (t->str)
 		t->type = WORD;
 	if (t->previous)
-		if (t->previous->type == T_APP || t->previous->type == T_IN
-			|| t->previous->type == T_OUT || t->previous->type == T_HERE)
-			t->type = PATH;
+	{
+		if (t->previous->type == T_OUT || t->previous->type == T_IN
+			|| t->previous->type == T_APP || t->previous->type == T_HERE)
+			{
+				// printf("curr str = %s\nprev str = %s\nprev type %i\n\n", t->str, t->previous->str, t->previous->type);
+				t->type = PATH;
+			}
+	}
 }
 
 // t_token	*make_token(void)

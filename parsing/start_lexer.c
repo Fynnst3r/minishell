@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 21:07:39 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/30 22:39:45 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,16 @@ char	*get_str(t_lexer *lex, t_token **toktop)
 }
 
 // lexer who scans string and calls functions when it finds a token to make it
-t_ast	*start_lexer(char *input)
+void	start_lexer(char *input, t_data *data)
 {
 	t_token	*token_top;
 	t_lexer	lexer;
-	t_ast	*ast;
 	bool	skip;
 
 	token_top = NULL;
 	add_history(input);
 	lexer = init_lex(input);
 	skip = false;
-	ast = NULL;
 	while (input[lexer.position])
 	{
 		while (is_special_char(input[lexer.position]))
@@ -68,12 +66,14 @@ t_ast	*start_lexer(char *input)
 		skip = false;
 	}
 	set_token_id(token_top);
-	expand_tokens(&token_top); //$? is not handled yet.
+	expand_tokens(&token_top, data->exit_status);
 	print_token_data(token_top);
-	ast = make_ast(&token_top);
+	// ast = make_ast(&token_top);
+	// make_ast2(data, &token_top);
+	if (evaluator(token_top))
+		ft_error("Failed", 1, &token_top);
 	ft_error("test test", 0, &token_top);
 	// token_top = NULL; //put at end of token use (and free them)
-	return (ast);
 }
 	// start makin ast nodes "s_node"
 	// scan for pipes

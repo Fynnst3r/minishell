@@ -7,8 +7,9 @@ SRCS = 	minishell.c\
 		parsing/start_lexer.c parsing/lexer_utils.c\
 		parsing/make_token.c\
 		parsing/token_utils.c\
-		parsing/make_ast.c\
 		parsing/expander.c parsing/expander_utils.c\
+		parsing/evaluator.c\
+		parsing/ast_files/make_ast2.c\
 		error/error.c\
 		garbage_collector/garbage_start.c\
 		garbage_collector/ft_malloc.c\

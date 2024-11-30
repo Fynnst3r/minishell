@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 19:32:01 by fforster         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:36:01 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*add_char(char *ret, char add, size_t *position)
 	return (added);
 }
 
-char	*ft_strjoin_at(char *s1, char *s2, t_lexer *l)
+char	*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit)
 {
 	size_t	i;
 	size_t	x;
@@ -51,6 +51,10 @@ char	*ft_strjoin_at(char *s1, char *s2, t_lexer *l)
 	while (s2[x])
 		join[i++] = s2[x++];
 	ft_free(s1);
+	if (print_exit)
+		l->position += 2;
+	else
+		l->position = l->read;
 	s1 = NULL;
 	s2 = NULL;
 	return (join);
@@ -76,7 +80,7 @@ char	*check_val(char *s, t_lexer *l)
 	return (val);
 }
 
-static char	*get_exp_str(char *s, int type)
+static char	*get_exp_str(char *s, char *exit_status)
 {
 	t_lexer	l;
 	char	*val;
@@ -87,15 +91,16 @@ static char	*get_exp_str(char *s, int type)
 	while (s[l.position])
 	{
 		if (s[l.position] == '\"')
-			ret = keep_expanding(s, ret, &l, type);
+			ret = keep_expanding(s, ret, &l, exit_status);
 		else if (s[l.position] == '\'')
-			ret = stop_expanding(s, ret, &l, type);
-		else if (s[l.position] == '$' && type != SINGLE_Q)
+			ret = stop_expanding(s, ret, &l);
+		else if (s[l.position] == '$' && s[l.position + 1] == '?')
+			ret = ft_strjoin_at(ret, exit_status, &l, true);
+		else if (s[l.position] == '$')
 		{
 			val = check_val(s, &l);
 			if (val)
-				ret = ft_strjoin_at(ret, val, &l);
-			l.position = l.read;
+				ret = ft_strjoin_at(ret, val, &l, false);
 		}
 		else
 			ret = add_char(ret, s[l.position], &l.position);
@@ -103,19 +108,22 @@ static char	*get_exp_str(char *s, int type)
 	return (ret);
 }
 
-void	expand_tokens(t_token **toktop)
+void	expand_tokens(t_token **toktop, int exit_status)
 {
 	t_token	*tmp;
+	char	*exit_num_str;
 
 	tmp = *toktop;
+	exit_num_str = ft_itoa(exit_status);
 	while (tmp)
 	{
 		if (tmp->type == WORD || PATH)
-			tmp->str = get_exp_str(tmp->str, tmp->type);
+			tmp->str = get_exp_str(tmp->str, exit_num_str);
 		if (tmp->str)
 			tmp->len = ft_strlen(tmp->str);
 		tmp = tmp->next;
 	}
+	ft_free(exit_num_str);
 }
 
 // int main()
