@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:39:42 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/30 21:02:47 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/03 21:27:53 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ char	*keep_expanding(char *s, char *ret, t_lexer *l, char *exit_status)
 {
 	char	*val;
 
+	l->keepempty = true;
 	l->position++;
 	while (s[l->position] != '\"' && s[l->position])
 	{
@@ -49,5 +50,4 @@ char	*stop_expanding(char *s, char *ret, t_lexer *l)
 
 // char	*handle_exit_status(char *s, char *ret, t_lexer *l)
 // {
-	
 // } get exit_status as string and replace IF it was NOT in single q

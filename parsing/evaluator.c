@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 14:40:34 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/29 19:40:35 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/03 21:29:57 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	evaluator(t_token *toktop)
 	tmp = toktop;
 	while (tmp)
 	{
-		if (tmp->type == T_PIPE && (tmp->next == NULL || tmp->previous == NULL)
-			|| (tmp->type == T_PIPE && tmp->next->type == T_PIPE))
+		if (tmp->type == T_PIPE && ((tmp->next == NULL || tmp->previous == NULL)
+				|| (tmp->type == T_PIPE && tmp->next->type == T_PIPE)))
 		{
 			return (printf("syntax error near token '%s'\n", tmp->str), 1);
 		}

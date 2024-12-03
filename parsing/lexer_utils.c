@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:37:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 21:08:49 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/03 22:06:41 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_lexer	init_lex(char *input)
 	lex.read = 0;
 	lex.last_c = 0;
 	lex.curr_c = 0;
+	lex.keepempty = false;
 	return (lex);
 }
 

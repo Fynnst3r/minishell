@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/30 22:39:45 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:01:09 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,15 @@ void	start_lexer(char *input, t_data *data)
 			make_token(&token_top, &lexer);
 		skip = false;
 	}
-	set_token_id(token_top);
 	expand_tokens(&token_top, data->exit_status);
-	print_token_data(token_top);
-	// ast = make_ast(&token_top);
-	// make_ast2(data, &token_top);
+	set_token_id(token_top);
+	// print_token_data(token_top);
 	if (evaluator(token_top))
 		ft_error("Failed", 1, &token_top);
-	ft_error("test test", 0, &token_top);
+	make_ast2(data, &token_top);
+	// if (data->st_node->type == EXECUTE)
+		// print_exec((t_exec *)data->st_node);
+	// ft_error("test test", 0, &token_top);
 	// token_top = NULL; //put at end of token use (and free them)
 }
 	// start makin ast nodes "s_node"

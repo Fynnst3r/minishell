@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/30 21:47:45 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/03 22:56:50 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 void	print_token_data(t_token *top)
 {
 	t_token		*tmp;
-	static int	count = 0;
+	int			count;
 
+	count = 0;
 	tmp = top;
 	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
 	while (tmp)
@@ -34,6 +35,19 @@ void	print_token_data(t_token *top)
 		tmp = tmp->next;
 	}
 	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
+}
+
+void	remove_token(t_token *to_del)
+{
+	if (to_del->previous != NULL)
+		to_del->previous->next = to_del->next;
+	if (to_del->next != NULL)
+		to_del->next->previous = to_del->previous;
+	if (to_del->str)
+		ft_free(to_del->str);
+	to_del->str = NULL;
+	ft_free(to_del);
+	to_del = NULL;
 }
 
 t_token	*find_last_token(t_token *t)
@@ -91,12 +105,12 @@ void	set_token_types(t_token *t)
 	{
 		if (t->previous->type == T_OUT || t->previous->type == T_IN
 			|| t->previous->type == T_APP || t->previous->type == T_HERE)
-			{
-				// printf("curr str = %s\nprev str = %s\nprev type %i\n\n", t->str, t->previous->str, t->previous->type);
-				t->type = PATH;
-			}
+		{
+			t->type = PATH;
+		}
 	}
 }
+				// printf("curr str = %s\nprev str = %s\nprev type %i\n\n", t->str, t->previous->str, t->previous->type);
 
 // t_token	*make_token(void)
 // {

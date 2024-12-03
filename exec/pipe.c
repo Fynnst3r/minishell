@@ -3,47 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/15 10:57:39 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/02 19:45:02 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../minishell.h"
 
-void	pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data)
+void	check_pipe(t_pipe *st_node, t_data *data, int last)
 {
+	if (st_node->type == PIPE)
+	{
+		check_pipe((t_pipe *)st_node->left, data, 0);
+		check_pipe((t_pipe *)st_node->right, data, last);
+	}
+	else
+	{
+		run_pipe((t_cmd *)st_node, data, last);
+		return ;
+	}
+	return ;
+}
+
+void	run_pipe(t_cmd *st_node, t_data *data, int last)
+{
+	int		pipefd[2];
+	int		status;
 	pid_t	pid1;
 
+	if (pipe(pipefd) == -1)
+		exit(-1);
 	pid1 = fork();
 	if (pid1 == -1)
 		exit(1);
 	if (pid1 == 0)
+		child(st_node, data, last, pipefd);
+	if (pid1 > 0)
 	{
-		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
+		waitpid(pid1, &status, 0);
+		g_signal = WIFEXITED(status);
 		close(pipefd[1]);
-		exec_execu(st_node_left, data);
+		if (last == 0)
+			dup2(pipefd[0], STDIN_FILENO);
+		else
+		{
+			close(pipefd[0]);
+			dup2(data->origin_stdin, STDIN_FILENO);
+		}
 	}
-	close(pipefd[1]);
-	waitpid(pid1, NULL, 0);
+	return ;
 }
 
-void	pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data)
+void	child(t_cmd *st_node, t_data *data, int last, int pipefd[2])
 {
-	pid_t	pid2;
-
-	pid2 = fork();
-	if (pid2 == -1)
-		exit(1);
-	if (pid2 == 0)
-	{
-		close(pipefd[1]);
-		dup2(pipefd[0], STDIN_FILENO);
-		close(pipefd[0]);
-		exec_execu(st_node_right, data);
-	}
+	data->argc = 4;
 	close(pipefd[0]);
-	waitpid(pid2, NULL, 0);
+	if (last == 0)
+		dup2(pipefd[1], STDOUT_FILENO);
+	else
+		close(pipefd[1]);
+	start_exec(data, (t_cmd *)st_node);
 }

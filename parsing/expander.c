@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/30 20:36:01 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/03 23:15:57 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,39 +71,42 @@ char	*check_val(char *s, t_lexer *l)
 	{
 		l->read++;
 	}
+	if (l->read == l->position + 1)
+		return (l->position = l->read, "$");
 	sub = ft_substr(s, l->position + 1, l->read - l->position - 1);
 	val = getenv(sub);
 	ft_free(sub);
 	sub = NULL;
 	if (val == NULL)
+	{
+		l->position = l->read;
 		return (NULL);
+	}
 	return (val);
 }
 
-static char	*get_exp_str(char *s, char *exit_status)
+static char	*get_exp_str(char *s, char *exit_status, t_lexer *l)
 {
-	t_lexer	l;
 	char	*val;
 	char	*ret;
 
-	l = init_lex(s);
 	ret = ft_strdup("");
-	while (s[l.position])
+	while (s[l->position])
 	{
-		if (s[l.position] == '\"')
-			ret = keep_expanding(s, ret, &l, exit_status);
-		else if (s[l.position] == '\'')
-			ret = stop_expanding(s, ret, &l);
-		else if (s[l.position] == '$' && s[l.position + 1] == '?')
-			ret = ft_strjoin_at(ret, exit_status, &l, true);
-		else if (s[l.position] == '$')
+		if (s[l->position] == '\"')
+			ret = keep_expanding(s, ret, l, exit_status);
+		else if (s[l->position] == '\'')
+			ret = stop_expanding(s, ret, l);
+		else if (s[l->position] == '$' && s[l->position + 1] == '?')
+			ret = ft_strjoin_at(ret, exit_status, l, true);
+		else if (s[l->position] == '$')
 		{
-			val = check_val(s, &l);
+			val = check_val(s, l);
 			if (val)
-				ret = ft_strjoin_at(ret, val, &l, false);
+				ret = ft_strjoin_at(ret, val, l, false);
 		}
 		else
-			ret = add_char(ret, s[l.position], &l.position);
+			ret = add_char(ret, s[l->position], &l->position);
 	}
 	return (ret);
 }
@@ -111,17 +114,25 @@ static char	*get_exp_str(char *s, char *exit_status)
 void	expand_tokens(t_token **toktop, int exit_status)
 {
 	t_token	*tmp;
+	t_lexer	l;
 	char	*exit_num_str;
 
 	tmp = *toktop;
 	exit_num_str = ft_itoa(exit_status);
 	while (tmp)
 	{
-		if (tmp->type == WORD || PATH)
-			tmp->str = get_exp_str(tmp->str, exit_num_str);
+		l = init_lex(tmp->str);
+		if (tmp->type == WORD || tmp->type == PATH)
+			tmp->str = get_exp_str(tmp->str, exit_num_str, &l);
 		if (tmp->str)
 			tmp->len = ft_strlen(tmp->str);
-		tmp = tmp->next;
+		if (l.keepempty == false && tmp->str[0] == 0)
+		{
+			tmp = tmp->next;
+			remove_token(tmp->previous);
+		}
+		else
+			tmp = tmp->next;
 	}
 	ft_free(exit_num_str);
 }

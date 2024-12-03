@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/30 22:19:48 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/03 22:40:14 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,16 @@
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+
 // OWN LIBS
 # include "libft/libft.h"
 # include "garbage_collector/garbage_collector.h"
 // COLOR
 # include "parsing/colors.h"
+
+extern int	g_signal;
 
 enum e_flags
 {
@@ -56,6 +61,7 @@ typedef struct s_lexer
 	size_t		read;
 	char		last_c;
 	char		curr_c;
+	bool		keepempty;
 }					t_lexer;
 
 typedef struct s_token
@@ -64,7 +70,6 @@ typedef struct s_token
 	int				type;
 	int				id;
 	size_t			len;
-	bool			need_exit;
 
 	struct s_token	*next;
 	struct s_token	*previous;
@@ -167,6 +172,7 @@ void		make_special_token(t_token **toktop, char *str, int e_flag);
 
 //parsing/token_utils.c
 void		print_token_data(t_token *top);
+void		remove_token(t_token *to_del);
 t_token		*find_last_token(t_token *t);
 t_token		*find_id(t_token *t, int find);
 void		set_token_id(t_token *t);
@@ -208,10 +214,10 @@ void		free_tokens(t_token **t);
 
 typedef enum s_obj
 {
-	PIPE,
-	RED,
-	EXECUTE,
-	HEREDOC
+	PIPE = 0,
+	RED = 1,
+	EXECUTE = 2,
+	HEREDOC = 3
 }					t_obj;
 
 typedef struct s_cmd
@@ -246,7 +252,7 @@ typedef struct s_here_d
 	t_obj		type;
 	t_cmd		*cmd;
 	char		*del;
-}					t_hered;
+}					t_herd;
 
 ///parsing/ast_files/make_ast2.c
 void		make_ast2(t_data *data, t_token **toktop);
@@ -257,18 +263,32 @@ t_pipe		*find_last_pipe(t_pipe *p);
 void		loop_pipes(t_token **toktop, t_pipe **pipetop, size_t p_count);
 t_cmd		*move_tok_to_curr_pipe(t_token **toktop, size_t p_count);
 t_cmd		*check_cmd_type(t_token *tmp);
+void		print_exec(t_exec *cmd);
 
-// //execution/start_execution
-// void		start_exec(t_data *data);
-// void		exec_execu(t_exec *st_node, t_data *data);
-// void		exec_pipe(t_pipe *st_node, t_data *data);
-// void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
+//execution/start_execution
+void		start_exec(t_data *data, t_cmd *cmd);
+void		exec_execu(t_exec *st_node, t_data *data);
+void		exec_pipe(t_pipe *st_node, t_data *data);
+void		exec_red(t_red *st_node, t_data *data);
+void		exec_heredoc(t_herd *st_node, t_data *data);
+void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
 
-// //execution/help_execution
-// char		*find_path(t_data *data, t_exec *st_node);
-// void		free_dp(char **str);
+//execution/pipe
+void		check_pipe(t_pipe *st_node, t_data *data, int last);
+void		run_pipe(t_cmd *st_node, t_data *data, int last);
+void		child(t_cmd *st_node, t_data *data, int last, int pipefd[2]);
 
-// //execution/pipe
-// void		pipe_left(t_exec *st_node_left, int pipefd[2], t_data *data);
-// void		pipe_right(t_exec *st_node_right, int pipefd[2], t_data *data);
+//execution/help_execution
+char		*find_path(t_data *data, t_exec *st_node);
+void		free_dp(char **str);
+char		**find_path_help(t_data *data);
+int			write_in_file(int fd, t_herd *st_node);
+
+//builtins/builtins1
+int		check_builtins(t_data *data, char **cmd);
+void	exec_echo(char **cmd);
+// void	exec_cd(char **cmd);
+void	exec_pwd(t_data *data);
+void	exec_env(t_data *data);
+void	exec_exit(char **cmd);
 #endif
