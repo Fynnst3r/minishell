@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:07:06 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/09 20:24:49 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,13 +173,4 @@ void	make_ast2(t_data *data, t_token **toktop)
 		data->st_node = (t_cmd *)make_pipe_ast(toktop);
 		print_pipe_ast((t_pipe *)data->st_node);
 	}
-		// ft_error("Not implemented", 4, toktop);
-	// else if (cmd_type == RED)
-	// 	make_red_node(toktop);
-	// else if (cmd_type == HEREDOC)
-	// 	make_here_node(toktop);
-	// pipe_count = count_pipes(*toktop);
-	// if (pipe_count != 0)
-	// 	data->st_node = (t_cmd *)start_pipe_ast(toktop, pipe_count);
-	
 }

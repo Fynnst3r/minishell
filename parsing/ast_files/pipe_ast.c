@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 22:32:04 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:08:22 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/09 20:26:25 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	scan_cmd_type_pipe(t_token *t)
 		}
 		if (t->type == T_PIPE)
 		{
-			printf("AAHHH A PIPE, SAVE ME NIGGERMAN\n");
+			printf("AAHHH A PIPE, SAVE ME BIGGERMAN\n"); //distasteful joke ik
 			break ;
 		}
 		t = t->next;
