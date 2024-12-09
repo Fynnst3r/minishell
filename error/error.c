@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/29 16:51:40 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/04 23:01:25 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,14 @@ void	ft_error(char *message, int errcode, t_token **toktop)
 {
 	if (message)
 		printf(ANSI_RED"ERROR: %s\n", message);
-	printf("ERRORCODE: %i\n"ANSI_RESET, errcode);
-	free_tokens(toktop);
-	delete_trash();
-	ft_bzero(get_workers(), sizeof(t_trashman));
 	if (errcode != 0)
+		printf("ERRORCODE: %i\n"ANSI_RESET, errcode);
+	if (toktop)
+		free_tokens(toktop);
+	if (errcode != 0)
+	{
+		delete_trash();
+		ft_bzero(get_workers(), sizeof(t_trashman));
 		exit(errcode);
+	}
 }

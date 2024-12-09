@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/03 16:26:21 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:25:07 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,37 +127,37 @@
 // 	data->st_node = (t_cmd *)pipe_grep_wc;
 // }
 
-void	fill_test_struct(t_data *data) // ls -l | grep "txt" > txt_files.txt
-{
-	// 1. Erstellen des 'ls -l' Befehls
-    t_exec *exec_ls = malloc(sizeof(t_exec));
-    exec_ls->type = EXECUTE;
-    exec_ls->argv = malloc(3 * sizeof(char *));
-    exec_ls->argv[0] = strdup("ls");
-    exec_ls->argv[1] = strdup("-l");
-    exec_ls->argv[2] = NULL;
-    // 2. Erstellen des 'grep "txt"' Befehls
-    t_exec *exec_grep = malloc(sizeof(t_exec));
-    exec_grep->type = EXECUTE;
-    exec_grep->argv = malloc(3 * sizeof(char *));
-    exec_grep->argv[0] = strdup("grep");
-    exec_grep->argv[1] = strdup("txt");
-    exec_grep->argv[2] = NULL;
-    // 3. Erstellen der Ausgabeumleitung '> txt_files.txt' für 'grep "txt"'
-    t_red *redir = malloc(sizeof(t_red));
-    redir->type = RED;
-    redir->mode = O_WRONLY | O_CREAT | O_TRUNC; // steht für '>'
-    redir->file = strdup("txt_files.txt");
-    redir->fd = STDOUT_FILENO; // Standard-Ausgabe
-    redir->cmd = (t_cmd *)exec_grep; // Verweisen auf den 'grep "txt"' Befehl
-    // 4. Erstellen des PIPE-Knotens zwischen 'ls -l' und 'grep "txt" > txt_files.txt'
-    t_pipe *pipe_cmd = malloc(sizeof(t_pipe));
-    pipe_cmd->type = PIPE;
-    pipe_cmd->left = (t_cmd *)exec_ls;
-    pipe_cmd->right = (t_cmd *)redir;
-    // 5. Setzen der Wurzel des AST in die Datenstruktur
-    data->st_node = (t_cmd *)pipe_cmd;
-}
+// void	fill_test_struct(t_data *data) // ls -l | grep "txt" > txt_files.txt
+// {
+// 	// 1. Erstellen des 'ls -l' Befehls
+//     t_exec *exec_ls = malloc(sizeof(t_exec));
+//     exec_ls->type = EXECUTE;
+//     exec_ls->argv = malloc(3 * sizeof(char *));
+//     exec_ls->argv[0] = strdup("ls");
+//     exec_ls->argv[1] = strdup("-l");
+//     exec_ls->argv[2] = NULL;
+//     // 2. Erstellen des 'grep "txt"' Befehls
+//     t_exec *exec_grep = malloc(sizeof(t_exec));
+//     exec_grep->type = EXECUTE;
+//     exec_grep->argv = malloc(3 * sizeof(char *));
+//     exec_grep->argv[0] = strdup("grep");
+//     exec_grep->argv[1] = strdup("txt");
+//     exec_grep->argv[2] = NULL;
+//     // 3. Erstellen der Ausgabeumleitung '> txt_files.txt' für 'grep "txt"'
+//     t_red *redir = malloc(sizeof(t_red));
+//     redir->type = RED;
+//     redir->mode = O_WRONLY | O_CREAT | O_TRUNC; // steht für '>'
+//     redir->file = strdup("txt_files.txt");
+//     redir->fd = STDOUT_FILENO; // Standard-Ausgabe
+//     redir->cmd = (t_cmd *)exec_grep; // Verweisen auf den 'grep "txt"' Befehl
+//     // 4. Erstellen des PIPE-Knotens zwischen 'ls -l' und 'grep "txt" > txt_files.txt'
+//     t_pipe *pipe_cmd = malloc(sizeof(t_pipe));
+//     pipe_cmd->type = PIPE;
+//     pipe_cmd->left = (t_cmd *)exec_ls;
+//     pipe_cmd->right = (t_cmd *)redir;
+//     // 5. Setzen der Wurzel des AST in die Datenstruktur
+//     data->st_node = (t_cmd *)pipe_cmd;
+// }
 
 // void fill_test_struct(t_data *data) // grep "Zeile" << EOF | sort
 // {
@@ -474,6 +474,7 @@ void	exec_execu(t_exec *st_node, t_data *data)
 			exit(1);
 		}
 	}
+	// printf("EHH SUGOI\n");
 	// free (cmd_path); //funktioniert nicht
 }
 

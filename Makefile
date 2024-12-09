@@ -10,6 +10,7 @@ SRCS = 	minishell.c\
 		parsing/expander.c parsing/expander_utils.c\
 		parsing/evaluator.c\
 		parsing/ast_files/make_ast2.c\
+		parsing/ast_files/pipe_ast.c\
 		error/error.c\
 		garbage_collector/garbage_start.c\
 		garbage_collector/ft_malloc.c\
@@ -20,27 +21,6 @@ SRCS = 	minishell.c\
 		builtins/builtins1.c
 
 
-# grep | sort | uniq
-
-# int parse_1_command(token_list, *command)
-
-# parse_tree(token_list) 
-# {
-# 	pipe
-# 	parse_1_command(token_list, &pipe.left)
-# 	if (token_list finished)
-# 		pipe.type = EXECUTE
-# 		return (...)
-# 	while(not token_list end) {
-# 		parse_1_command(token_list, &pipe.right)
-# 		if (token_list not finished)
-# 		{
-# 			new_pipe.left = pipe
-# 			pipe = new_pipe
-# 		}
-# 	}
-# 	return (pipe)
-# }
 
 OBJS = $(SRCS:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/03 21:28:46 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:16:48 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ int	main(int ac, char **av, char**env)
 		if (data.input)
 		{
 			init_garbage_collector();
-			start_lexer(data.input, &data);
+			if (start_lexer(data.input, &data))
+				continue ;
 			if (pid == -1)
 				exit(1);
 			if (pid == 0 && data.st_node != NULL)

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 15:50:45 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/21 18:43:51 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/09 20:13:33 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	add_trash_top(void *pointer)
 	trashman = get_workers();
 	new = create_trash_node(pointer);
 	if (!new)
-		printf("Malloc FAILED, could not add to trashpile!\n"); //needs real error handling
+		ft_error("Malloc FAIL!", 42, NULL);
 	if (trashman->head == NULL)
 	{
 		new->next = NULL;

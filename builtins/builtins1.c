@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/03 23:02:10 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/04 22:28:00 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,23 @@ void	exec_pwd(t_data *data)
 	ft_putstr_fd("\n", 2);
 }
 
+bool	check_n_flag(char **cmd, size_t *i)
+{
+	bool	newline;
+
+	newline = true;
+	if (cmd[1])
+	{
+		if (!ft_strncmp(cmd[*i], "-n", 3))
+		{
+			// printf("flag found\n");
+			(*i)++;
+			newline = false;
+		}
+	}
+	return (newline);
+}
+
 // bool	check_n_flag(char **cmd, size_t *i)
 // {
 // 	size_t	j;
@@ -73,37 +90,26 @@ void	exec_pwd(t_data *data)
 // 	bool	n_flag;
 
 // 	newline = 1;
-// 	if (strnstr)
+// 	while (cmd[*i][0] == '-' && cmd[*i][1] == 'n')
+// 	{
+// 		j = 2;
+// 		n_flag = 1;
+// 		while (cmd[*i][j])
+// 		{
+// 			if (cmd[*i][j] != 'n')
+// 			{
+// 				n_flag = 0;
+// 				break ;
+// 			}
+// 			j++;
+// 		}
+// 		if (!n_flag)
+// 			break ;
+// 		newline = 0;
+// 		(*i)++;
+// 	}
 // 	return (newline);
 // }
-
-bool	check_n_flag(char **cmd, size_t *i)
-{
-	size_t	j;
-	bool	newline;
-	bool	n_flag;
-
-	newline = 1;
-	while (cmd[*i][0] == '-' && cmd[*i][1] == 'n')
-	{
-		j = 2;
-		n_flag = 1;
-		while (cmd[*i][j])
-		{
-			if (cmd[*i][j] != 'n')
-			{
-				n_flag = 0;
-				break ;
-			}
-			j++;
-		}
-		if (!n_flag)
-			break ;
-		newline = 0;
-		(*i)++;
-	}
-	return (newline);
-}
 
 size_t	echo_argc(char **cmd, bool newline)
 {
@@ -128,12 +134,13 @@ void	exec_echo(char **cmd)
 	size_t	argc;
 
 	i = 1;
-	if (cmd[1])
-		newline = check_n_flag(cmd, &i);
+	newline = check_n_flag(cmd, &i);
 	if (cmd[i])
 		argc = echo_argc(cmd, newline);
 	if (!cmd[i])
 	{
+		if (newline == false)
+			return ;
 		ft_putstr_fd("\n", 2);
 		return ;
 	}

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/03 22:40:14 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/09 20:02:53 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ enum e_flags
 	T_APP = 3,
 	T_IN = 4,
 	T_HERE = 5,
-	DEL = 6,
+	T_SKIP = 6,
 	PATH = 7
 };
 
@@ -156,18 +156,18 @@ typedef struct s_command
 // void		fill_env(t_data *data, char **env);
 
 //parsing/new_lex.c
-void		start_lexer(char *input, t_data *data);
-char		*get_str(t_lexer *lex, t_token **toktop);
+int			start_lexer(char *input, t_data *data);
+int			get_str(t_lexer *lex, t_token **tofill);
 //parsing/new_lex_utils.c
 t_lexer		init_lex(char *input);
 int			is_special_char(char c);
 int			ft_isspace(char c);
-void		skip_quote(const char *s, size_t *i, t_token **toktop);
+int			skip_quote(const char *s, size_t *i);
 int			handle_special(char *input, t_lexer *lex, t_token **toktop,
 				size_t start);
 
 //parsing/make_token.c
-void		make_token(t_token **tok, t_lexer *lexer);
+int			make_token(t_token **tok, t_lexer *lexer);
 void		make_special_token(t_token **toktop, char *str, int e_flag);
 
 //parsing/token_utils.c
@@ -179,7 +179,7 @@ void		set_token_id(t_token *t);
 void		set_token_types(t_token *t);
 
 // parsing/expander.c
-void		expand_tokens(t_token **toktop, int exit_status);
+void		expand_tokens(t_token **toktop, int exit_status, t_lexer l);
 char		*check_val(char *s, t_lexer *l);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit);
 char		*add_char(char *ret, char add, size_t *position);
@@ -256,14 +256,14 @@ typedef struct s_here_d
 
 ///parsing/ast_files/make_ast2.c
 void		make_ast2(t_data *data, t_token **toktop);
-size_t		count_pipes(t_token *t);
-t_pipe		*start_pipe_ast(t_token **toktop, size_t p_count);
-void		new_pipe_node(t_pipe **ptop);
-t_pipe		*find_last_pipe(t_pipe *p);
-void		loop_pipes(t_token **toktop, t_pipe **pipetop, size_t p_count);
-t_cmd		*move_tok_to_curr_pipe(t_token **toktop, size_t p_count);
-t_cmd		*check_cmd_type(t_token *tmp);
+int			scan_cmd_type(t_token *t);
 void		print_exec(t_exec *cmd);
+void		print_pipe_ast(t_pipe *pipe);
+t_exec		*make_cmd_node(t_token *t);
+t_red		*make_red_node(t_token *t);
+t_herd		*make_herd_node(t_token *t);
+///parsing/ast_files/make_pipe_ast.c
+t_pipe		*make_pipe_ast(t_token **toktop);
 
 //execution/start_execution
 void		start_exec(t_data *data, t_cmd *cmd);

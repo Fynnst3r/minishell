@@ -6,16 +6,32 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/03 23:01:09 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/09 20:12:25 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+int	empty_tokens(t_token *t)
+{
+	size_t	count;
+
+	count = 0;
+	while (t)
+	{
+		if (t->type != T_SKIP)
+			count++;
+		t = t->next;
+	}
+	if (count == 0)
+		return (1);
+	return (0);
+}
+
 // scans input str using lex position,
 // stops when there is a space and skips them when there is a quote
 // The return is an allocated string with ft_malloc
-char	*get_str(t_lexer *lex, t_token **toktop)
+int	get_str(t_lexer *lex, t_token **tofill)
 {
 	char	*ret;
 	size_t	l;
@@ -26,7 +42,8 @@ char	*get_str(t_lexer *lex, t_token **toktop)
 	{
 		lex->curr_c = lex->str[l];
 		if (lex->str[l] == '\'' || lex->str[l] == '\"')
-			skip_quote(lex->str, &l, toktop);
+			if (skip_quote(lex->str, &l))
+				return (1);
 		lex->last_c = lex->str[l];
 		l++;
 		if (is_special_char(lex->str[l]) || ft_isspace(lex->str[l]))
@@ -37,11 +54,12 @@ char	*get_str(t_lexer *lex, t_token **toktop)
 	while (ft_isspace(lex->str[l]))
 		l++;
 	lex->position = l;
-	return (ret);
+	(*tofill)->str = ret;
+	return (0);
 }
 
 // lexer who scans string and calls functions when it finds a token to make it
-void	start_lexer(char *input, t_data *data)
+int	start_lexer(char *input, t_data *data)
 {
 	t_token	*token_top;
 	t_lexer	lexer;
@@ -57,26 +75,26 @@ void	start_lexer(char *input, t_data *data)
 		{
 			skip = true;
 			if (handle_special(input, &lexer, &token_top, lexer.position))
-				ft_error("TOO MANY << OR >>", 1, &token_top);
+				return (ft_error("TOO MANY << OR >>", 0, &token_top), 1);
 		}
 		while (ft_isspace(input[lexer.position]))
 			lexer.position++;
 		if (!skip)
-			make_token(&token_top, &lexer);
+			if (make_token(&token_top, &lexer))
+				return (ft_error(NULL, 0, &token_top), 1);
 		skip = false;
 	}
-	expand_tokens(&token_top, data->exit_status);
+	expand_tokens(&token_top, data->exit_status, lexer);
+	if (empty_tokens(token_top))
+		return (ft_error(NULL, 0, &token_top), 1);
 	set_token_id(token_top);
-	// print_token_data(token_top);
 	if (evaluator(token_top))
-		ft_error("Failed", 1, &token_top);
+		return (ft_error(NULL, 0, &token_top), 1);
+	print_token_data(token_top);
 	make_ast2(data, &token_top);
-	// if (data->st_node->type == EXECUTE)
-		// print_exec((t_exec *)data->st_node);
+	if (data->st_node->type == EXECUTE)
+		print_exec((t_exec *)data->st_node);
+	return (0);
 	// ft_error("test test", 0, &token_top);
 	// token_top = NULL; //put at end of token use (and free them)
 }
-	// start makin ast nodes "s_node"
-	// scan for pipes
-	// assign type and scan for args and redirs
-	// ?check syntax?

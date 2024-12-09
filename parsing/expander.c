@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/03 23:15:57 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/04 19:51:30 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,9 @@ static char	*get_exp_str(char *s, char *exit_status, t_lexer *l)
 	return (ret);
 }
 
-void	expand_tokens(t_token **toktop, int exit_status)
+void	expand_tokens(t_token **toktop, int exit_status, t_lexer l)
 {
 	t_token	*tmp;
-	t_lexer	l;
 	char	*exit_num_str;
 
 	tmp = *toktop;
@@ -128,11 +127,15 @@ void	expand_tokens(t_token **toktop, int exit_status)
 			tmp->len = ft_strlen(tmp->str);
 		if (l.keepempty == false && tmp->str[0] == 0)
 		{
-			tmp = tmp->next;
-			remove_token(tmp->previous);
+			if (tmp->previous == NULL)
+				tmp->type = T_SKIP;
+			else
+			{
+				tmp = tmp->previous;
+				remove_token(tmp->next);
+			}
 		}
-		else
-			tmp = tmp->next;
+		tmp = tmp->next;
 	}
 	ft_free(exit_num_str);
 }
