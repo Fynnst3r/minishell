@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:12:25 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:22:20 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 int	empty_tokens(t_token *t)
 {
@@ -79,17 +79,17 @@ int	start_lexer(char *input, t_data *data)
 		}
 		while (ft_isspace(input[lexer.position]))
 			lexer.position++;
-		if (!skip)
+		if (!skip && input[lexer.position] != 0)
 			if (make_token(&token_top, &lexer))
 				return (ft_error(NULL, 0, &token_top), 1);
 		skip = false;
 	}
+	if (evaluator(token_top))
+		return (ft_error(NULL, 0, &token_top), 1);
 	expand_tokens(&token_top, data->exit_status, lexer);
 	if (empty_tokens(token_top))
 		return (ft_error(NULL, 0, &token_top), 1);
 	set_token_id(token_top);
-	if (evaluator(token_top))
-		return (ft_error(NULL, 0, &token_top), 1);
 	print_token_data(token_top);
 	make_ast2(data, &token_top);
 	if (data->st_node->type == EXECUTE)

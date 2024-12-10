@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:24:49 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:12:33 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../../../minishell.h"
 
 void	print_exec(t_exec *cmd)
 {
@@ -18,6 +18,8 @@ void	print_exec(t_exec *cmd)
 
 	i = 0;
 	printf("EXECUTE\n");
+	if (cmd->argv[0] == NULL)
+		printf("AHAHAHAHAH NOTHING YOU LOOOOOOSER\n");
 	while (cmd->argv[i])
 	{
 		printf("arg[%zu] = %s\n", i, cmd->argv[i]);

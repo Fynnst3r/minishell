@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:02:53 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:17:41 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 
 // OWN LIBS
 # include "libft/libft.h"
-# include "garbage_collector/garbage_collector.h"
+# include "src/garbage_collector/garbage_collector.h"
 // COLOR
-# include "parsing/colors.h"
+# include "src/parsing/colors.h"
 
 extern int	g_signal;
 
@@ -129,26 +129,26 @@ typedef struct s_redir	t_redir;
 	linked list von redirs:
 	delimeter fuer alle redirs bis auf T_HEREDOC ist das NULL
 */
-typedef struct s_redir
-{
-	// t_redirtype	type;
-	char		*file;
-	char		*delimeter;
-	t_redir		*next;
-}	t_redir;
-
-// typedef struct s_pipe
+// typedef struct s_redir
 // {
-	
-// }	t_pipe;
+// 	// t_redirtype	type;
+// 	char		*file;
+// 	char		*delimeter;
+// 	t_redir		*next;
+// }	t_redir;
 
-typedef struct s_command
-{
-	t_redir		*redirs;//linked list
-	char		*name;//str
-	char		**argv;//str array
-	//char		**env;
-}	t_command;
+// // typedef struct s_pipe
+// // {
+	
+// // }	t_pipe;
+
+// typedef struct s_command
+// {
+// 	t_redir		*redirs;//linked list
+// 	char		*name;//str
+// 	char		**argv;//str array
+// 	//char		**env;
+// }	t_command;
 
 
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<MY FUNCTIONS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

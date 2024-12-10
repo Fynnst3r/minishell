@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:30:37 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/27 19:22:44 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:25:14 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 void	delete_trash(void)
 {

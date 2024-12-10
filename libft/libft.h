@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 16:19:34 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/20 19:27:23 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:19:18 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 # include "get_next_line_bonus.h"
 # include "ft_printf.h"
-# include "../garbage_collector/garbage_collector.h"
+// # include "../src/garbage_collector/garbage_collector.h"
+# include "../minishell.h"
 # include <stdlib.h>
 # include <unistd.h>
 

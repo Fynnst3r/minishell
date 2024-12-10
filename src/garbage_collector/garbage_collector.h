@@ -6,14 +6,14 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 15:34:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/21 18:44:00 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:21:51 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GARBAGE_COLLECTOR_H
 # define GARBAGE_COLLECTOR_H
 
-# include "../minishell.h"
+# include "../../minishell.h"
 # include <stdlib.h>
 # include <stdio.h>
 # include <stdint.h>

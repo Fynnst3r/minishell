@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/02 19:45:00 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:14:17 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 char	*find_path(t_data *data, t_exec *st_node)
 {

@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/04 20:25:07 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:14:29 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 // void fill_test_struct(t_data *data) // pwd
 // {

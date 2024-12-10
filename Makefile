@@ -3,22 +3,22 @@ NAME = minishell
 CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
-SRCS = 	minishell.c\
-		parsing/start_lexer.c parsing/lexer_utils.c\
-		parsing/make_token.c\
-		parsing/token_utils.c\
-		parsing/expander.c parsing/expander_utils.c\
-		parsing/evaluator.c\
-		parsing/ast_files/make_ast2.c\
-		parsing/ast_files/pipe_ast.c\
-		error/error.c\
-		garbage_collector/garbage_start.c\
-		garbage_collector/ft_malloc.c\
-		garbage_collector/free.c\
-		exec/help_execution.c\
-		exec/pipe.c\
-		exec/start_execution.c\
-		builtins/builtins1.c
+SRCS = 	src/minishell.c\
+		src/parsing/start_lexer.c src/parsing/lexer_utils.c\
+		src/parsing/make_token.c\
+		src/parsing/token_utils.c\
+		src/parsing/expander.c src/parsing/expander_utils.c\
+		src/parsing/evaluator.c\
+		src/parsing/ast_files/make_ast2.c\
+		src/parsing/ast_files/pipe_ast.c\
+		src/error/error.c\
+		src/garbage_collector/garbage_start.c\
+		src/garbage_collector/ft_malloc.c\
+		src/garbage_collector/free.c\
+		src/exec/help_execution.c\
+		src/exec/pipe.c\
+		src/exec/start_execution.c\
+		src/builtins/builtins1.c
 
 
 

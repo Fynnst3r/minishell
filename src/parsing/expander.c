@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/04 19:51:30 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:22:30 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 char	*add_char(char *ret, char add, size_t *position)
 {
@@ -90,6 +90,8 @@ static char	*get_exp_str(char *s, char *exit_status, t_lexer *l)
 	char	*val;
 	char	*ret;
 
+	// if (!ft_strchr(s, '$'))
+	// 	return (s);
 	ret = ft_strdup("");
 	while (s[l->position])
 	{

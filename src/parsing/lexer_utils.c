@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:37:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:10:37 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:22:28 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 t_lexer	init_lex(char *input)
 {

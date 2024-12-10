@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:39:42 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:23:30 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:22:33 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 char	*keep_expanding(char *s, char *ret, t_lexer *l, char *exit_status)
 {

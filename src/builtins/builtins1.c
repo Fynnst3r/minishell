@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/04 22:28:00 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:10:12 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 int	check_builtins(t_data *data, char **cmd)
 {

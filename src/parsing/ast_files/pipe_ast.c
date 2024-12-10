@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 22:32:04 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:26:25 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:13:36 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../../../minishell.h"
 
 bool	check_for_next_pipe(t_token *tmp)
 {
@@ -86,6 +86,7 @@ t_pipe	*make_pipe_ast(t_token **toktop)
 	tmp = *toktop;
 	pipe = make_pipe_node(NULL);
 	pipe->left = set_pipe_cmd(tmp);
+	print_exec((t_exec *)pipe->left);
 	while (tmp)
 	{
 		while (tmp->type != T_PIPE)

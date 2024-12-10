@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/02 19:45:02 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:15:47 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 void	check_pipe(t_pipe *st_node, t_data *data, int last)
 {

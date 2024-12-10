@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/04 23:01:25 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:25:01 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 void	free_tokens(t_token **t)
 {

@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/04 17:16:48 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:22:05 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	g_signal = 0;
 

@@ -6,11 +6,11 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 14:40:34 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/04 20:47:45 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:22:37 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 // This function checks basic syntax errors
 int	evaluator(t_token *toktop)
