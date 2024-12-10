@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 15:34:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 16:21:51 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:45:17 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <stdio.h>
 # include <stdint.h>
 # include <strings.h>
+
+typedef struct s_list	t_list;
 
 typedef struct s_trashnode
 {

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 16:12:33 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:55:20 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_exec(t_exec *cmd)
 	i = 0;
 	printf("EXECUTE\n");
 	if (cmd->argv[0] == NULL)
-		printf("AHAHAHAHAH NOTHING YOU LOOOOOOSER\n");
+		printf(ANSI_RED"EMPTY PIPE COMMAND\n"ANSI_RESET);
 	while (cmd->argv[i])
 	{
 		printf("arg[%zu] = %s\n", i, cmd->argv[i]);
@@ -173,6 +173,6 @@ void	make_ast2(t_data *data, t_token **toktop)
 	else
 	{
 		data->st_node = (t_cmd *)make_pipe_ast(toktop);
-		print_pipe_ast((t_pipe *)data->st_node);
+		// print_pipe_ast((t_pipe *)data->st_node);
 	}
 }

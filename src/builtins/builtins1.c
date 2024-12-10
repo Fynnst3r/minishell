@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 19:20:50 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:59:30 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 int	check_builtins(t_data *data, char **cmd)
 {
 	data->argc = 3;
-	if (ft_strncmp(cmd[0], "echo", 4) == 0)
+	if (ft_strncmp(cmd[0], "echo", 5) == 0)
 		exec_echo(cmd);
-	else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
+	else if (ft_strncmp(cmd[0], "pwd", 4) == 0)
 	{
 		exec_pwd(data);
 	}
-	else if (ft_strncmp(cmd[0], "env", 3) == 0)
+	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 		exec_env(data);
-	// else if (ft_strncmp(cmd[0], "unset", 3) == 0)
+	// else if (ft_strncmp(cmd[0], "unset", 6) == 0)
 	// 	exec_unset(data, cmd);
-	// else if (ft_strncmp(cmd[0], "cd", 2) == 0)
+	// else if (ft_strncmp(cmd[0], "cd", 3) == 0)
 	// 	exec_cd(cmd);
-	// else if (ft_strncmp(cmd[0], "export", 3) == 0)
+	// else if (ft_strncmp(cmd[0], "export", 7) == 0)
 	// 	exec_export(data, cmd);
-	// else if (ft_strncmp(cmd[0], "exit", 3) == 0)
+	// else if (ft_strncmp(cmd[0], "exit", 5) == 0)
 	// 	exec_exit(cmd);
 	else
 		return (0);

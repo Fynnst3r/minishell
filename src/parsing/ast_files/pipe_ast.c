@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 22:32:04 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 16:13:36 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:55:03 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	scan_cmd_type_pipe(t_token *t)
 		}
 		if (t->type == T_PIPE)
 		{
-			printf("AAHHH A PIPE, SAVE ME BIGGERMAN\n"); //distasteful joke ik
 			break ;
 		}
 		t = t->next;
@@ -64,7 +63,7 @@ t_cmd	*set_pipe_cmd(t_token *tmp)
 	int		cmd_type;
 
 	cmd_type = scan_cmd_type_pipe(tmp);
-	printf("COMMAND TYPE %i\n\n\n", cmd_type);
+	// printf("COMMAND TYPE %i\n\n\n", cmd_type);
 	if (cmd_type == EXECUTE)
 		return ((t_cmd *)make_cmd_node(tmp));
 	else if (cmd_type == RED)
@@ -86,12 +85,12 @@ t_pipe	*make_pipe_ast(t_token **toktop)
 	tmp = *toktop;
 	pipe = make_pipe_node(NULL);
 	pipe->left = set_pipe_cmd(tmp);
-	print_exec((t_exec *)pipe->left);
+	// print_exec((t_exec *)pipe->left);
 	while (tmp)
 	{
 		while (tmp->type != T_PIPE)
 			tmp = tmp->next;
-		printf("currID %i\n", tmp->id);
+		// printf("currID %i\n", tmp->id);
 		curr_id = tmp->id + 1;
 		pipe->right = set_pipe_cmd(find_id(*toktop, curr_id));
 		if (check_for_next_pipe(find_id(*toktop, curr_id)) == true)

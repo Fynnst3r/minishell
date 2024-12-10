@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 19:19:03 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:45:40 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 
 extern int	g_signal;
 
+typedef struct s_list	t_list;
+
 enum e_flags
 {
 	WORD = 0,
@@ -49,7 +51,6 @@ typedef struct s_data
 	int				argc;
 	char			**env;
 	char			*cmd_path;
-	int				exit_status;
 	int				origin_stdin;
 	int				origin_stdout;
 	t_list			*env_list;
@@ -154,7 +155,7 @@ void		set_token_id(t_token *t);
 void		set_token_types(t_token *t);
 
 // parsing/expander.c
-void		expand_tokens(t_token **toktop, int exit_status, t_lexer l);
+void		expand_tokens(t_token **toktop, t_lexer l);
 char		*check_val(char *s, t_lexer *l);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit);
 char		*add_char(char *ret, char add, size_t *position);
@@ -209,7 +210,7 @@ char		**find_path_help(t_data *data);
 int			write_in_file(int fd, t_herd *st_node);
 
 //execution/exec_utils
-void		fill_env(t_data *data, char **env);
+// void		fill_env(t_data *data, char **env);
 void		fill_env_list(t_data *data, char **env);
 // void		ft_add_node_back(t_node **list, t_node *new_node);
 // t_node		*create_node(const char *env_entry);

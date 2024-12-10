@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 16:22:30 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:29:28 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ static char	*get_exp_str(char *s, char *exit_status, t_lexer *l)
 	char	*val;
 	char	*ret;
 
-	// if (!ft_strchr(s, '$'))
-	// 	return (s);
 	ret = ft_strdup("");
 	while (s[l->position])
 	{
@@ -113,13 +111,13 @@ static char	*get_exp_str(char *s, char *exit_status, t_lexer *l)
 	return (ret);
 }
 
-void	expand_tokens(t_token **toktop, int exit_status, t_lexer l)
+void	expand_tokens(t_token **toktop, t_lexer l)
 {
 	t_token	*tmp;
 	char	*exit_num_str;
 
 	tmp = *toktop;
-	exit_num_str = ft_itoa(exit_status);
+	exit_num_str = ft_itoa(g_signal);
 	while (tmp)
 	{
 		l = init_lex(tmp->str);
