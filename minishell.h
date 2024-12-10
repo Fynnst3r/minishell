@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 15:39:04 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/10 17:03:26 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ typedef struct s_data
 // 	struct s_vars	*next;
 // }	t_vars;
 
-typedef struct s_env_list
+typedef struct s_env_entry
 {
-	void			*content;
-	struct s_list	*next;
-}	t_env_list;
+	char	*name;
+	char	*value;
+}	t_env_entry;
 
 typedef enum s_obj
 {
