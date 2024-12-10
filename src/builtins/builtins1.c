@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yannismauk <yannismauk@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/10/31 21:13:12 by yannismauk       ###   ########.fr       */
+/*   Updated: 2024/12/04 16:43:34 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,25 +18,29 @@ int	check_builtins(t_data *data, char **cmd)
 	if (ft_strncmp(cmd[0], "echo", 4) == 0)
 		exec_echo(cmd);
 	else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
+	{
 		exec_pwd(data);
+	}
 	else if (ft_strncmp(cmd[0], "env", 3) == 0)
 		exec_env(data);
+	// else if (ft_strncmp(cmd[0], "unset", 3) == 0)
+	// 	exec_unset(data, cmd);
 	// else if (ft_strncmp(cmd[0], "cd", 2) == 0)
 	// 	exec_cd(cmd);
 	// else if (ft_strncmp(cmd[0], "export", 3) == 0)
 	// 	exec_export(data, cmd);
-	else if (ft_strncmp(cmd[0], "exit", 3) == 0)
-		exec_exit(cmd);
+	// else if (ft_strncmp(cmd[0], "exit", 3) == 0)
+	// 	exec_exit(cmd);
 	else
 		return (0);
 	return (1);
 }
 
-void	exec_exit(char **cmd) // unklar ob das stimmt
-{
-	if (cmd[1] == NULL)
-        exit(0);
-}
+// void	exec_exit(char **cmd) // unklar ob das stimmt
+// {
+// 	ft_putstr_fd("exit\n", 2);
+// 	exit(0);
+// }
 
 void	exec_env(t_data *data) // nochmal abchecken ob mein ergebnis korrekt ist. evt müssen umgebungsvariablem vererbt werden
 {
@@ -53,17 +57,15 @@ void	exec_env(t_data *data) // nochmal abchecken ob mein ergebnis korrekt ist. e
 
 void	exec_pwd(t_data *data)
 {
-	char	*path;
-	int		i;
+	char	*pwd;
 
-	i = 0;
-	while (data->env[i] != ft_strnstr(data->env[i], "PWD=/", 5))
-	{
-		i++;
-		path = ft_strchr(data->env[i], '/');
-	}
-	ft_putstr_fd(path, 2);
-	ft_putstr_fd("\n", 2);
+	data->argc = 1;
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		exit(1);
+	ft_putstr_fd(pwd, STDOUT_FILENO);
+	ft_putstr_fd("\n", STDOUT_FILENO);
+	free(pwd);
 }
 
 void	exec_echo(char **cmd)
@@ -75,7 +77,7 @@ void	exec_echo(char **cmd)
 
 	i = 1;
 	newline = 1;
-	while (cmd[i][0] == '-' && cmd[i][1] == 'n')
+	while (cmd[i] && cmd[i][0] == '-' && cmd[i][1] == 'n')
 	{
 		j = 2;
 		n_flag = 1;
@@ -95,13 +97,13 @@ void	exec_echo(char **cmd)
 	}
 	while (cmd[i] != NULL)
 	{
-		ft_putstr_fd(cmd[i], 2);
+		ft_putstr_fd(cmd[i], STDOUT_FILENO);
 		if (cmd[i + 1] != NULL)
-			ft_putstr_fd(" ", 2);
+			ft_putstr_fd(" ", STDOUT_FILENO);
 		i++;
 	}
 	if (newline)
-		ft_putstr_fd("\n", 2);
+		ft_putstr_fd("\n", STDOUT_FILENO);
 }
 
 // void	exec_cd(char **cmd)
