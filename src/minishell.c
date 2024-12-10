@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/04 15:19:05 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/10 15:46:44 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int ac, char **av, char **env)
 	av = NULL;
 	// setting_data(&data);
 	fill_env(&data, env);
-	// fill_env_list(&data, env);
+	fill_env_list(&data, env);
 	fill_test_struct(&data);
 	data.origin_stdin = dup(STDIN_FILENO);
 	data.origin_stdout = dup(STDOUT_FILENO);
@@ -49,4 +49,19 @@ int	main(int ac, char **av, char **env)
 // void	setting_data(t_data *data)
 // {
 // 	data->env_list = NULL;
+// }
+
+// #include <stdio.h> // Für printf
+// #include "libft.h" // Falls t_list dort definiert ist
+
+// void print_env_list(t_list *env_list)
+// {
+//     t_list *current = env_list;
+
+//     while (current != NULL)
+//     {
+//         // Da content ein char* ist, kann es direkt als String ausgegeben werden
+//         printf("%s\n", (char *)current->content);
+//         current = current->next;
+//     }
 // }

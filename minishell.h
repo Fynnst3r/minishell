@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/04 15:16:39 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/10 15:39:04 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 
 extern int	g_signal;
 
-
 typedef struct s_data
 {
 	struct s_cmd	*st_node;
@@ -36,15 +35,21 @@ typedef struct s_data
 	char			*cmd_path;
 	int				origin_stdin;
 	int				origin_stdout;
-	// t_			*env_list;
+	t_list			*env_list;
 }	t_data;
 
-typedef struct s_vars
+// typedef struct s_vars
+// {
+// 	char			*name;// Der Name der Umgebungsvariable (z. B. "PATH")
+// 	char			*value;// Der Wert der Umgebungsvariable (z. B. "/usr/bin")
+// 	struct s_vars	*next;
+// }	t_vars;
+
+typedef struct s_env_list
 {
-	char			*name;// Der Name der Umgebungsvariable (z. B. "PATH")
-	char			*value;// Der Wert der Umgebungsvariable (z. B. "/usr/bin")
-	struct s_vars	*next;
-}	t_vars;
+	void			*content;
+	struct s_list	*next;
+}	t_env_list;
 
 typedef enum s_obj
 {
@@ -87,7 +92,6 @@ typedef struct s_herd
 	t_cmd	*cmd;
 	char	*del;
 }	t_herd;
-
 
 //minishell.c
 int			main(int ac, char **av, char **env);
