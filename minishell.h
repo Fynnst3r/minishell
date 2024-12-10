@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yannismauk <yannismauk@student.42.fr>      +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/31 21:09:19 by yannismauk       ###   ########.fr       */
+/*   Updated: 2024/11/19 16:38:54 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,34 @@
 // C_PARANT is short for "closing parentheses."
 enum e_flags
 {
-	BUILTIN = 2,
-	IDENTIFIER,
-	PLUS_ASSIGN,
-	MINUS_ASSIGN,
-	DIVI_ASSIGN,
-	MULTI_ASSIGN,
-	NUMBER,
-	O_PARANT,
-	C_PARANT,
-	OTHER
+	WORD,
+	SINGLE_Q,
+	DOUBLE_Q,
+	T_PIPE,
+	T_IN,
+	T_OUT,
+	T_APP,
+	T_HERE,
+	PATH
 };
+
+typedef struct s_lexer
+{
+	char		*str;
+	size_t		position;
+	size_t		read_cursor;
+	char		last_c;
+	char		curr_c;
+}					t_lexer;
 
 typedef struct s_token
 {
 	char			*str;
-	int				flag;
+	int				type;
 	int				id;
+	size_t			len;
 
 	struct s_token	*next;
-	struct s_token	*next2;
 	struct s_token	*previous;
 
 }			t_token;
@@ -152,3 +160,5 @@ void	exec_env(t_data *data);
 void	exec_exit(char **cmd);
 
 #endif
+
+// echo -n nigger aahaahahahahAHAHHAAHAHH AHHAH AHAH AHAHA HAHA HH AHAHHAAHAHAHHAH >ass 

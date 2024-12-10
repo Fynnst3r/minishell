@@ -1,34 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 10:15:22 by ymauk             #+#    #+#             */
-/*   Updated: 2024/11/19 16:50:22 by ymauk            ###   ########.fr       */
+/*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
+/*   Updated: 2024/12/04 15:16:00 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include <stdio.h>
-// copying s1 in a new ptr
-char	*ft_strdup(const char *s1)
-{
-	int		i;
-	char	*ptr;
+#include "../../minishell.h"
 
-	if (s1 == NULL)
-		return (NULL);
+//filling the data->env variable with the content of char **env
+void	fill_env(t_data *data, char **env)
+{
+	int	i;
+	int	j;
+
 	i = 0;
-	ptr = (char *)malloc((ft_strlen(s1) + 1) * sizeof(char));
-	if (ptr == NULL)
-		return (NULL);
-	while (s1[i] != '\0')
-	{
-		ptr[i] = s1[i];
+	while (env[i] != NULL)
 		i++;
+	data->env = (char **) malloc ((i + 1) * (sizeof(char *)));
+	if (!data->env)
+		printf("error!");
+	j = 0;
+	while (j < i)
+	{
+		data->env[j] = ft_strdup(env[j]);
+		j++;
 	}
-	ptr[i] = '\0';
-	return (ptr);
+	data->env[i] = NULL;
 }
+
+// void	fill_env_list(t_data *data, char **env)
+// {
+	
+// }
+

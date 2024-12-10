@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/15 11:28:35 by ymauk             #+#    #+#             */
-/*   Updated: 2024/11/19 16:50:15 by ymauk            ###   ########.fr       */
+/*   Created: 2024/11/20 10:36:55 by ymauk             #+#    #+#             */
+/*   Updated: 2024/11/20 10:38:13 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-// new node with the value content
-t_list	*ft_lstnew(void *content)
-{
-	t_list	*new_node;
+#include "../../minishell.h"
 
-	new_node = (t_list *)malloc(sizeof(t_list));
-	if (new_node == NULL)
-		return (NULL);
-	new_node->content = content;
-	new_node->next = NULL;
-	return (new_node);
+void	exec_unset(t_data *data, char **cmd)
+{
+	
 }
