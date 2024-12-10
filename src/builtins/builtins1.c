@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 17:13:09 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:20:50 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,17 @@ int	check_builtins(t_data *data, char **cmd)
 // 	exit(0);
 // }
 
-void	exec_env(t_data *data) // nochmal abchecken ob mein ergebnis korrekt ist. evt müssen umgebungsvariablem vererbt werden
+void	exec_env(t_data *data)
 {
-	int	i;
+	t_list		*current;
+	t_env_entry	*entry;
 
-	i = 0;
-	while (data->env[i] != NULL)
+	current = data->env_list;
+	while (current != NULL)
 	{
-		ft_putstr_fd(data->env[i], 2);
-		ft_putstr_fd("\n", 2);
-		i++;
+		entry = (t_env_entry *)current->content;
+		printf("%s=%s\n", entry->name, entry->value);
+		current = current->next;
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 17:20:18 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 19:19:03 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_data
 	int				exit_status;
 	int				origin_stdin;
 	int				origin_stdout;
+	t_list			*env_list;
 }						t_data;
 
 typedef struct s_lexer
@@ -74,6 +75,12 @@ typedef struct s_token
 	struct s_token	*next;
 	struct s_token	*previous;
 }						t_token;
+
+typedef struct s_env_entry
+{
+	char	*name;
+	char	*value;
+}	t_env_entry;
 
 typedef enum s_obj
 {
@@ -178,6 +185,9 @@ void		free_tokens(t_token **t);
 //<<<<<<<<<<<<<<<<<<<<<    ymauk execution functions    >>>>>>>>>>>>>>>>>>>>>>//
 /******************************************************************************/
 
+//minishell.c
+int			main(int ac, char **av, char **env);
+void		setting_data(t_data *data);
 
 //execution/start_execution
 void		start_exec(t_data *data, t_cmd *cmd);
@@ -198,11 +208,20 @@ void		free_dp(char **str);
 char		**find_path_help(t_data *data);
 int			write_in_file(int fd, t_herd *st_node);
 
+//execution/exec_utils
+void		fill_env(t_data *data, char **env);
+void		fill_env_list(t_data *data, char **env);
+// void		ft_add_node_back(t_node **list, t_node *new_node);
+// t_node		*create_node(const char *env_entry);
+// void		print_env_list(t_node *list);
+
 //builtins/builtins1
-int				check_builtins(t_data *data, char **cmd);
-void			exec_echo(char **cmd);
+int			check_builtins(t_data *data, char **cmd);
+void		exec_echo(char **cmd);
+
 // void	exec_cd(char **cmd);
-void			exec_pwd(t_data *data);
-void			exec_env(t_data *data);
-void			exec_exit(char **cmd);
+void		exec_pwd(t_data *data);
+void		exec_env(t_data *data);
+// void		exec_exit(char **cmd);
+void		exec_unset(t_data *data, char **cmd);
 #endif
