@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/04 16:42:45 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/10 12:51:33 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -415,6 +415,42 @@
 //     data->st_node = (t_cmd *)redir;
 // }
 
+void fill_test_struct(t_data *data) // echo "hallo" > a > b > c
+{
+    // 1. Erstellen des echo-Befehls mit Argument "hallo"
+    t_exec *exec_echo = malloc(sizeof(t_exec));
+    exec_echo->type = EXECUTE;
+    exec_echo->argv = malloc(3 * sizeof(char *));
+    exec_echo->argv[0] = strdup("echo");
+    exec_echo->argv[1] = strdup("hallo");
+    exec_echo->argv[2] = NULL;
+    // 2. Erste Ausgabeumleitung '> a'
+    t_red *redir_a = malloc(sizeof(t_red));
+    redir_a->type = RED;
+    redir_a->mode = O_WRONLY | O_CREAT | O_TRUNC;
+    redir_a->file = strdup("a");
+    redir_a->fd = STDOUT_FILENO;
+    // 3. Zweite Ausgabeumleitung '> b'
+    t_red *redir_b = malloc(sizeof(t_red));
+    redir_b->type = RED;
+    redir_b->mode = O_WRONLY | O_CREAT | O_TRUNC;
+    redir_b->file = strdup("b");
+    redir_b->fd = STDOUT_FILENO;
+    // 4. Dritte Ausgabeumleitung '> c'
+    t_red *redir_c = malloc(sizeof(t_red));
+    redir_c->type = RED;
+    redir_c->mode = O_WRONLY | O_CREAT | O_TRUNC;
+    redir_c->file = strdup("c");
+    redir_c->fd = STDOUT_FILENO;
+    // 5. Verkettung der Redirections in der Reihenfolge der Eingabe:
+    // Dadurch wird zuerst a, dann b, dann c gesetzt, bevor echo ausgeführt wird.
+    redir_c->cmd = (t_cmd *)exec_echo; // c verweist auf den echo-Befehl
+    redir_b->cmd = (t_cmd *)redir_c;   // b verweist auf c
+    redir_a->cmd = (t_cmd *)redir_b;   // a verweist auf b
+    // Letztendlich ist a die Wurzel des AST, da a die erste Umleitung ist
+    data->st_node = (t_cmd *)redir_a;
+}
+
 void	start_exec(t_data *data, t_cmd *cmd)
 {
 	if (cmd->type == EXECUTE)
@@ -469,12 +505,14 @@ void	exec_red(t_red *st_node, t_data *data)
 	if (dup2(fd_orig, st_node->fd) == -1)
 		exit(1);
 	close(fd_orig);
-	exec_execu((t_exec *)st_node->cmd, data);
+	if (st_node->cmd->type == RED)
+		start_exec(data, st_node->cmd);
+	else if (st_node->cmd->type == EXECUTE)
+		exec_execu((t_exec *)st_node->cmd, data);
 	if (dup2(saved_fd, STDOUT_FILENO) == -1)
 		exit(1);
 	close(saved_fd);
 }
-
 
 void	exec_execu(t_exec *st_node, t_data *data)
 {

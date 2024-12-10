@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/19 16:38:54 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/04 15:16:39 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,48 +24,8 @@
 # include "lib/get_next_line/get_next_line.h"
 # include <string.h>
 
-// IDENTIFIER An identifier is things like a variable or a function name.
-// They are referencing something.
-// ASSIGNMENT An assignment just means that this is an operator that is used
-// to assign a value. An operator is a symbol placed between
-// identifiers or values to do something.
-// O_PARANT is short for "opening parentheses." Parentheses are ( and ).
-// C_PARANT is short for "closing parentheses."
-enum e_flags
-{
-	WORD,
-	SINGLE_Q,
-	DOUBLE_Q,
-	T_PIPE,
-	T_IN,
-	T_OUT,
-	T_APP,
-	T_HERE,
-	PATH
-};
-
-typedef struct s_lexer
-{
-	char		*str;
-	size_t		position;
-	size_t		read_cursor;
-	char		last_c;
-	char		curr_c;
-}					t_lexer;
-
-typedef struct s_token
-{
-	char			*str;
-	int				type;
-	int				id;
-	size_t			len;
-
-	struct s_token	*next;
-	struct s_token	*previous;
-
-}			t_token;
-
 extern int	g_signal;
+
 
 typedef struct s_data
 {
@@ -76,7 +36,15 @@ typedef struct s_data
 	char			*cmd_path;
 	int				origin_stdin;
 	int				origin_stdout;
-}t_data;
+	// t_			*env_list;
+}	t_data;
+
+typedef struct s_vars
+{
+	char			*name;// Der Name der Umgebungsvariable (z. B. "PATH")
+	char			*value;// Der Wert der Umgebungsvariable (z. B. "/usr/bin")
+	struct s_vars	*next;
+}	t_vars;
 
 typedef enum s_obj
 {
@@ -84,25 +52,25 @@ typedef enum s_obj
 	RED,
 	EXECUTE,
 	HEREDOC
-}t_obj;
+}	t_obj;
 
 typedef struct s_cmd
 {
 	t_obj	type;
-}t_cmd;
+}	t_cmd;
 
 typedef struct s_exec
 {
 	t_obj		type;
 	char		**argv;
-}t_exec;
+}	t_exec;
 
 typedef struct s_pipe
 {
 	t_obj			type;
 	t_cmd			*left;
 	t_cmd			*right;
-}t_pipe;
+}	t_pipe;
 
 typedef struct s_red
 {
@@ -111,26 +79,19 @@ typedef struct s_red
 	char	*file;
 	int		fd;
 	t_cmd	*cmd;
-}t_red;
+}	t_red;
 
 typedef struct s_herd
 {
 	t_obj	type;
 	t_cmd	*cmd;
 	char	*del;
-}t_herd;
+}	t_herd;
 
 
 //minishell.c
 int			main(int ac, char **av, char **env);
-void		fill_env(t_data *data, char **env);
-
-//parsing/token_utils.c
-void		make_token(t_token **token);
-t_token		*find_last_token(t_token *t);
-
-//parsing/free.c
-void		free_tokens(t_token **t);
+void		setting_data(t_data *data);
 
 //execution/start_execution
 void		start_exec(t_data *data, t_cmd *cmd);
@@ -151,14 +112,22 @@ void		free_dp(char **str);
 char		**find_path_help(t_data *data);
 int			write_in_file(int fd, t_herd *st_node);
 
+//execution/exec_utils
+void		fill_env(t_data *data, char **env);
+void		fill_env_list(t_data *data, char **env);
+// void		ft_add_node_back(t_node **list, t_node *new_node);
+// t_node		*create_node(const char *env_entry);
+// void		print_env_list(t_node *list);
+
 //builtins/builtins1
-int		check_builtins(t_data *data, char **cmd);
-void	exec_echo(char **cmd);
+int			check_builtins(t_data *data, char **cmd);
+void		exec_echo(char **cmd);
+
 // void	exec_cd(char **cmd);
-void	exec_pwd(t_data *data);
-void	exec_env(t_data *data);
-void	exec_exit(char **cmd);
+void		exec_pwd(t_data *data);
+void		exec_env(t_data *data);
+// void		exec_exit(char **cmd);
+void		exec_unset(t_data *data, char **cmd);
+
 
 #endif
-
-// echo -n nigger aahaahahahahAHAHHAAHAHH AHHAH AHAH AHAHA HAHA HH AHAHHAAHAHAHHAH >ass 
