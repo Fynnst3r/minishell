@@ -17,8 +17,10 @@ SRCS = 	src/minishell.c\
 		src/garbage_collector/free.c\
 		src/exec/help_execution.c\
 		src/exec/pipe.c\
+		src/exec/exec_utils.c\
 		src/exec/start_execution.c\
-		src/builtins/builtins1.c
+		src/builtins/builtins1.c\
+		src/builtins/unset.c\
 OBJ_DIR = obj
 OBJS = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 LIBFT = libft

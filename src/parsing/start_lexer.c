@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_lexer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 16:22:20 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:46:37 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	start_lexer(char *input, t_data *data)
 	}
 	if (evaluator(token_top))
 		return (ft_error(NULL, 0, &token_top), 1);
-	expand_tokens(&token_top, data->exit_status, lexer);
+	expand_tokens(&token_top, g_signal, lexer);
 	if (empty_tokens(token_top))
 		return (ft_error(NULL, 0, &token_top), 1);
 	set_token_id(token_top);

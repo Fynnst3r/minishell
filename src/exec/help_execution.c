@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   help_execution.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 19:23:56 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:45:46 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*find_path(t_data *data, t_exec *st_node)
 		full_p = ft_strjoin(mul_p[i], cmd);
 		if (access(full_p, X_OK) == 0)
 		{
-			free(cmd);
+			ft_free(cmd);
 			free_dp(mul_p);
 			return (full_p);
 		}
@@ -72,10 +72,10 @@ void	free_dp(char **str)
 	i = 0;
 	while (str[i] != NULL)
 	{
-		free(str[i]);
+		ft_free(str[i]);
 		i++;
 	}
-	free (str);
+	ft_free (str);
 }
 
 int	write_in_file(int fd, t_herd *st_node)

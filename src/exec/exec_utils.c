@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 17:55:18 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/11 14:40:17 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	fill_env_list(t_data *data, char **env)
 		equal_sign = ft_strchr(env[i], '=');
 		if (equal_sign)
 		{
-			entry = malloc(sizeof(t_env_entry));
+			entry = ft_malloc(sizeof(t_env_entry));
 			if (!entry)
 				exit(1);
 			entry->name = ft_substr(env[i], 0, equal_sign - env[i]);
@@ -34,9 +34,9 @@ void	fill_env_list(t_data *data, char **env)
 			new_node = ft_lstnew(entry);
 			if (!new_node)
 			{
-				free(entry->name);
-				free(entry->value);
-				free(entry);
+				ft_free(entry->name);
+				ft_free(entry->value);
+				ft_free(entry);
 				exit(1);
 			}
 			ft_lstadd_back(&data->env_list, new_node);
