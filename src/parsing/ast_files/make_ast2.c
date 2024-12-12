@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 19:55:20 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/12 23:30:45 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,37 @@ void	print_pipe_ast(t_pipe *pipe)
 	printf("finished pipe print\n");
 }
 
+void	print_red(t_red *red)
+{
+	static int	i = 0;
+
+	printf("red num %i\n\n", i);
+	i++;
+	if (red)
+	{
+		printf("filename = %s\n", red->file);
+		printf("cmd type = %i\n", red->type);
+		printf("red mode = %i\n", red->mode);
+		printf("fd = %i\n", red->fd);
+		if (red->cmd && red->cmd->type == RED)
+		{
+			// printf("next type %i\n", red->cmd->type);
+			print_red((t_red *)red->cmd);
+		}
+	}
+}
+
 int	scan_cmd_type(t_token *t)
 {
+	int	ret;
+
+	ret = EXECUTE;
 	while (t)
 	{
 		if (t->type == PATH)
 		{
 			if (t->previous->type != T_HERE)
-				return (RED);
+				ret = RED;
 			else
 				return (HEREDOC);
 		}
@@ -64,14 +87,14 @@ int	scan_cmd_type(t_token *t)
 			return (PIPE);
 		t = t->next;
 	}
-	return (EXECUTE);
+	return (ret);
 }
 
 t_exec	*make_cmd_node(t_token *t)
 {
 	t_exec	*exec;
-	size_t	count;
 	t_token	*tmp;
+	size_t	count;
 
 	count = 0;
 	tmp = t;
@@ -119,24 +142,52 @@ static void	set_red_type(t_red **red, int type)
 	}
 }
 
-t_red	*make_red_node(t_token *t)
+static t_red	*find_last_red(t_red *top)
+{
+	while (top->cmd != NULL)
+	{
+		top = (t_red *)top->cmd;
+	}
+	return (top);
+}
+
+static void	make_red_node(t_red **top, int type, char *filename)
+{
+	t_red	*new;
+	t_red	*last;
+
+	new = ft_calloc(sizeof(t_red), 1);
+	new->type = RED;
+	new->file = filename;
+	set_red_type(&new, type);
+	if (*top == NULL)
+	{
+		*top = new;
+		return ;
+	}
+	last = find_last_red(*top);
+	last->cmd = (t_cmd *)new;
+	return ;
+}
+
+t_red	*create_redir_cmd(t_token *t)
 {
 	t_red	*red;
+	t_red	*last;
 	t_token	*tmp;
 
+	red = NULL;
 	tmp = t;
-	red = ft_calloc(sizeof(t_red), 1);
-	red->type = RED;
 	while (tmp)
 	{
 		if (tmp->type == PATH)
 		{
-			red->file = tmp->str;
-			set_red_type(&red, tmp->previous->type);
+			make_red_node(&red, tmp->previous->type, tmp->str);
 		}
 		tmp = tmp->next;
 	}
-	red->cmd = (t_cmd *)make_cmd_node(t);
+	last = find_last_red(red);
+	last->cmd = (t_cmd *)make_cmd_node(t);
 	return (red);
 }
 
@@ -160,14 +211,17 @@ t_herd	*make_herd_node(t_token *t)
 
 void	make_ast2(t_data *data, t_token **toktop)
 {
-	// size_t	pipe_count;
 	int		cmd_type;
 
 	cmd_type = scan_cmd_type(*toktop);
+	// printf("cmd type %i\n", cmd_type);
 	if (cmd_type == EXECUTE)
 		data->st_node = (t_cmd *)make_cmd_node(*toktop);
 	else if (cmd_type == RED)
-		data->st_node = (t_cmd *)make_red_node(*toktop);
+	{
+		data->st_node = (t_cmd *)create_redir_cmd(*toktop);
+		// print_red((t_red *)data->st_node);
+	}
 	else if (cmd_type == HEREDOC)
 		data->st_node = (t_cmd *)make_herd_node(*toktop);
 	else

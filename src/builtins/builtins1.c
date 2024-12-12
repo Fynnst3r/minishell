@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 19:59:30 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/12 17:32:17 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	check_builtins(t_data *data, char **cmd)
 	}
 	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 		exec_env(data);
+	else
+		return (0);
 	// else if (ft_strncmp(cmd[0], "unset", 6) == 0)
 	// 	exec_unset(data, cmd);
 	// else if (ft_strncmp(cmd[0], "cd", 3) == 0)
@@ -31,8 +33,6 @@ int	check_builtins(t_data *data, char **cmd)
 	// 	exec_export(data, cmd);
 	// else if (ft_strncmp(cmd[0], "exit", 5) == 0)
 	// 	exec_exit(cmd);
-	else
-		return (0);
 	return (1);
 }
 
@@ -66,7 +66,7 @@ void	exec_pwd(t_data *data)
 		exit(1);
 	ft_putstr_fd(pwd, STDOUT_FILENO);
 	ft_putstr_fd("\n", STDOUT_FILENO);
-	free(pwd);
+	ft_free(pwd);
 }
 
 void	exec_echo(char **cmd)

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 22:32:04 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 19:55:03 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/10 21:13:17 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_cmd	*set_pipe_cmd(t_token *tmp)
 	if (cmd_type == EXECUTE)
 		return ((t_cmd *)make_cmd_node(tmp));
 	else if (cmd_type == RED)
-		return ((t_cmd *)make_red_node(tmp));
+		return ((t_cmd *)create_redir_cmd(tmp));
 	else if (cmd_type == HEREDOC)
 		return ((t_cmd *)make_herd_node(tmp));
 	return (NULL);

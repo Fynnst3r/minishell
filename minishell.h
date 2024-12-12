@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 19:45:40 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/12 23:12:03 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <signal.h>
+
 
 // OWN LIBS
 # include "libft/libft.h"
@@ -28,9 +30,10 @@
 // COLOR
 # include "src/parsing/colors.h"
 
-extern int	g_signal;
+extern int				g_signal;
 
 typedef struct s_list	t_list;
+typedef struct s_token	t_token;
 
 enum e_flags
 {
@@ -46,14 +49,16 @@ enum e_flags
 
 typedef struct s_data
 {
-	struct s_cmd	*st_node;
-	char			*input;
-	int				argc;
-	char			**env;
-	char			*cmd_path;
-	int				origin_stdin;
-	int				origin_stdout;
-	t_list			*env_list;
+	struct s_cmd		*st_node;
+	struct sigaction	sa;
+	t_token				*token_top;
+	char				*input;
+	int					argc;
+	char				**env;
+	char				*cmd_path;
+	int					origin_stdin;
+	int					origin_stdout;
+	t_list				*env_list;
 }						t_data;
 
 typedef struct s_lexer
@@ -155,13 +160,14 @@ void		set_token_id(t_token *t);
 void		set_token_types(t_token *t);
 
 // parsing/expander.c
-void		expand_tokens(t_token **toktop, t_lexer l);
-char		*check_val(char *s, t_lexer *l);
+void		expand_tokens(t_token **toktop, t_lexer l, t_list *env);
+char		*check_val(char *s, t_lexer *l, t_list *env);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit);
 char		*add_char(char *ret, char add, size_t *position);
 //..uitls.c
-char		*keep_expanding(char *s, char *ret, t_lexer *l, char *exit_status);
+char		*keep_expanding(char *s, char *ret, t_lexer *l, t_list *env);
 char		*stop_expanding(char *s, char *ret, t_lexer *l);
+char		*ft_getenv(char *tolook, t_list *env);
 
 //evaluator.c
 int			evaluator(t_token *toktop);
@@ -172,14 +178,15 @@ int			scan_cmd_type(t_token *t);
 void		print_exec(t_exec *cmd);
 void		print_pipe_ast(t_pipe *pipe);
 t_exec		*make_cmd_node(t_token *t);
-t_red		*make_red_node(t_token *t);
+t_red		*create_redir_cmd(t_token *t);
+// t_red		*make_red_node(void);
 t_herd		*make_herd_node(t_token *t);
 ///parsing/ast_files/make_pipe_ast.c
 t_pipe		*make_pipe_ast(t_token **toktop);
 
 //error/error.c
 void		ft_error(char *message, int errcode, t_token **toktop);
-//garbage_collector/free.c
+int			ft_free_tree(t_cmd *st_node);
 void		free_tokens(t_token **t);
 
 /******************************************************************************/

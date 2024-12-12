@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 19:29:28 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/11 15:53:09 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,12 @@ char	*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit)
 	return (join);
 }
 
-char	*check_val(char *s, t_lexer *l)
+char	*check_val(char *s, t_lexer *l, t_list *env)
 {
 	char	*sub;
 	char	*val;
 
+	(void)env;
 	l->read = l->position + 1;
 	while (s[l->read] != '$' && s[l->read] != ' ' && s[l->read] != 0
 		&& s[l->read] != '\'' && s[l->read] != '\"')
@@ -74,7 +75,8 @@ char	*check_val(char *s, t_lexer *l)
 	if (l->read == l->position + 1)
 		return (l->position = l->read, "$");
 	sub = ft_substr(s, l->position + 1, l->read - l->position - 1);
-	val = getenv(sub);
+	// val = getenv(sub);
+	val = ft_getenv(sub, env);
 	ft_free(sub);
 	sub = NULL;
 	if (val == NULL)
@@ -85,7 +87,7 @@ char	*check_val(char *s, t_lexer *l)
 	return (val);
 }
 
-static char	*get_exp_str(char *s, char *exit_status, t_lexer *l)
+static char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env)
 {
 	char	*val;
 	char	*ret;
@@ -94,14 +96,14 @@ static char	*get_exp_str(char *s, char *exit_status, t_lexer *l)
 	while (s[l->position])
 	{
 		if (s[l->position] == '\"')
-			ret = keep_expanding(s, ret, l, exit_status);
+			ret = keep_expanding(s, ret, l, env);
 		else if (s[l->position] == '\'')
 			ret = stop_expanding(s, ret, l);
 		else if (s[l->position] == '$' && s[l->position + 1] == '?')
 			ret = ft_strjoin_at(ret, exit_status, l, true);
 		else if (s[l->position] == '$')
 		{
-			val = check_val(s, l);
+			val = check_val(s, l, env);
 			if (val)
 				ret = ft_strjoin_at(ret, val, l, false);
 		}
@@ -111,7 +113,7 @@ static char	*get_exp_str(char *s, char *exit_status, t_lexer *l)
 	return (ret);
 }
 
-void	expand_tokens(t_token **toktop, t_lexer l)
+void	expand_tokens(t_token **toktop, t_lexer l, t_list *env)
 {
 	t_token	*tmp;
 	char	*exit_num_str;
@@ -122,7 +124,7 @@ void	expand_tokens(t_token **toktop, t_lexer l)
 	{
 		l = init_lex(tmp->str);
 		if (tmp->type == WORD || tmp->type == PATH)
-			tmp->str = get_exp_str(tmp->str, exit_num_str, &l);
+			tmp->str = get_exp_str(tmp->str, exit_num_str, &l, env);
 		if (tmp->str)
 			tmp->len = ft_strlen(tmp->str);
 		if (l.keepempty == false && tmp->str[0] == 0)

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 19:49:40 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/12 23:30:18 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	start_lexer(char *input, t_data *data)
 	t_lexer	lexer;
 	bool	skip;
 
-	token_top = NULL;
+	token_top = data->token_top;
 	add_history(input);
 	lexer = init_lex(input);
 	skip = false;
@@ -84,9 +84,9 @@ int	start_lexer(char *input, t_data *data)
 				return (ft_error(NULL, 0, &token_top), 1);
 		skip = false;
 	}
+	expand_tokens(&token_top, lexer, data->env_list);
 	if (evaluator(token_top))
 		return (ft_error(NULL, 0, &token_top), 1);
-	expand_tokens(&token_top, lexer);
 	if (empty_tokens(token_top))
 		return (ft_error(NULL, 0, &token_top), 1);
 	set_token_id(token_top);
@@ -94,7 +94,6 @@ int	start_lexer(char *input, t_data *data)
 	make_ast2(data, &token_top);
 	// if (data->st_node->type == EXECUTE)
 		// print_exec((t_exec *)data->st_node);
+	// free_tokens(&token_top);
 	return (0);
-	// ft_error("test test", 0, &token_top);
-	// token_top = NULL; //put at end of token use (and free them)
 }

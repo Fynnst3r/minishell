@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:36:55 by ymauk             #+#    #+#             */
-/*   Updated: 2024/11/20 10:38:13 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/10 20:08:00 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,6 @@
 
 void	exec_unset(t_data *data, char **cmd)
 {
-	
+	(void)cmd;
+	(void)data;
 }

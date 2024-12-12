@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 19:38:55 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/12 15:51:05 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	fill_env_list(t_data *data, char **env)
 		equal_sign = ft_strchr(env[i], '=');
 		if (equal_sign)
 		{
-			entry = ft_calloc(sizeof(t_env_entry), 1);
+			entry = ft_malloc(sizeof(t_env_entry));
 			if (!entry)
 				exit(1);
 			entry->name = ft_substr(env[i], 0, equal_sign - env[i]);

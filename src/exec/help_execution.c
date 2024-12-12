@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 19:23:56 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/12 23:17:19 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ char	**find_path_help(t_data *data)
 	return (mul);
 }
 
-
 void	free_dp(char **str)
 {
 	int	i;
@@ -72,10 +71,12 @@ void	free_dp(char **str)
 	i = 0;
 	while (str[i] != NULL)
 	{
-		free(str[i]);
+		ft_free(str[i]);
+		str[i] = NULL;
 		i++;
 	}
-	free (str);
+	ft_free(str);
+	str = NULL;
 }
 
 int	write_in_file(int fd, t_herd *st_node)
