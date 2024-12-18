@@ -6,11 +6,20 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:39:42 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/12 15:47:16 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:37:40 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+bool	needs_to_expand(t_token *tmp)
+{
+	if ((tmp->type == WORD || tmp->type == PATH)
+		&& (ft_strchr(tmp->str, '\'') || ft_strchr(tmp->str, '\"')
+			|| ft_strchr(tmp->str, '$')))
+		return (true);
+	return (false);
+}
 
 char	*keep_expanding(char *s, char *ret, t_lexer *l, t_list *env)
 {
@@ -56,9 +65,9 @@ char	*ft_getenv(char *tolook, t_list *env)
 	t_list		*curr;
 	t_env_entry	*enventry;
 
-	curr = env;
 	if (!env)
 		return (NULL);
+	curr = env;
 	while (curr)
 	{
 		enventry = (t_env_entry *)curr->content;

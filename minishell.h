@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/12 23:12:03 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/18 22:59:03 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <signal.h>
-
 
 // OWN LIBS
 # include "libft/libft.h"
@@ -165,6 +164,7 @@ char		*check_val(char *s, t_lexer *l, t_list *env);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit);
 char		*add_char(char *ret, char add, size_t *position);
 //..uitls.c
+bool		needs_to_expand(t_token *tmp);
 char		*keep_expanding(char *s, char *ret, t_lexer *l, t_list *env);
 char		*stop_expanding(char *s, char *ret, t_lexer *l);
 char		*ft_getenv(char *tolook, t_list *env);
@@ -226,10 +226,15 @@ void		fill_env_list(t_data *data, char **env);
 //builtins/builtins1
 int			check_builtins(t_data *data, char **cmd);
 void		exec_echo(char **cmd);
-
-// void	exec_cd(char **cmd);
 void		exec_pwd(t_data *data);
 void		exec_env(t_data *data);
-// void		exec_exit(char **cmd);
+// void		exec_exit(void);
+// void	exec_cd(char **cmd);
+
+//builtins/export.c
+void		exec_export(t_data *data, char **cmd);
+
+//builtins/unset.c
 void		exec_unset(t_data *data, char **cmd);
+void		free_env_entry(t_env_entry *entry);
 #endif

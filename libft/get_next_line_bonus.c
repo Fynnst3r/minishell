@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:01:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/06/19 19:10:03 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:00:53 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ static char	*f_read_line(int fd, char *buffer, char *leftover)
 		if (bytes_read == 0)
 			break ;
 		if (bytes_read < 0)
-			return (free(leftover), NULL);
+			return (ft_free(leftover), NULL);
 		buffer[bytes_read] = 0;
 		if (!leftover)
 			leftover = f_strdup("");
 		tmp = leftover;
 		leftover = f_strjoin(tmp, buffer);
-		free(tmp);
+		ft_free(tmp);
 		tmp = NULL;
 		if (f_strchr(buffer, '\n'))
 			break ;
@@ -51,7 +51,7 @@ static char	*f_cut_str(char *line)
 	leftover = f_substr(line, i + 1, f_strlen(line) - i);
 	if (*leftover == 0)
 	{
-		free(leftover);
+		ft_free(leftover);
 		leftover = NULL;
 	}
 	line[i + 1] = 0;
@@ -71,14 +71,14 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (read(fd, 0, 0) < 0)
 	{
-		free(leftover[fd]);
-		free(buffer);
+		ft_free(leftover[fd]);
+		ft_free(buffer);
 		return (leftover[fd] = NULL, buffer = NULL, NULL);
 	}
 	line = f_read_line(fd, buffer, leftover[fd]);
-	free(buffer);
+	ft_free(buffer);
 	if (!line)
-		return (free(leftover[fd]), NULL);
+		return (ft_free(leftover[fd]), NULL);
 	leftover[fd] = f_cut_str(line);
 	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/12 17:32:17 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/18 23:39:41 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,23 @@ int	check_builtins(t_data *data, char **cmd)
 	}
 	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 		exec_env(data);
+	else if (ft_strncmp(cmd[0], "export", 7) == 0)
+		exec_export(data, cmd);
+	else if (strncmp(cmd[0], "unset", 6) == 0)
+		exec_unset(data, cmd);
 	else
 		return (0);
-	// else if (ft_strncmp(cmd[0], "unset", 6) == 0)
-	// 	exec_unset(data, cmd);
 	// else if (ft_strncmp(cmd[0], "cd", 3) == 0)
 	// 	exec_cd(cmd);
-	// else if (ft_strncmp(cmd[0], "export", 7) == 0)
-	// 	exec_export(data, cmd);
 	// else if (ft_strncmp(cmd[0], "exit", 5) == 0)
-	// 	exec_exit(cmd);
+		// exec_exit();
 	return (1);
 }
 
-// void	exec_exit(char **cmd) // unklar ob das stimmt
+// void	exec_exit(void)
 // {
 // 	ft_putstr_fd("exit\n", 2);
-// 	exit(0);
+// 	ft_error(NULL, 1, NULL);
 // }
 
 void	exec_env(t_data *data)
@@ -50,8 +50,10 @@ void	exec_env(t_data *data)
 	current = data->env_list;
 	while (current != NULL)
 	{
-		entry = (t_env_entry *)current->content;
-		printf("%s=%s\n", entry->name, entry->value);
+		if (current->content)
+			entry = (t_env_entry *)current->content;
+		if (entry->name && entry->value)
+			printf("%s=%s\n", entry->name, entry->value);
 		current = current->next;
 	}
 }

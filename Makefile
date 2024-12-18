@@ -21,6 +21,7 @@ SRCS = 	src/minishell.c\
 		src/exec/exec_utils.c\
 		src/exec/pipe.c\
 		src/builtins/builtins1.c\
+		src/builtins/export.c\
 		src/builtins/unset.c
 
 

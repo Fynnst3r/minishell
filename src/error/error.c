@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/12 23:29:53 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/13 19:42:28 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,14 @@ void	ft_error(char *message, int errcode, t_token **toktop)
 	printf("last global errcode %i\n", g_signal);
 	if (message)
 		printf(ANSI_RED"ERROR: %s\n", message);
-	if (errcode != 0)
-		printf("ERRORCODE: %i\n"ANSI_RESET, errcode);
 	if (toktop)
 		free_tokens(toktop);
 	if (errcode != 0)
 	{
+		printf("ERRORCODE: %i\n"ANSI_RESET, errcode);
 		delete_trash();
 		ft_bzero(get_workers(), sizeof(t_trashman));
-		exit(errcode);
+		exit(g_signal);
 	}
 }
 
@@ -62,7 +61,7 @@ int	ft_free_tree(t_cmd *st_node)
 	// t_herd	*free_herd;
 	t_pipe	*free_pipe;
 	// static int count = 0;
-	
+
 	// count++;
 	// printf("count %i\n", count);
 	if (st_node->type == EXECUTE)

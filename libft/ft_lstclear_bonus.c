@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 21:11:40 by fforster          #+#    #+#             */
-/*   Updated: 2024/04/03 15:07:41 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:00:00 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 	{
 		tmp = tmp->next;
 		del(tmp2->content);
-		free(tmp2);
+		ft_free(tmp2);
 		tmp2 = tmp;
 	}
 	*lst = NULL;

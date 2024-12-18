@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/12 15:51:05 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/18 21:50:42 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	fill_env_list(t_data *data, char **env)
 		{
 			entry = ft_malloc(sizeof(t_env_entry));
 			if (!entry)
-				exit(1);
+				ft_error("Malloc fail for env entry", 42, NULL);
 			entry->name = ft_substr(env[i], 0, equal_sign - env[i]);
 			entry->value = ft_strdup(equal_sign + 1);
 			new_node = ft_lstnew(entry);
@@ -37,7 +37,7 @@ void	fill_env_list(t_data *data, char **env)
 				ft_free(entry->name);
 				ft_free(entry->value);
 				ft_free(entry);
-				exit(1); //we could use garbage exit "ft_error"
+				ft_error("Malloc fail for env entry", 42, NULL);
 			}
 			ft_lstadd_back(&data->env_list, new_node);
 		}

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 18:17:37 by fforster          #+#    #+#             */
-/*   Updated: 2024/10/29 19:39:10 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/17 22:00:13 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static void	f_free_strs(char **split)
 	k = 0;
 	while (split[k] != NULL)
 	{
-		free(split[k]);
+		ft_free(split[k]);
 		k++;
 	}
-	free(split);
+	ft_free(split);
 }
 
 static size_t	f_count_words(const char *s1, char c)

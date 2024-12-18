@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/12 23:17:19 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/18 21:04:53 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ char	*find_path(t_data *data, t_exec *st_node)
 		full_p = ft_strjoin(mul_p[i], cmd);
 		if (access(full_p, X_OK) == 0)
 		{
-			free(cmd);
+			ft_free(cmd);
 			free_dp(mul_p);
 			return (full_p);
 		}
 		else
-			free(full_p);
+			ft_free(full_p);
 	}
-	free(cmd);
+	ft_free(cmd);
 	free_dp(mul_p);
 	return (0);
 }

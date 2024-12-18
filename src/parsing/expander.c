@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/11 15:53:09 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/16 23:27:09 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	expand_tokens(t_token **toktop, t_lexer l, t_list *env)
 	while (tmp)
 	{
 		l = init_lex(tmp->str);
-		if (tmp->type == WORD || tmp->type == PATH)
+		if (needs_to_expand(tmp))
 			tmp->str = get_exp_str(tmp->str, exit_num_str, &l, env);
 		if (tmp->str)
 			tmp->len = ft_strlen(tmp->str);
