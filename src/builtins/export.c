@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 22:03:24 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/18 23:41:14 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:40:53 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,18 @@ static int	check_valid_name(char *s)
 	{
 		if (s[i] == '$')
 		{
-			printf("YM_FF_SHELL: export: %s: not a valid identifier\n", s);
+			printf("YM_FF_SHELL: export: `%s': not a valid identifier\n", s);
 			return (1);
 		}
 		if (s[i] == '=')
 			break ;
 		i++;
 	}
-	if (s[i + 1] == 0)
+	if (i == 0)
+	{
+		printf("YM_FF_SHELL: export: `%s': not a valid identifier\n", s);
 		return (1);
+	}
 	return (0);
 }
 

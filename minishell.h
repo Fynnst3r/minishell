@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/18 22:59:03 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/19 18:38:11 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <sys/param.h>
+# include <errno.h>
 # include <signal.h>
 
 // OWN LIBS
@@ -229,12 +231,15 @@ void		exec_echo(char **cmd);
 void		exec_pwd(t_data *data);
 void		exec_env(t_data *data);
 // void		exec_exit(void);
-// void	exec_cd(char **cmd);
 
 //builtins/export.c
 void		exec_export(t_data *data, char **cmd);
+void	add_or_replace_entry(t_data *data, char *cmd, char *equal_sign);
 
 //builtins/unset.c
 void		exec_unset(t_data *data, char **cmd);
 void		free_env_entry(t_env_entry *entry);
+
+//builtins/cd.c
+int			exec_cd(t_data *data, char **cmd);
 #endif

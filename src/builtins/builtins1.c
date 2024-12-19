@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/18 23:39:41 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:08:43 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ int	check_builtins(t_data *data, char **cmd)
 		exec_export(data, cmd);
 	else if (strncmp(cmd[0], "unset", 6) == 0)
 		exec_unset(data, cmd);
+	else if (ft_strncmp(cmd[0], "cd", 3) == 0)
+		exec_cd(data, cmd);
 	else
 		return (0);
-	// else if (ft_strncmp(cmd[0], "cd", 3) == 0)
-	// 	exec_cd(cmd);
 	// else if (ft_strncmp(cmd[0], "exit", 5) == 0)
 		// exec_exit();
 	return (1);
@@ -68,7 +68,7 @@ void	exec_pwd(t_data *data)
 		exit(1);
 	ft_putstr_fd(pwd, STDOUT_FILENO);
 	ft_putstr_fd("\n", STDOUT_FILENO);
-	ft_free(pwd);
+	free(pwd);
 }
 
 void	exec_echo(char **cmd)
@@ -108,14 +108,3 @@ void	exec_echo(char **cmd)
 	if (newline)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 }
-
-// void	exec_cd(char **cmd)
-// {
-// 	if (cmd[1] == NULL)
-// 	{
-// 		ft_putstr_fd("\n", 2);
-// 		return ;
-// 	}
-// 	if (chdir(cmd[1]) == -1)
-// 		exit(0); // error code noch platzieren so wie bash es macht
-// }
