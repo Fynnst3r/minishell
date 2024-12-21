@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/12 23:30:45 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/20 22:19:41 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ t_exec	*make_cmd_node(t_token *t)
 		}
 		tmp = tmp->next;
 	}
+	exec->argv[count] = NULL;
 	return (exec);
 }
 
@@ -202,7 +203,11 @@ t_herd	*make_herd_node(t_token *t)
 	while (tmp)
 	{
 		if (tmp->type == PATH && tmp->previous->type == T_HERE)
-			herd->del = tmp->str;
+		{
+			herd->del = ft_strjoin(tmp->str, "\n");
+			ft_free(tmp->str);
+			tmp->str = herd->del;
+		}
 		tmp = tmp->next;
 	}
 	herd->cmd = (t_cmd *)make_cmd_node(t);

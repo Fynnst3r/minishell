@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/13 19:42:28 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/21 17:30:30 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	free_tokens(t_token **t)
 
 void	ft_error(char *message, int errcode, t_token **toktop)
 {
-	printf("last global errcode %i\n", g_signal);
 	if (message)
 		printf(ANSI_RED"ERROR: %s\n", message);
 	if (toktop)
@@ -77,6 +76,6 @@ int	ft_free_tree(t_cmd *st_node)
 			ft_free_tree((t_cmd *)free_pipe->left);
 		return (ft_free_tree((t_cmd *)free_pipe->right), ft_free(free_pipe), 0);
 	}
-	printf("??heredoc not implemented??\n");
+	// printf("??heredoc not implemented??\n");
 	return (1);
 }

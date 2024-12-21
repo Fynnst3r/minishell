@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 15:50:45 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/09 20:13:33 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/19 22:23:35 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	*ft_malloc(size_t size)
 
 	pointer = malloc(size);
 	if (!pointer)
-		return (NULL);
+		return (ft_error("Malloc FAIL!", 42, NULL), NULL);
 	add_trash_top(pointer);
 	return (pointer);
 }

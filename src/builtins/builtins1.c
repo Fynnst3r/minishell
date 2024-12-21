@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/19 19:08:43 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/19 23:18:58 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,46 +65,8 @@ void	exec_pwd(t_data *data)
 	data->argc = 1;
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
-		exit(1);
+		ft_error("Malloc FAIL!", 44, NULL);
 	ft_putstr_fd(pwd, STDOUT_FILENO);
 	ft_putstr_fd("\n", STDOUT_FILENO);
 	free(pwd);
-}
-
-void	exec_echo(char **cmd)
-{
-	int	i;
-	int	j;
-	int	newline;
-	int	n_flag;
-
-	i = 1;
-	newline = 1;
-	while (cmd[i] && cmd[i][0] == '-' && cmd[i][1] == 'n')
-	{
-		j = 2;
-		n_flag = 1;
-		while (cmd[i][j])
-		{
-			if (cmd[i][j] != 'n')
-			{
-				n_flag = 0;
-				break ;
-			}
-			j++;
-		}
-		if (!n_flag)
-			break ;
-		newline = 0;
-		i++;
-	}
-	while (cmd[i] != NULL)
-	{
-		ft_putstr_fd(cmd[i], STDOUT_FILENO);
-		if (cmd[i + 1] != NULL)
-			ft_putstr_fd(" ", STDOUT_FILENO);
-		i++;
-	}
-	if (newline)
-		ft_putstr_fd("\n", STDOUT_FILENO);
 }

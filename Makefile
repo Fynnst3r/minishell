@@ -13,6 +13,7 @@ SRCS = 	src/minishell.c\
 		src/parsing/ast_files/make_ast2.c\
 		src/parsing/ast_files/pipe_ast.c\
 		src/error/error.c\
+		src/error/errno_print.c\
 		src/garbage_collector/garbage_start.c\
 		src/garbage_collector/ft_malloc.c\
 		src/garbage_collector/free.c\
@@ -21,10 +22,10 @@ SRCS = 	src/minishell.c\
 		src/exec/exec_utils.c\
 		src/exec/pipe.c\
 		src/builtins/builtins1.c\
+		src/builtins/echo.c\
 		src/builtins/export.c\
 		src/builtins/unset.c\
 		src/builtins/cd.c
-
 
 
 OBJS = $(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/18 21:04:53 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/21 18:00:23 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,20 @@ char	*find_path(t_data *data, t_exec *st_node)
 	char	*cmd;
 	char	*full_p;
 
-	cmd = ft_strjoin("/", st_node->argv[0]);
+	if (st_node->argv[0][0] != '/')
+	{
+		cmd = ft_strjoin("/", st_node->argv[0]);
+	}
+	else
+	{
+		if (access(st_node->argv[0], X_OK) != 0)
+			return (print_access_error(st_node->argv[0], X_OK), NULL);
+		else
+			return (st_node->argv[0]);
+	}
 	mul_p = find_path_help(data);
 	i = -1;
-	while (mul_p[++i] != NULL)
+	while (mul_p && mul_p[++i] != NULL)
 	{
 		full_p = ft_strjoin(mul_p[i], cmd);
 		if (access(full_p, X_OK) == 0)
@@ -32,8 +42,11 @@ char	*find_path(t_data *data, t_exec *st_node)
 			return (full_p);
 		}
 		else
+		{
 			ft_free(full_p);
+		}
 	}
+	print_access_error(st_node->argv[0], X_OK);
 	ft_free(cmd);
 	free_dp(mul_p);
 	return (0);
@@ -69,34 +82,56 @@ void	free_dp(char **str)
 	int	i;
 
 	i = 0;
-	while (str[i] != NULL)
+	if (!str)
+		return ;
+	while (str && str[i] != NULL)
 	{
 		ft_free(str[i]);
-		str[i] = NULL;
 		i++;
 	}
 	ft_free(str);
-	str = NULL;
 }
 
-int	write_in_file(int fd, t_herd *st_node)
+void	expand_heredoc(int fd, char *buffer, t_data *data)
+{
+	char	*exit_status;
+	char	*expan;
+	t_lexer	lex;
+
+	lex = init_lex(NULL);
+	exit_status = ft_itoa(g_signal);
+	expan = get_exp_str(buffer, exit_status, &lex, data->env_list);
+	if (expan[0] == 0)
+		write (fd, "\n", 1);
+	else
+		write (fd, expan, ft_strlen(expan));
+	ft_free(expan);
+	ft_free(exit_status);
+}
+
+int	write_in_file(int fd, t_herd *st_node, t_data *data)
 {
 	ssize_t	bytes;
 	char	buffer[1024];
 
+	bytes = -1;
+	write(STDERR_FILENO, "heredoc> ", 9);
 	while (1)
 	{
-		write(STDERR_FILENO, "heredoc> ", 9);
-		bytes = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
 		if (bytes > 0)
 		{
+			buffer[bytes - 1] = '\n';
 			buffer[bytes] = '\0';
-			if (ft_strncmp(buffer, st_node->del, 3) == 0)
-			{
+			if (!ft_strncmp(buffer, st_node->del, ft_strlen(st_node->del)))
 				break ;
-			}
-			write (fd, buffer, bytes);
+			write(STDERR_FILENO, "heredoc> ", 9);
+			if (ft_strchr(buffer, '\'')
+				|| ft_strchr(buffer, '\"') || ft_strchr(buffer, '$'))
+				expand_heredoc(fd, buffer, data);
+			else
+				write (fd, buffer, bytes);
 		}
+		bytes = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
 	}
 	return (fd);
 }

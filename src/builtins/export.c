@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 22:03:24 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/19 17:40:53 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/20 20:38:08 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ t_list	*find_name(t_list **top, t_env_entry *newentry)
 	}
 	return (NULL);
 }
+
 void	add_or_replace_entry(t_data *data, char *cmd, char *equal_sign)
 {
 	t_list		*list_node;

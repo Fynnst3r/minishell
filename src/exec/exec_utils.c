@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/18 21:50:42 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/20 20:41:57 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,7 @@ void	fill_env_list(t_data *data, char **env)
 			new_node = ft_lstnew(entry);
 			if (!new_node)
 			{
-				ft_free(entry->name);
-				ft_free(entry->value);
-				ft_free(entry);
+				free_env_entry(entry);
 				ft_error("Malloc fail for env entry", 42, NULL);
 			}
 			ft_lstadd_back(&data->env_list, new_node);

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/19 18:38:11 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/21 17:46:50 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ void		set_token_types(t_token *t);
 
 // parsing/expander.c
 void		expand_tokens(t_token **toktop, t_lexer l, t_list *env);
+char		*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env);
 char		*check_val(char *s, t_lexer *l, t_list *env);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit);
 char		*add_char(char *ret, char add, size_t *position);
@@ -191,6 +192,11 @@ void		ft_error(char *message, int errcode, t_token **toktop);
 int			ft_free_tree(t_cmd *st_node);
 void		free_tokens(t_token **t);
 
+//error/errno_print.c
+void		print_access_error(char *path, int mode);
+void		print_cd_error(char *path);
+void		print_open_error(char *path, int flags);
+
 /******************************************************************************/
 //<<<<<<<<<<<<<<<<<<<<<    ymauk execution functions    >>>>>>>>>>>>>>>>>>>>>>//
 /******************************************************************************/
@@ -205,7 +211,7 @@ void		exec_execu(t_exec *st_node, t_data *data);
 void		exec_pipe(t_pipe *st_node, t_data *data);
 void		exec_red(t_red *st_node, t_data *data);
 void		exec_heredoc(t_herd *st_node, t_data *data);
-void		fill_test_struct(t_data *data); //Muss am ende rausgenommen werden, da befülltes struct von Parsing seite aus kommt
+void		fill_test_struct(t_data *data);
 
 //execution/pipe
 void		check_pipe(t_pipe *st_node, t_data *data, int last);
@@ -216,7 +222,7 @@ void		child(t_cmd *st_node, t_data *data, int last, int pipefd[2]);
 char		*find_path(t_data *data, t_exec *st_node);
 void		free_dp(char **str);
 char		**find_path_help(t_data *data);
-int			write_in_file(int fd, t_herd *st_node);
+int			write_in_file(int fd, t_herd *st_node, t_data *data);
 
 //execution/exec_utils
 // void		fill_env(t_data *data, char **env);
@@ -227,10 +233,12 @@ void		fill_env_list(t_data *data, char **env);
 
 //builtins/builtins1
 int			check_builtins(t_data *data, char **cmd);
-void		exec_echo(char **cmd);
 void		exec_pwd(t_data *data);
 void		exec_env(t_data *data);
 // void		exec_exit(void);
+
+//builtins/echo.c
+void		exec_echo(char **cmd);
 
 //builtins/export.c
 void		exec_export(t_data *data, char **cmd);

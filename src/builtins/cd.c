@@ -6,45 +6,36 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:34:33 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/19 20:03:02 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/21 16:53:54 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	print_cd_error(char *path)
-{
-	if (errno == EACCES)
-		printf("Search permission is denied for one of the components of %s.\n",
-			path);
-	if (errno == EFAULT)
-		printf("%s points outside your accessible address space.\n", path);
-	if (errno == EIO)
-		printf("An I/O error occurred.\n");
-	if (errno == ELOOP)
-		printf("Too many symbolic links were encountered in resolving%s.\n",
-			path);
-	if (errno == ENAMETOOLONG)
-		printf("%s is too long.\n", path);
-	if (errno == ENOENT)
-		printf("The directory specified in %s does not exist.\n", path);
-	if (errno == ENOMEM)
-		printf("Insufficient kernel memory was available.\n");
-	if (errno == ENOTDIR)
-		printf("A component of %s is not a directory.\n", path);
-}
-
-static int	check_cd_arg(char **cmd)
+		// printf("cdm0 = '%s'\ncmd1 = '%s'\n", cmd[0][0], cmd[0][1]);
+		// return (cd_home(data, cmd), 1);
+static int	check_cd_arg(t_data *data, char **cmd)
 {
 	size_t	i;
+	char	**newcmd;
 
 	i = 0;
 	while (cmd[i])
 		i++;
-	if (i <= 1)
+	if (i < 1)
 		return (1);
 	if (i > 2)
 		return (printf("YM_FF_SHELL: too many arguments\n"), 1);
+	if (i == 1)
+	{
+		free_dp(cmd);
+		newcmd = ft_malloc(sizeof(char *) * 3);
+		newcmd[0] = ft_strdup("cd");
+		newcmd[1] = ft_getenv("HOME", data->env_list);
+		newcmd[2] = NULL;
+		exec_cd(data, newcmd);
+		return (1);
+	}
 	return (0);
 }
 
@@ -58,7 +49,7 @@ int	exec_cd(t_data *data, char **cmd)
 	cwd = NULL;
 	newcwd = NULL;
 	oldpwd = NULL;
-	if (check_cd_arg(cmd))
+	if (check_cd_arg(data, cmd))
 		return (1);
 	cwd = getcwd(cwd, MAXPATHLEN);
 	oldpwd = ft_strjoin("OLDPWD=", cwd);

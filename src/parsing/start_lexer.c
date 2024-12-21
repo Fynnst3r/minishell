@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/12 23:30:18 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/20 16:54:36 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	start_lexer(char *input, t_data *data)
 		{
 			skip = true;
 			if (handle_special(input, &lexer, &token_top, lexer.position))
-				return (ft_error("TOO MANY << OR >>", 0, &token_top), 1);
+				return (ft_error("too many `<' or `>'.", 0, &token_top), 1);
 		}
 		while (ft_isspace(input[lexer.position]))
 			lexer.position++;

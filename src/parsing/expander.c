@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/16 23:27:09 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/21 18:34:44 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ char	*check_val(char *s, t_lexer *l, t_list *env)
 	if (l->read == l->position + 1)
 		return (l->position = l->read, "$");
 	sub = ft_substr(s, l->position + 1, l->read - l->position - 1);
-	// val = getenv(sub);
 	val = ft_getenv(sub, env);
 	ft_free(sub);
 	sub = NULL;
@@ -87,7 +86,7 @@ char	*check_val(char *s, t_lexer *l, t_list *env)
 	return (val);
 }
 
-static char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env)
+char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env)
 {
 	char	*val;
 	char	*ret;
@@ -123,7 +122,7 @@ void	expand_tokens(t_token **toktop, t_lexer l, t_list *env)
 	while (tmp)
 	{
 		l = init_lex(tmp->str);
-		if (needs_to_expand(tmp))
+		if (needs_to_expand(tmp) && tmp->previous->type != T_HERE)
 			tmp->str = get_exp_str(tmp->str, exit_num_str, &l, env);
 		if (tmp->str)
 			tmp->len = ft_strlen(tmp->str);
