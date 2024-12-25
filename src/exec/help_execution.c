@@ -6,12 +6,13 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/21 18:00:23 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 22:04:58 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
+//wont find path for current dir? try : ./minishell			it wont find it...
 char	*find_path(t_data *data, t_exec *st_node)
 {
 	int		i;
@@ -26,7 +27,7 @@ char	*find_path(t_data *data, t_exec *st_node)
 	else
 	{
 		if (access(st_node->argv[0], X_OK) != 0)
-			return (print_access_error(st_node->argv[0], X_OK), NULL);
+			return (perror("YM_FF_SHELL"), NULL);
 		else
 			return (st_node->argv[0]);
 	}
@@ -46,7 +47,7 @@ char	*find_path(t_data *data, t_exec *st_node)
 			ft_free(full_p);
 		}
 	}
-	print_access_error(st_node->argv[0], X_OK);
+	perror("YM_FF_SHELL");
 	ft_free(cmd);
 	free_dp(mul_p);
 	return (0);
@@ -99,12 +100,17 @@ void	expand_heredoc(int fd, char *buffer, t_data *data)
 	t_lexer	lex;
 
 	lex = init_lex(NULL);
+	lex.ignore_quotes = true;
+	buffer[ft_strlen(buffer) - 1] = 0;
 	exit_status = ft_itoa(g_signal);
 	expan = get_exp_str(buffer, exit_status, &lex, data->env_list);
 	if (expan[0] == 0)
-		write (fd, "\n", 1);
+		write(fd, "\n", 1);
 	else
-		write (fd, expan, ft_strlen(expan));
+	{
+		write(fd, expan, ft_strlen(expan));
+		write(fd, "\n", 1);
+	}
 	ft_free(expan);
 	ft_free(exit_status);
 }
@@ -129,7 +135,7 @@ int	write_in_file(int fd, t_herd *st_node, t_data *data)
 				|| ft_strchr(buffer, '\"') || ft_strchr(buffer, '$'))
 				expand_heredoc(fd, buffer, data);
 			else
-				write (fd, buffer, bytes);
+				write(fd, buffer, bytes);
 		}
 		bytes = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
 	}

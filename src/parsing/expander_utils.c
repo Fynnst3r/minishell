@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:39:42 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/20 16:50:58 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 20:49:29 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*ft_getenv(char *tolook, t_list *env)
 	t_list		*curr;
 	t_env_entry	*enventry;
 
-	if (!env)
+	if (!env || !tolook)
 		return (NULL);
 	curr = env;
 	while (curr)

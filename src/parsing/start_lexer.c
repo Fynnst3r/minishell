@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/20 16:54:36 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 21:46:07 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,9 @@ int	get_str(t_lexer *lex, t_token **tofill)
 	ret = NULL;
 	while (lex->str[l])
 	{
-		lex->curr_c = lex->str[l];
 		if (lex->str[l] == '\'' || lex->str[l] == '\"')
 			if (skip_quote(lex->str, &l))
 				return (1);
-		lex->last_c = lex->str[l];
 		l++;
 		if (is_special_char(lex->str[l]) || ft_isspace(lex->str[l]))
 			break ;

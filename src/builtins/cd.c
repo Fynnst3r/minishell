@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 16:34:33 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/21 16:53:54 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 22:08:58 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ static int	check_cd_arg(t_data *data, char **cmd)
 		return (printf("YM_FF_SHELL: too many arguments\n"), 1);
 	if (i == 1)
 	{
-		free_dp(cmd);
 		newcmd = ft_malloc(sizeof(char *) * 3);
 		newcmd[0] = ft_strdup("cd");
 		newcmd[1] = ft_getenv("HOME", data->env_list);
 		newcmd[2] = NULL;
 		exec_cd(data, newcmd);
+		free_dp(newcmd);
 		return (1);
 	}
 	return (0);
@@ -59,7 +59,7 @@ int	exec_cd(t_data *data, char **cmd)
 	free(cwd);
 	cwd = NULL;
 	if (ret < 0)
-		return (print_cd_error(cmd[1]), 1);
+		return (perror("YM_FF_SHELL"), 1);
 	cwd = getcwd(cwd, MAXPATHLEN);
 	newcwd = ft_strjoin("PWD=", cwd);
 	free(cwd);

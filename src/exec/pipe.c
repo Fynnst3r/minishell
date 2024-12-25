@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 16:44:25 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 22:07:12 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void	run_pipe(t_cmd *st_node, t_data *data, int last)
 
 void	child(t_cmd *st_node, t_data *data, int last, int pipefd[2])
 {
-	data->argc = 4;
 	close(pipefd[0]);
 	if (last == 0)
 		dup2(pipefd[1], STDOUT_FILENO);

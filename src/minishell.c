@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/21 18:34:08 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 21:08:17 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	g_signal = 0;
 static void	init_data(t_data *data, int ac, char **av, char **env)
 {
 	ft_bzero(data, sizeof(t_data));
-	av = NULL;
+	(void)av;
 	data->argc = ac;
 
 	// data->sa.sa_flags = SA_SIGINFO;

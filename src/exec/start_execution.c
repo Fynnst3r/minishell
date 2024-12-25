@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/21 18:32:31 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 21:24:05 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -476,13 +476,21 @@ void	exec_heredoc(t_herd *st_node, t_data *data)
 	int		fd;
 
 	fd = open("heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		perror("YM_FF_SHELL");
+		exit(1);
+	}
 	write_in_file(fd, (t_herd *)st_node, data);
 	close (fd);
 	fd = open("heredoc.txt", O_RDONLY);
 	if (dup2(fd, STDIN_FILENO) == -1)
 		exit(1);
 	close(fd);
-	exec_execu((t_exec *)st_node->cmd, data);
+	if (st_node->cmd->type == RED)
+		start_exec(data, st_node->cmd);
+	else if (st_node->cmd->type == EXECUTE)
+		exec_execu((t_exec *)st_node->cmd, data);
 	unlink("heredoc.txt");
 }
 
@@ -497,12 +505,10 @@ void	exec_red(t_red *st_node, t_data *data)
 		saved_fd = dup(st_node->fd);
 	}
 	else
-	{
 		fd_orig = open(st_node->file, st_node->mode);
-	}
 	if (fd_orig == -1)
 	{
-		print_open_error(st_node->file, st_node->mode);
+		perror("YM_FF_SHELL");
 		exit(1);
 	}
 	if (dup2(fd_orig, st_node->fd) == -1)

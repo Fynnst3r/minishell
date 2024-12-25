@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/20 22:19:41 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 20:19:58 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ t_red	*create_redir_cmd(t_token *t)
 	tmp = t;
 	while (tmp)
 	{
-		if (tmp->type == PATH)
+		if (tmp->type == PATH && tmp->previous->type != T_HERE)
 		{
 			make_red_node(&red, tmp->previous->type, tmp->str);
 		}
@@ -192,27 +192,64 @@ t_red	*create_redir_cmd(t_token *t)
 	return (red);
 }
 
+t_token	*scan_last_heredoc(t_token *tmp)
+{
+	t_token	*last;
+
+	last = NULL;
+	while (tmp)
+	{
+		if (tmp->type == T_PIPE)
+			return (NULL);
+		if (tmp->type == PATH && tmp->previous->type == T_HERE)
+			last = tmp;
+		tmp = tmp->next;
+	}
+	return (last);
+}
+
 t_herd	*make_herd_node(t_token *t)
 {
 	t_herd	*herd;
+	t_token	*last_herd_tok;
 	t_token	*tmp;
 
-	tmp = t;
+	last_herd_tok = scan_last_heredoc(t);
+	if (last_herd_tok == NULL)
+		return (NULL);
 	herd = ft_calloc(sizeof(t_herd), 1);
 	herd->type = HEREDOC;
+	herd->del = ft_strjoin(last_herd_tok->str, "\n");
+	ft_free(last_herd_tok->str);
+	last_herd_tok->str = herd->del;
+	tmp = t;
 	while (tmp)
 	{
-		if (tmp->type == PATH && tmp->previous->type == T_HERE)
-		{
-			herd->del = ft_strjoin(tmp->str, "\n");
-			ft_free(tmp->str);
-			tmp->str = herd->del;
-		}
+		if (tmp->type == PATH && tmp->previous->type != T_HERE)
+			herd->cmd = (t_cmd *)create_redir_cmd(t);
 		tmp = tmp->next;
 	}
-	herd->cmd = (t_cmd *)make_cmd_node(t);
+	if (herd->cmd == NULL)
+		herd->cmd = (t_cmd *)make_cmd_node(t);
 	return (herd);
 }
+// t_herd	*make_herd_node(t_token *t)
+// {
+// 	t_herd	*herd;
+// 	t_token	*tmp;
+
+// 	tmp = t;
+// 	herd = ft_calloc(sizeof(t_herd), 1);
+// 	herd->type = HEREDOC;
+// 	while (tmp)
+// 	{
+// 		if (tmp->type == PATH && tmp->previous->type == T_HERE)
+// 			herd->del = tmp->str;
+// 		tmp = tmp->next;
+// 	}
+// 	herd->cmd = (t_cmd *)make_cmd_node(t);
+// 	return (herd);
+// }
 
 void	make_ast2(t_data *data, t_token **toktop)
 {

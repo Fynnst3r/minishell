@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/21 17:30:30 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 21:51:41 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,14 @@ void	free_tokens(t_token **t)
 	count = 0;
 	if (!*t)
 		return ;
-	// printf("free start\n");
 	tmp = *t;
 	while (tmp->next != NULL)
 	{
-		// printf("id %i\n", tmp->id);
 		ft_free(tmp->str);
 		tmp->str = NULL;
 		tmp = tmp->next;
 		ft_free(tmp->previous);
 	}
-	// printf("id %i\n", tmp->id);
-	// printf("free end\n");
 	ft_free(tmp);
 	tmp = NULL;
 	*t = NULL;
@@ -53,16 +49,37 @@ void	ft_error(char *message, int errcode, t_token **toktop)
 	}
 }
 
+int	ft_free_herd(t_cmd *node)
+{
+	t_herd	*free_herd;
+
+	if (!node)
+		return (1);
+	if (node->type == HEREDOC)
+	{
+		free_herd = (t_herd *)node;
+		ft_free_tree(free_herd->cmd);
+		ft_free(free_herd->del);
+		ft_free(free_herd->cmd);
+		free_herd->del = NULL;
+		free_herd->cmd = NULL;
+		free_herd = NULL;
+		return (1);
+	}
+	return (1);
+}
+
 int	ft_free_tree(t_cmd *st_node)
 {
 	t_exec	*free_exec;
 	t_red	*free_red;
-	// t_herd	*free_herd;
 	t_pipe	*free_pipe;
 	// static int count = 0;
-
 	// count++;
 	// printf("count %i\n", count);
+	if (!st_node)
+		return (1);
+	// printf("type %i\n", st_node->type);
 	if (st_node->type == EXECUTE)
 		return (free_exec = (t_exec *)st_node, free_dp(free_exec->argv),
 			ft_free(free_exec), free_exec = NULL, 0);
@@ -76,6 +93,7 @@ int	ft_free_tree(t_cmd *st_node)
 			ft_free_tree((t_cmd *)free_pipe->left);
 		return (ft_free_tree((t_cmd *)free_pipe->right), ft_free(free_pipe), 0);
 	}
-	// printf("??heredoc not implemented??\n");
+	if (st_node->type == HEREDOC)
+		ft_free_herd(st_node);
 	return (1);
 }

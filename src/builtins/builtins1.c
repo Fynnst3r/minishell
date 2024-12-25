@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/19 23:18:58 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 22:07:39 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	check_builtins(t_data *data, char **cmd)
 {
-	data->argc = 3;
+	if (!*cmd)
+		return (1);
 	if (ft_strncmp(cmd[0], "echo", 5) == 0)
 		exec_echo(cmd);
 	else if (ft_strncmp(cmd[0], "pwd", 4) == 0)
@@ -62,11 +63,12 @@ void	exec_pwd(t_data *data)
 {
 	char	*pwd;
 
-	data->argc = 1;
+	(void)data;
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		ft_error("Malloc FAIL!", 44, NULL);
-	ft_putstr_fd(pwd, STDOUT_FILENO);
-	ft_putstr_fd("\n", STDOUT_FILENO);
+	// ft_putstr_fd(pwd, STDOUT_FILENO);
+	// ft_putstr_fd("\n", STDOUT_FILENO);
+	printf("%s\n", pwd);
 	free(pwd);
 }

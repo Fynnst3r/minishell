@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 22:32:04 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 21:13:17 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/21 21:28:00 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,26 @@ bool	check_for_next_pipe(t_token *tmp)
 	return (false);
 }
 
+	// print_token_data(t);
 int	scan_cmd_type_pipe(t_token *t)
 {
-	// print_token_data(t);
+	int	ret;
+
+	ret = EXECUTE;
 	while (t)
 	{
 		if (t->type == PATH)
 		{
 			if (t->previous->type != T_HERE)
-				return (RED);
+				ret = RED;
 			else
 				return (HEREDOC);
 		}
 		if (t->type == T_PIPE)
-		{
 			break ;
-		}
 		t = t->next;
 	}
-	return (EXECUTE);
+	return (ret);
 }
 
 t_pipe	*make_pipe_node(t_pipe *last)

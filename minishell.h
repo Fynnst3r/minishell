@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/21 17:46:50 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 21:45:51 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,7 @@ typedef struct s_lexer
 	char		*str;
 	size_t		position;
 	size_t		read;
-	char		last_c;
-	char		curr_c;
+	bool		ignore_quotes;
 	bool		keepempty;
 }					t_lexer;
 

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/21 18:34:44 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/25 21:46:48 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,9 @@ char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env)
 	ret = ft_strdup("");
 	while (s[l->position])
 	{
-		if (s[l->position] == '\"')
+		if (s[l->position] == '\"' && l->ignore_quotes == false)
 			ret = keep_expanding(s, ret, l, env);
-		else if (s[l->position] == '\'')
+		else if (s[l->position] == '\'' && l->ignore_quotes == false)
 			ret = stop_expanding(s, ret, l);
 		else if (s[l->position] == '$' && s[l->position + 1] == '?')
 			ret = ft_strjoin_at(ret, exit_status, l, true);
