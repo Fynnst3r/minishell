@@ -1,6 +1,6 @@
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror
-LDFLAGS = -lreadline
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+LDFLAGS = -lreadline -g -fsanitize=address
 SRCS = src/minishell.c \
 		src/parsing/start_lexer.c src/parsing/lexer_utils.c \
 		src/parsing/make_token.c \
