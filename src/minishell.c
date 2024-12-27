@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/25 21:08:17 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/27 19:49:05 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ int	g_signal = 0;
 // 	(void)info;
 // 	(void)uap;
 // 	if (signum == SIGINT)
-// {
-// 	ft_error("^C\n", 0, NULL);
-// 	main(0, NULL, NULL);
-// }
+// 	{
+// 		ft_error("^C\n", 0, NULL);
+// 		main(0, NULL, NULL);
+// 	}
 // 	if (signum == SIGQUIT)
 // 		ft_error("SIGINT", 1, NULL);
 // }
@@ -57,6 +57,27 @@ static void	init_data(t_data *data, int ac, char **av, char **env)
 // 	}
 // }
 
+void	check_exit(t_cmd *cmd)
+{
+	t_exec	*exec;
+	size_t	i;
+
+	i = 0;
+	if (cmd->type == EXECUTE)
+	{
+		exec = (t_exec *)cmd;
+		while (exec->argv[i])
+			i++;
+		if (i > 1)
+			return ;
+		if (ft_strncmp(exec->argv[0], "exit", 5) == 0)
+		{
+			printf("exit\n");
+			ft_error(NULL, 1, NULL);
+		}
+	}
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_data		data;
@@ -78,6 +99,7 @@ int	main(int ac, char **av, char **env)
 		{
 			if (start_lexer(data.input, &data))
 				continue ;
+			check_exit(data.st_node);
 			pid = fork();
 			if (pid == -1)
 				exit(1);

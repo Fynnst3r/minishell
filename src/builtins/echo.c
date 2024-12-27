@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 23:17:46 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/19 23:28:04 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/27 20:07:25 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,12 @@ void	exec_echo(char **cmd)
 	newline = check_n_flag(cmd, &i);
 	while (cmd[i] != NULL)
 	{
-		ft_putstr_fd(cmd[i], STDOUT_FILENO);
+		printf("%s", cmd[i]);
 		if (cmd[i + 1] != NULL)
-			ft_putstr_fd(" ", STDOUT_FILENO);
+			printf(" ");
 		i++;
 	}
 	if (newline)
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		printf("\n");
+	g_signal = 0;
 }

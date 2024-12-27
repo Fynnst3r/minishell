@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/25 21:24:05 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/27 18:46:27 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -451,6 +451,28 @@
 //     data->st_node = (t_cmd *)redir_a;
 // }
 
+// void	exec_no_pipe(t_exec *st_node, t_data *data)
+// {
+// 	pid_t		pid;
+// 	int			status;
+
+// 	if (check_builtins(data, st_node->argv) == 0)
+// 	{
+// 		pid = fork();
+// 		if (pid == -1)
+// 		exit(1);
+// 	if (pid == 0)
+// 	waitpid(pid, &status, 0);
+// 	g_signal = WIFEXITED(status);
+// 		data->cmd_path = find_path(data, st_node);
+// 		if (data->cmd_path == 0)
+// 			exit(1);
+// 		if (execve(data->cmd_path, st_node->argv, data->env) == -1)
+// 			exit(1);
+// 	}
+// 	return ;
+// }
+
 void	start_exec(t_data *data, t_cmd *cmd)
 {
 	if (cmd->type == EXECUTE)
@@ -539,8 +561,12 @@ void	exec_execu(t_exec *st_node, t_data *data)
 		if (data->cmd_path == 0)
 			exit(1);
 		if (execve(data->cmd_path, st_node->argv, data->env) == -1)
+		{
+			perror("YM_FF_SHELL");
 			exit(1);
+		}
 	}
+	// exit(0);
 	// free (cmd_path); //funktioniert nicht
 }
 
@@ -549,4 +575,5 @@ void	exec_pipe(t_pipe *st_node, t_data *data)
 	check_pipe((t_pipe *)st_node->left, data, 0);
 	dup2(data->origin_stdout, STDOUT_FILENO);
 	run_pipe((t_cmd *)st_node->right, data, 1);
+	exit(0);
 }

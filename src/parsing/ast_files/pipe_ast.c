@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 22:32:04 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/21 21:28:00 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/27 20:12:46 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,20 +78,16 @@ t_pipe	*make_pipe_ast(t_token **toktop)
 {
 	t_pipe	*pipe;
 	int		curr_id;
-	int		next_pipe_id;
 	t_token	*tmp;
 
 	curr_id = 0;
-	next_pipe_id = 0;
 	tmp = *toktop;
 	pipe = make_pipe_node(NULL);
 	pipe->left = set_pipe_cmd(tmp);
-	// print_exec((t_exec *)pipe->left);
 	while (tmp)
 	{
 		while (tmp->type != T_PIPE)
 			tmp = tmp->next;
-		// printf("currID %i\n", tmp->id);
 		curr_id = tmp->id + 1;
 		pipe->right = set_pipe_cmd(find_id(*toktop, curr_id));
 		if (check_for_next_pipe(find_id(*toktop, curr_id)) == true)

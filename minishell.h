@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/25 21:45:51 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/27 20:10:09 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ typedef struct s_here_d
 }					t_herd;
 
 /******************************************************************************/
-//<<<<<<<<<<<<<<<<<<<<   fforsters parsing functions   >>>>>>>>>>>>>>>>>>>>>>>//
+//<<<<<<<<<<<<<<<<<<<<<<<<<   parsing functions   >>>>>>>>>>>>>>>>>>>>>>>>>>>>//
 /******************************************************************************/
 //minishell.c
 // void		fill_env(t_data *data, char **env);
@@ -197,7 +197,7 @@ void		print_cd_error(char *path);
 void		print_open_error(char *path, int flags);
 
 /******************************************************************************/
-//<<<<<<<<<<<<<<<<<<<<<    ymauk execution functions    >>>>>>>>>>>>>>>>>>>>>>//
+//<<<<<<<<<<<<<<<<<<<<<<<<    execution functions    >>>>>>>>>>>>>>>>>>>>>>>>>//
 /******************************************************************************/
 
 //minishell.c
@@ -234,7 +234,7 @@ void		fill_env_list(t_data *data, char **env);
 int			check_builtins(t_data *data, char **cmd);
 void		exec_pwd(t_data *data);
 void		exec_env(t_data *data);
-// void		exec_exit(void);
+void		exec_exit(void);
 
 //builtins/echo.c
 void		exec_echo(char **cmd);

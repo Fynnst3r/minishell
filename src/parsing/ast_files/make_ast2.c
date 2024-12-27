@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/25 20:19:58 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/27 19:50:00 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,8 @@ t_red	*create_redir_cmd(t_token *t)
 	tmp = t;
 	while (tmp)
 	{
+		if (tmp->type == T_PIPE)
+			break ;
 		if (tmp->type == PATH && tmp->previous->type != T_HERE)
 		{
 			make_red_node(&red, tmp->previous->type, tmp->str);
