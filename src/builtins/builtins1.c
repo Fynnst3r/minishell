@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/27 20:06:02 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/29 14:42:38 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ void	exec_pwd(t_data *data)
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 		ft_error("Malloc FAIL!", 44, NULL);
-	// ft_putstr_fd(pwd, STDOUT_FILENO);
-	// ft_putstr_fd("\n", STDOUT_FILENO);
 	printf("%s\n", pwd);
 	free(pwd);
 }

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/27 19:49:05 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/29 18:28:02 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,6 @@ static void	init_data(t_data *data, int ac, char **av, char **env)
 	data->origin_stdout = dup(STDOUT_FILENO);
 }
 
-// void	print_env_list(t_list *env_list)
-// {
-// 	t_list		*current = env_list;
-// 	t_env_entry	*entry;
-
-// 	while (current != NULL)
-// 	{
-// 		entry = (t_env_entry *)current->content;
-// 		// entry->name und entry->value sind nun getrennt
-// 		printf("%s=%s\n", entry->name, entry->value);
-// 		current = current->next;
-// 	}
-// }
-
 void	check_exit(t_cmd *cmd)
 {
 	t_exec	*exec;
@@ -78,16 +64,13 @@ void	check_exit(t_cmd *cmd)
 	}
 }
 
+// cat << end < 1				it should use 1 as input not heredoc
 int	main(int ac, char **av, char **env)
 {
 	t_data		data;
-	pid_t		pid;
-	int			status;
 
 	init_garbage_collector();
 	init_data(&data, ac, av, env);
-	// print_env_list(data.env_list);
-	// fill_test_struct(&data);
 	while (1)
 	{
 		data.input = readline(ANSI_BOLD ANSI_CYAN"YM_FF_SHELL: "ANSI_RESET);
@@ -100,15 +83,10 @@ int	main(int ac, char **av, char **env)
 			if (start_lexer(data.input, &data))
 				continue ;
 			check_exit(data.st_node);
-			pid = fork();
-			if (pid == -1)
-				exit(1);
-			if (pid == 0 && data.st_node != NULL)
+			if (data.st_node != NULL)
 			{
 				start_exec(&data, data.st_node);
 			}
-			waitpid(pid, &status, 0);
-			g_signal = WIFEXITED(status);
 			ft_free_tree(data.st_node);
 			free_tokens(&data.token_top);
 			free(data.input);

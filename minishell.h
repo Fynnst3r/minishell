@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/27 20:10:09 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/29 17:16:06 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,8 @@ char		*find_path(t_data *data, t_exec *st_node);
 void		free_dp(char **str);
 char		**find_path_help(t_data *data);
 int			write_in_file(int fd, t_herd *st_node, t_data *data);
+void		extra_exec(t_data *data, t_cmd *st_node);
+char		**env_list_to_array(t_data *data);
 
 //execution/exec_utils
 // void		fill_env(t_data *data, char **env);
@@ -241,7 +243,7 @@ void		exec_echo(char **cmd);
 
 //builtins/export.c
 void		exec_export(t_data *data, char **cmd);
-void	add_or_replace_entry(t_data *data, char *cmd, char *equal_sign);
+void		add_or_replace_entry(t_data *data, char *cmd, char *equal_sign);
 
 //builtins/unset.c
 void		exec_unset(t_data *data, char **cmd);

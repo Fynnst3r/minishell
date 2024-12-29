@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/27 19:50:00 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/29 18:21:30 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,10 @@ int	scan_cmd_type(t_token *t)
 	{
 		if (t->type == PATH)
 		{
-			if (t->previous->type != T_HERE)
+			if (t->previous->type != T_HERE && ret != HEREDOC)
 				ret = RED;
 			else
-				return (HEREDOC);
+				ret = HEREDOC;
 		}
 		if (t->type == T_PIPE)
 			return (PIPE);
@@ -201,8 +201,8 @@ t_token	*scan_last_heredoc(t_token *tmp)
 	last = NULL;
 	while (tmp)
 	{
-		if (tmp->type == T_PIPE)
-			return (NULL);
+		// if (tmp->type == T_PIPE)
+		// 	return (NULL);
 		if (tmp->type == PATH && tmp->previous->type == T_HERE)
 			last = tmp;
 		tmp = tmp->next;
@@ -227,6 +227,8 @@ t_herd	*make_herd_node(t_token *t)
 	tmp = t;
 	while (tmp)
 	{
+		if (tmp->type == T_PIPE)
+			break ;
 		if (tmp->type == PATH && tmp->previous->type != T_HERE)
 			herd->cmd = (t_cmd *)create_redir_cmd(t);
 		tmp = tmp->next;
