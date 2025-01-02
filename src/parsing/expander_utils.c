@@ -6,13 +6,13 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:39:42 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/25 20:49:29 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:37:51 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-bool	needs_to_expand(t_token *tmp)
+bool	needs_to_exp(t_token *tmp)
 {
 	if ((tmp->type == WORD || tmp->type == PATH)
 		&& (ft_strchr(tmp->str, '\'') || ft_strchr(tmp->str, '\"')
@@ -21,21 +21,21 @@ bool	needs_to_expand(t_token *tmp)
 	return (false);
 }
 
-char	*keep_expanding(char *s, char *ret, t_lexer *l, t_list *env)
+char	*keep_expanding(char *s, char *ret, t_lexer *l, t_data *data)
 {
 	char	*val;
 	char	*exit_status;
 
 	l->keepempty = true;
 	l->position++;
-	exit_status = ft_itoa(g_signal);
+	exit_status = ft_itoa(data->e_status);
 	while (s[l->position] != '\"' && s[l->position])
 	{
 		if (s[l->position] == '$' && s[l->position + 1] == '?')
 			ret = ft_strjoin_at(ret, exit_status, l, true);
 		if (s[l->position] == '$')
 		{
-			val = check_val(s, l, env);
+			val = check_val(s, l, data->env_list);
 			if (val)
 				ret = ft_strjoin_at(ret, val, l, false);
 			l->position = l->read;

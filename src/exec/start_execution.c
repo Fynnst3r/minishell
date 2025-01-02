@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/29 18:08:07 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/02 21:54:51 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,45 @@
 //     pipe2->right = (t_cmd *)exec_uniq;  // Rechtes Kommando: `uniq`
 //     // 7. Setzen der Wurzel des AST in die Datenstruktur
 //     data->st_node = (t_cmd *)pipe2;
+// }
+// void fill_test_struct(t_data *data) // grep "Zeile" << EOF | sort | uniq
+// {
+//     // 1. Erstellen des `grep "Zeile"` Kommandos
+//     t_exec *exec_echo = malloc(sizeof(t_exec));
+//     exec_echo->type = EXECUTE;
+//     exec_echo->argv = malloc(3 * sizeof(char *));
+//     exec_echo->argv[0] = strdup("grep");
+//     exec_echo->argv[1] = strdup("Zeile");
+//     exec_echo->argv[2] = NULL;
+//     // 3. Erstellen des `sort` Kommandos
+//     t_exec *exec_cat = malloc(sizeof(t_exec));
+//     exec_cat->type = EXECUTE;
+//     exec_cat->argv = malloc(2 * sizeof(char *));
+//     exec_cat->argv[0] = strdup("cat");
+//     exec_cat->argv[1] = NULL;
+//     // 4. Erstellen des `uniq` Kommandos
+//     // 2. Erstellen des Here-Documents '<< EOF' für `grep`
+//     t_herd *heredoc = malloc(sizeof(t_herd));
+//     heredoc->type = HEREDOC;
+//     heredoc->cmd = (t_cmd *)exec_cat;  // Verweist auf `grep`-Kommando
+//     heredoc->del = strdup("end");       // Delimiter für das Heredoc
+//     // t_exec *exec_uniq = malloc(sizeof(t_exec));
+//     // exec_uniq->type = EXECUTE;
+//     // exec_uniq->argv = malloc(2 * sizeof(char *));
+//     // exec_uniq->argv[0] = strdup("uniq");
+//     // exec_uniq->argv[1] = NULL;
+//     // 5. Verbindung des Here-Documents und `grep` Kommandos mit `sort` in der ersten Pipe
+//     t_pipe *pipe1 = malloc(sizeof(t_pipe));
+//     pipe1->type = PIPE;
+//     pipe1->left = (t_cmd *)exec_echo;     // Linkes Kommando: `grep "Zeile" << EOF`
+//     pipe1->right = (t_herd *)heredoc;  // Rechtes Kommando: `sort`
+//     // 6. Verbindung der ersten Pipe (`grep | sort`) mit `uniq` in der zweiten Pipe
+//     // t_pipe *pipe2 = malloc(sizeof(t_pipe));
+//     // pipe2->type = PIPE;
+//     // pipe2->left = (t_cmd *)pipe1;       // Linkes Kommando: `grep "Zeile" << EOF | sort`
+//     // pipe2->right = (t_cmd *)exec_uniq;  // Rechtes Kommando: `uniq`
+//     // 7. Setzen der Wurzel des AST in die Datenstruktur
+//     data->st_node = (t_cmd *)pipe1;
 // }
 
 // void fill_test_struct(t_data *data) // grep "Zeile" << EOF | sort | wc -w | tee result.txt
@@ -451,28 +490,6 @@
 //     data->st_node = (t_cmd *)redir_a;
 // }
 
-// void	exec_no_pipe(t_exec *st_node, t_data *data)
-// {
-// 	pid_t		pid;
-// 	int			status;
-
-// 	if (check_builtins(data, st_node->argv) == 0)
-// 	{
-// 		pid = fork();
-// 		if (pid == -1)
-// 		exit(1);
-// 	if (pid == 0)
-// 	waitpid(pid, &status, 0);
-// 	g_signal = WIFEXITED(status);
-// 		data->cmd_path = find_path(data, st_node);
-// 		if (data->cmd_path == 0)
-// 			exit(1);
-// 		if (execve(data->cmd_path, st_node->argv, data->env) == -1)
-// 			exit(1);
-// 	}
-// 	return ;
-// }
-
 void	start_exec(t_data *data, t_cmd *cmd)
 {
 	if (cmd->type == EXECUTE)
@@ -499,9 +516,10 @@ void	exec_heredoc(t_herd *st_node, t_data *data)
 	pid_t	pid;
 	int		status;
 
+	prepare_signal(data, signal_handler2);
 	pid = fork();
 	if (pid == -1)
-		exit(1);
+		return ;
 	if (pid == 0)
 	{
 		fd = open("heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -510,11 +528,19 @@ void	exec_heredoc(t_herd *st_node, t_data *data)
 			perror("YM_FF_SHELL");
 			exit(1);
 		}
-		write_in_file(fd, (t_herd *)st_node, data);
+		if (write_in_file(fd, (t_herd *)st_node, data) == 1)
+		{
+			unlink("heredoc.txt");
+			close(fd);
+			exit(1);
+		}
 		close (fd);
 		fd = open("heredoc.txt", O_RDONLY);
 		if (dup2(fd, STDIN_FILENO) == -1)
+		{
+			perror("herd");
 			exit(1);
+		}
 		close(fd);
 		if (st_node->cmd->type == RED)
 			start_exec(data, st_node->cmd);
@@ -523,8 +549,10 @@ void	exec_heredoc(t_herd *st_node, t_data *data)
 		unlink("heredoc.txt");
 		exit(1);
 	}
-	waitpid(pid, &status, 0);
-	g_signal = WIFEXITED(status);
+	while (waitpid(pid, &status, 0) == -1)
+		;
+	prepare_signal(data, signal_handler);
+	data->e_status = WEXITSTATUS(status);
 	extra_exec(data, data->st_node);
 }
 
@@ -535,6 +563,7 @@ void	exec_red(t_red *st_node, t_data *data)
 	pid_t	pid;
 	int		status;
 
+	prepare_signal(data, signal_handler2);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -567,8 +596,10 @@ void	exec_red(t_red *st_node, t_data *data)
 		close(saved_fd);
 		exit(0);
 	}
-	waitpid(pid, &status, 0);
-	g_signal = WIFEXITED(status);
+	while (waitpid(pid, &status, 0) == -1)
+		;
+	prepare_signal(data, signal_handler);
+	data->e_status = WEXITSTATUS(status);
 	extra_exec(data, data->st_node);
 }
 
@@ -582,6 +613,7 @@ void	exec_execu(t_exec *st_node, t_data *data)
 		data->cmd_path = find_path(data, st_node);
 		if (data->cmd_path == 0)
 			return ;
+		prepare_signal(data, signal_handler2);
 		pid = fork();
 		if (pid == -1)
 		{
@@ -594,11 +626,17 @@ void	exec_execu(t_exec *st_node, t_data *data)
 			if (execve(data->cmd_path, st_node->argv, data->env) == -1)
 			{
 				perror("YM_FF_SHELL");
-				exit(1);
+				exit(127);
 			}
 		}
-		waitpid(pid, &status, 0);
-		g_signal = WIFEXITED(status);
+		while (waitpid(pid, &status, 0) == -1)
+			;
+		prepare_signal(data, signal_handler);
+		data->e_status = WEXITSTATUS(status);
+		// printf("%d exit statd\n", WEXITSTATUS(status));
+		// printf("%d termsig\n", WTERMSIG(status));
+		// if (WTERMSIG(status) == 0)
+		// 	ft_error(NULL, 0, NULL);
 		ft_free(data->cmd_path);
 		return ;
 	}

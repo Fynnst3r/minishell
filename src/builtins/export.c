@@ -6,13 +6,13 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 22:03:24 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/20 20:38:08 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/01 16:42:24 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-static int	check_valid_name(char *s)
+static int	check_valid_name(char *s, t_data *data)
 {
 	size_t	i;
 
@@ -22,6 +22,7 @@ static int	check_valid_name(char *s)
 		if (s[i] == '$')
 		{
 			printf("YM_FF_SHELL: export: `%s': not a valid identifier\n", s);
+			data->e_status = 2;
 			return (1);
 		}
 		if (s[i] == '=')
@@ -31,6 +32,7 @@ static int	check_valid_name(char *s)
 	if (i == 0)
 	{
 		printf("YM_FF_SHELL: export: `%s': not a valid identifier\n", s);
+		data->e_status = 2;
 		return (1);
 	}
 	return (0);
@@ -85,11 +87,12 @@ void	exec_export(t_data *data, char **cmd)
 	char		*equal_sign;
 	size_t		i;
 
-	i = 0;
+	i = 1;
+	data->e_status = 0;
 	while (cmd[i])
 	{
 		equal_sign = ft_strchr(cmd[i], '=');
-		if (equal_sign && !check_valid_name(cmd[i]))
+		if (equal_sign && !check_valid_name(cmd[i], data))
 		{
 			add_or_replace_entry(data, cmd[i], equal_sign);
 		}

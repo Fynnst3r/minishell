@@ -2,12 +2,14 @@ NAME = minishell
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 LDFLAGS = -lreadline -g -fsanitize=address
 SRCS = src/minishell.c \
+		src/signals.c \
 		src/parsing/start_lexer.c src/parsing/lexer_utils.c \
 		src/parsing/make_token.c \
 		src/parsing/token_utils.c \
 		src/parsing/expander.c src/parsing/expander_utils.c \
 		src/parsing/evaluator.c \
-		src/parsing/ast_files/make_ast2.c \
+		src/parsing/ast_files/make_ast.c \
+		src/parsing/ast_files/make_ast_helper.c \
 		src/parsing/ast_files/pipe_ast.c \
 		src/error/error.c \
 		src/error/errno_print.c \

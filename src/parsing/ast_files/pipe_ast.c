@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 22:32:04 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/27 20:12:46 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:33:24 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_pipe	*make_pipe_node(t_pipe *last)
 	return (new);
 }
 
-t_cmd	*set_pipe_cmd(t_token *tmp)
+t_cmd	*set_pipe_cmd(t_token *tmp, bool first)
 {
 	int		cmd_type;
 
@@ -70,7 +70,15 @@ t_cmd	*set_pipe_cmd(t_token *tmp)
 	else if (cmd_type == RED)
 		return ((t_cmd *)create_redir_cmd(tmp));
 	else if (cmd_type == HEREDOC)
+	{
+		if (!first)
+		{
+			printf("YM_FF_SHELL: syntax error near token '|', "
+				"pipe heredoc does not work\n");
+			return (NULL);
+		}
 		return ((t_cmd *)make_herd_node(tmp));
+	}
 	return (NULL);
 }
 
@@ -83,13 +91,15 @@ t_pipe	*make_pipe_ast(t_token **toktop)
 	curr_id = 0;
 	tmp = *toktop;
 	pipe = make_pipe_node(NULL);
-	pipe->left = set_pipe_cmd(tmp);
+	pipe->left = set_pipe_cmd(tmp, true);
 	while (tmp)
 	{
 		while (tmp->type != T_PIPE)
 			tmp = tmp->next;
 		curr_id = tmp->id + 1;
-		pipe->right = set_pipe_cmd(find_id(*toktop, curr_id));
+		pipe->right = set_pipe_cmd(find_id(*toktop, curr_id), false);
+		if (!pipe->right)
+			return (ft_free_tree((t_cmd *)pipe), NULL);
 		if (check_for_next_pipe(find_id(*toktop, curr_id)) == true)
 			pipe = make_pipe_node(pipe);
 		else

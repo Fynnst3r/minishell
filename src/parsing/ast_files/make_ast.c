@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   make_ast2.c                                        :+:      :+:    :+:   */
+/*   make_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 21:15:30 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/29 18:21:30 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:04:41 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,26 +69,9 @@ void	print_red(t_red *red)
 	}
 }
 
-int	scan_cmd_type(t_token *t)
-{
-	int	ret;
+//////////////////////////////////////////////////////////////////////////////
 
-	ret = EXECUTE;
-	while (t)
-	{
-		if (t->type == PATH)
-		{
-			if (t->previous->type != T_HERE && ret != HEREDOC)
-				ret = RED;
-			else
-				ret = HEREDOC;
-		}
-		if (t->type == T_PIPE)
-			return (PIPE);
-		t = t->next;
-	}
-	return (ret);
-}
+
 
 t_exec	*make_cmd_node(t_token *t)
 {
@@ -96,16 +79,10 @@ t_exec	*make_cmd_node(t_token *t)
 	t_token	*tmp;
 	size_t	count;
 
-	count = 0;
+	count = count_cmd_args(t);
 	tmp = t;
 	exec = ft_calloc(sizeof(t_exec), 1);
 	exec->type = EXECUTE;
-	while (tmp)
-	{
-		if (tmp->type == WORD && tmp->str != NULL)
-			count++;
-		tmp = tmp->next;
-	}
 	exec->argv = ft_calloc(sizeof(char *), count + 1);
 	tmp = t;
 	count = 0;
@@ -114,42 +91,12 @@ t_exec	*make_cmd_node(t_token *t)
 		if (tmp->type == WORD && tmp->str != NULL)
 		{
 			exec->argv[count] = tmp->str;
-			// printf("node str %s\n", exec->argv[count]);
 			count++;
-			// ft_free(tmp->str);? will get freed after ast creation.
 		}
 		tmp = tmp->next;
 	}
 	exec->argv[count] = NULL;
 	return (exec);
-}
-
-static void	set_red_type(t_red **red, int type)
-{
-	if (type == T_OUT)
-	{
-		(*red)->fd = STDOUT_FILENO;
-		(*red)->mode = O_WRONLY | O_CREAT | O_TRUNC;
-	}
-	if (type == T_APP)
-	{
-		(*red)->fd = STDOUT_FILENO;
-		(*red)->mode = O_WRONLY | O_CREAT | O_APPEND;
-	}
-	if (type == T_IN)
-	{
-		(*red)->fd = STDIN_FILENO;
-		(*red)->mode = O_RDONLY;
-	}
-}
-
-static t_red	*find_last_red(t_red *top)
-{
-	while (top->cmd != NULL)
-	{
-		top = (t_red *)top->cmd;
-	}
-	return (top);
 }
 
 static void	make_red_node(t_red **top, int type, char *filename)
@@ -194,32 +141,16 @@ t_red	*create_redir_cmd(t_token *t)
 	return (red);
 }
 
-t_token	*scan_last_heredoc(t_token *tmp)
-{
-	t_token	*last;
-
-	last = NULL;
-	while (tmp)
-	{
-		// if (tmp->type == T_PIPE)
-		// 	return (NULL);
-		if (tmp->type == PATH && tmp->previous->type == T_HERE)
-			last = tmp;
-		tmp = tmp->next;
-	}
-	return (last);
-}
-
 t_herd	*make_herd_node(t_token *t)
 {
 	t_herd	*herd;
 	t_token	*last_herd_tok;
 	t_token	*tmp;
 
-	last_herd_tok = scan_last_heredoc(t);
-	if (last_herd_tok == NULL)
-		return (NULL);
 	herd = ft_calloc(sizeof(t_herd), 1);
+	last_herd_tok = scan_last_heredoc(t, herd);
+	if (last_herd_tok == NULL)
+		return (ft_free(herd), NULL);
 	herd->type = HEREDOC;
 	herd->del = ft_strjoin(last_herd_tok->str, "\n");
 	ft_free(last_herd_tok->str);
@@ -237,23 +168,6 @@ t_herd	*make_herd_node(t_token *t)
 		herd->cmd = (t_cmd *)make_cmd_node(t);
 	return (herd);
 }
-// t_herd	*make_herd_node(t_token *t)
-// {
-// 	t_herd	*herd;
-// 	t_token	*tmp;
-
-// 	tmp = t;
-// 	herd = ft_calloc(sizeof(t_herd), 1);
-// 	herd->type = HEREDOC;
-// 	while (tmp)
-// 	{
-// 		if (tmp->type == PATH && tmp->previous->type == T_HERE)
-// 			herd->del = tmp->str;
-// 		tmp = tmp->next;
-// 	}
-// 	herd->cmd = (t_cmd *)make_cmd_node(t);
-// 	return (herd);
-// }
 
 void	make_ast2(t_data *data, t_token **toktop)
 {
@@ -269,7 +183,9 @@ void	make_ast2(t_data *data, t_token **toktop)
 		// print_red((t_red *)data->st_node);
 	}
 	else if (cmd_type == HEREDOC)
+	{
 		data->st_node = (t_cmd *)make_herd_node(*toktop);
+	}
 	else
 	{
 		data->st_node = (t_cmd *)make_pipe_ast(toktop);

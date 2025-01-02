@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:36:55 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/18 22:46:45 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/01 21:47:28 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,12 @@ void	free_env_entry(t_env_entry *entry)
 	entry = NULL;
 }
 
-int	remove_entry(t_list **top, t_env_entry *entry)
+int	remove_entry(t_list **top, t_env_entry *entry, t_list *to_del)
 {
-	t_list	*to_del;
 	t_list	*tmp;
 
 	if (!*top)
 		return (1);
-	to_del = NULL;
 	if ((*top)->content == entry)
 	{
 		to_del = *top;
@@ -71,12 +69,12 @@ void	exec_unset(t_data *data, char **cmd)
 					ft_strlen(enventry->name) + 1))
 			{
 				curr = curr->next;
-				remove_entry(&data->env_list, enventry);
+				if (remove_entry(&data->env_list, enventry, NULL))
+					data->e_status = 1;
 			}
 			else
 				curr = curr->next;
 		}
 		i++;
 	}
-	return ;
 }

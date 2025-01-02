@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:37:15 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/25 21:45:23 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/01 21:48:43 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ int	skip_quote(const char *s, size_t *i)
 	return (0);
 }
 
-// makes extra token for special char and sets lex position to next unspecial char
+// makes extra token for special char 
+// and sets lex position to next unspecial char
 int	handle_special(char *input, t_lexer *lex, t_token **toktop, size_t start)
 {
-	// printf("\n\nc %c\nl %zu\n\n", input[start], start);
 	if (input[lex->position] == '|')
 		return (make_special_token(toktop, "|", T_PIPE), lex->position += 1, 0);
 	if (input[lex->position] == '>')

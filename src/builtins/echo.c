@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 23:17:46 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/27 20:07:25 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/01 16:24:04 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ bool	check_n_flag(char **cmd, size_t *i)
 	return (newline);
 }
 
-void	exec_echo(char **cmd)
+void	exec_echo(t_data *data, char **cmd)
 {
 	size_t	i;
 	bool	newline;
@@ -56,5 +56,5 @@ void	exec_echo(char **cmd)
 	}
 	if (newline)
 		printf("\n");
-	g_signal = 0;
+	data->e_status = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/29 17:16:06 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:48:20 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_data
 	char				*cmd_path;
 	int					origin_stdin;
 	int					origin_stdout;
+	int					e_status;
 	t_list				*env_list;
 }						t_data;
 
@@ -128,6 +129,7 @@ typedef struct s_here_d
 	t_obj		type;
 	t_cmd		*cmd;
 	char		*del;
+	bool		last_redir;
 }					t_herd;
 
 /******************************************************************************/
@@ -136,10 +138,11 @@ typedef struct s_here_d
 //minishell.c
 // void		fill_env(t_data *data, char **env);
 
-//parsing/new_lex.c
+//parsing/start_lexer.c
 int			start_lexer(char *input, t_data *data);
 int			get_str(t_lexer *lex, t_token **tofill);
-//parsing/new_lex_utils.c
+int			start_parser(t_data *data, t_token *token_top);
+//parsing/lexer_utils.c
 t_lexer		init_lex(char *input);
 int			is_special_char(char c);
 int			ft_isspace(char c);
@@ -160,14 +163,14 @@ void		set_token_id(t_token *t);
 void		set_token_types(t_token *t);
 
 // parsing/expander.c
-void		expand_tokens(t_token **toktop, t_lexer l, t_list *env);
-char		*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env);
+void		expand_tokens(t_token **toktop, t_lexer l, t_data *data);
+char		*get_exp_str(char *s, char *exit_status, t_lexer *l, t_data *data);
 char		*check_val(char *s, t_lexer *l, t_list *env);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit);
 char		*add_char(char *ret, char add, size_t *position);
 //..uitls.c
-bool		needs_to_expand(t_token *tmp);
-char		*keep_expanding(char *s, char *ret, t_lexer *l, t_list *env);
+bool		needs_to_exp(t_token *tmp);
+char		*keep_expanding(char *s, char *ret, t_lexer *l, t_data *data);
 char		*stop_expanding(char *s, char *ret, t_lexer *l);
 char		*ft_getenv(char *tolook, t_list *env);
 
@@ -181,12 +184,18 @@ void		print_exec(t_exec *cmd);
 void		print_pipe_ast(t_pipe *pipe);
 t_exec		*make_cmd_node(t_token *t);
 t_red		*create_redir_cmd(t_token *t);
-// t_red		*make_red_node(void);
 t_herd		*make_herd_node(t_token *t);
 ///parsing/ast_files/make_pipe_ast.c
 t_pipe		*make_pipe_ast(t_token **toktop);
+///parsing/ast_files/make_ast_helper.c
+int			scan_cmd_type(t_token *t);
+void		set_red_type(t_red **red, int type);
+t_red		*find_last_red(t_red *top);
+t_token		*scan_last_heredoc(t_token *t, t_herd *herd);
+size_t		count_cmd_args(t_token *tmp);
 
 //error/error.c
+void		ft_clean(char *message, t_data *data, t_token **toktop);
 void		ft_error(char *message, int errcode, t_token **toktop);
 int			ft_free_tree(t_cmd *st_node);
 void		free_tokens(t_token **t);
@@ -203,6 +212,10 @@ void		print_open_error(char *path, int flags);
 //minishell.c
 int			main(int ac, char **av, char **env);
 void		setting_data(t_data *data);
+//sigma.c
+void		signal_handler(int signum);
+void		signal_handler2(int signum);
+void		prepare_signal(t_data *data, void (sig_handler)(int));
 
 //execution/start_execution
 void		start_exec(t_data *data, t_cmd *cmd);
@@ -239,7 +252,7 @@ void		exec_env(t_data *data);
 void		exec_exit(void);
 
 //builtins/echo.c
-void		exec_echo(char **cmd);
+void		exec_echo(t_data *data, char **cmd);
 
 //builtins/export.c
 void		exec_export(t_data *data, char **cmd);

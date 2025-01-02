@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/27 17:52:31 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/02 14:47:45 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,26 +34,23 @@ void	run_pipe(t_cmd *st_node, t_data *data, int last)
 	pid_t	pid1;
 
 	if (pipe(pipefd) == -1)
-		exit(-1);
+		return ;
 	pid1 = fork();
 	if (pid1 == -1)
-		exit(1);
+		return ;
 	if (pid1 == 0)
 		child(st_node, data, last, pipefd);
-	if (pid1 > 0)
+	while (waitpid(pid1, &status, 0) == -1)
+		;
+	data->e_status = WEXITSTATUS(status);
+	close(pipefd[1]);
+	if (last == 0)
+		dup2(pipefd[0], STDIN_FILENO);
+	else
 	{
-		waitpid(pid1, &status, 0);
-		g_signal = WIFEXITED(status);
-		close(pipefd[1]);
-		if (last == 0)
-			dup2(pipefd[0], STDIN_FILENO);
-		else
-		{
-			close(pipefd[0]);
-			dup2(data->origin_stdin, STDIN_FILENO);
-		}
+		close(pipefd[0]);
+		dup2(data->origin_stdin, STDIN_FILENO);
 	}
-	return ;
 }
 
 void	child(t_cmd *st_node, t_data *data, int last, int pipefd[2])
@@ -66,5 +63,5 @@ void	child(t_cmd *st_node, t_data *data, int last, int pipefd[2])
 	else
 		close(pipefd[1]);
 	start_exec(data, (t_cmd *)st_node);
-	exit(0);
+	exit(data->e_status);
 }

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/29 14:42:38 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/01 16:28:17 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	check_builtins(t_data *data, char **cmd)
 	if (!*cmd)
 		return (1);
 	if (ft_strncmp(cmd[0], "echo", 5) == 0)
-		exec_echo(cmd);
+		exec_echo(data, cmd);
 	else if (ft_strncmp(cmd[0], "pwd", 4) == 0)
 		exec_pwd(data);
 	else if (ft_strncmp(cmd[0], "env", 4) == 0)
@@ -39,6 +39,9 @@ void	exec_env(t_data *data)
 	t_env_entry	*entry;
 
 	current = data->env_list;
+	data->e_status = 0;
+	if (current == NULL)
+		data->e_status = 1;
 	while (current != NULL)
 	{
 		if (current->content)
@@ -53,10 +56,13 @@ void	exec_pwd(t_data *data)
 {
 	char	*pwd;
 
-	(void)data;
+	data->e_status = 0;
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
-		ft_error("Malloc FAIL!", 44, NULL);
+	{
+		data->e_status = 1;
+		return ;
+	}
 	printf("%s\n", pwd);
 	free(pwd);
 }

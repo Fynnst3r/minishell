@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/25 21:46:48 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/02 20:37:40 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char	*check_val(char *s, t_lexer *l, t_list *env)
 	return (val);
 }
 
-char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env)
+char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_data *data)
 {
 	char	*val;
 	char	*ret;
@@ -95,14 +95,14 @@ char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env)
 	while (s[l->position])
 	{
 		if (s[l->position] == '\"' && l->ignore_quotes == false)
-			ret = keep_expanding(s, ret, l, env);
+			ret = keep_expanding(s, ret, l, data);
 		else if (s[l->position] == '\'' && l->ignore_quotes == false)
 			ret = stop_expanding(s, ret, l);
 		else if (s[l->position] == '$' && s[l->position + 1] == '?')
 			ret = ft_strjoin_at(ret, exit_status, l, true);
 		else if (s[l->position] == '$')
 		{
-			val = check_val(s, l, env);
+			val = check_val(s, l, data->env_list);
 			if (val)
 				ret = ft_strjoin_at(ret, val, l, false);
 		}
@@ -112,18 +112,18 @@ char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_list *env)
 	return (ret);
 }
 
-void	expand_tokens(t_token **toktop, t_lexer l, t_list *env)
+void	expand_tokens(t_token **toktop, t_lexer l, t_data *data)
 {
 	t_token	*tmp;
 	char	*exit_num_str;
 
 	tmp = *toktop;
-	exit_num_str = ft_itoa(g_signal);
+	exit_num_str = ft_itoa(data->e_status);
 	while (tmp)
 	{
 		l = init_lex(tmp->str);
-		if (needs_to_expand(tmp) && tmp->previous->type != T_HERE)
-			tmp->str = get_exp_str(tmp->str, exit_num_str, &l, env);
+		if (needs_to_exp(tmp) && (!tmp->previous || tmp->previous->type != T_HERE))
+			tmp->str = get_exp_str(tmp->str, exit_num_str, &l, data);
 		if (tmp->str)
 			tmp->len = ft_strlen(tmp->str);
 		if (l.keepempty == false && tmp->str[0] == 0)

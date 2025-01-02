@@ -6,11 +6,36 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/29 17:42:13 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/02 15:54:57 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+void	check_for_shlvl(t_data *data)
+{
+	t_list		*current;
+	t_env_entry	*entry;
+	char		*tmp[3];
+
+	current = data->env_list;
+	data->e_status = 0;
+	if (current == NULL)
+		data->e_status = 1;
+	while (current != NULL)
+	{
+		if (current->content)
+			entry = (t_env_entry *)current->content;
+		if (entry->name)
+			if (!ft_strncmp(entry->name, "SHLVL", 6))
+				return ;
+		current = current->next;
+	}
+	tmp[0] = "export";
+	tmp[1] = "SHLVL=1";
+	tmp[2] = NULL;
+	exec_export(data, tmp);
+}
 
 void	handle_shlvl(t_env_entry *entry)
 {
@@ -58,4 +83,5 @@ void	fill_env_list(t_data *data, char **env)
 		}
 		i++;
 	}
+	check_for_shlvl(data);
 }
