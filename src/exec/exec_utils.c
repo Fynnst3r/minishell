@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/02 15:54:57 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/03 19:59:00 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	check_for_shlvl(t_data *data)
 	t_env_entry	*entry;
 	char		*tmp[3];
 
+	entry = NULL;
 	current = data->env_list;
 	data->e_status = 0;
 	if (current == NULL)
@@ -41,6 +42,7 @@ void	handle_shlvl(t_env_entry *entry)
 {
 	char	*tmp;
 
+	tmp = NULL;
 	if (!ft_strncmp(entry->name, "SHLVL", 6) && *entry->value)
 	{
 		tmp = ft_strdup(entry->value);

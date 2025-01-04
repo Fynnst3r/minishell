@@ -6,11 +6,18 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/02 21:40:39 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/03 15:39:31 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+void	clean_exit(int errnum)
+{
+	delete_trash();
+	ft_bzero(get_workers(), sizeof(t_trashman));
+	exit(errnum);
+}
 
 void	ft_clean(char *message, t_data *data, t_token **toktop)
 {
@@ -18,9 +25,11 @@ void	ft_clean(char *message, t_data *data, t_token **toktop)
 		printf("YM_FF_SHELL: %s\n", message);
 	if (data)
 	{
-		ft_free(data->input);
+		if (data->input)
+			ft_free(data->input);
 		data->input = NULL;
-		ft_free_tree(data->st_node);
+		if (data->st_node)
+			ft_free_tree(data->st_node);
 		data->st_node = NULL;
 	}
 	if (toktop)
@@ -30,9 +39,7 @@ void	ft_clean(char *message, t_data *data, t_token **toktop)
 void	free_tokens(t_token **t)
 {
 	t_token	*tmp;
-	int		count;
 
-	count = 0;
 	if (!*t)
 		return ;
 	tmp = *t;
@@ -99,6 +106,7 @@ int	ft_free_tree(t_cmd *st_node)
 		free_pipe = (t_pipe *)st_node;
 		if (free_pipe->left == PIPE)
 			ft_free_tree((t_cmd *)free_pipe->left);
+		// printf("%s%d freed left pipe\n", __FILE__, __LINE__);
 		return (ft_free_tree((t_cmd *)free_pipe->right), ft_free(free_pipe), 0);
 	}
 	if (st_node->type == HEREDOC)

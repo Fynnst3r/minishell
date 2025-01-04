@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/02 21:54:51 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:36:39 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -526,20 +526,20 @@ void	exec_heredoc(t_herd *st_node, t_data *data)
 		if (fd == -1)
 		{
 			perror("YM_FF_SHELL");
-			exit(1);
+			clean_exit(1);
 		}
 		if (write_in_file(fd, (t_herd *)st_node, data) == 1)
 		{
 			unlink("heredoc.txt");
 			close(fd);
-			exit(1);
+			clean_exit(0);
 		}
 		close (fd);
 		fd = open("heredoc.txt", O_RDONLY);
 		if (dup2(fd, STDIN_FILENO) == -1)
 		{
 			perror("herd");
-			exit(1);
+			clean_exit(1);
 		}
 		close(fd);
 		if (st_node->cmd->type == RED)
@@ -547,12 +547,13 @@ void	exec_heredoc(t_herd *st_node, t_data *data)
 		else if (st_node->cmd->type == EXECUTE)
 			exec_execu((t_exec *)st_node->cmd, data);
 		unlink("heredoc.txt");
-		exit(1);
+		clean_exit(0);
 	}
 	while (waitpid(pid, &status, 0) == -1)
 		;
 	prepare_signal(data, signal_handler);
 	data->e_status = WEXITSTATUS(status);
+	// printf("wexit %d\n", WEXITSTATUS(status));
 	extra_exec(data, data->st_node);
 }
 
@@ -572,29 +573,29 @@ void	exec_red(t_red *st_node, t_data *data)
 	}
 	if (pid == 0)
 	{
-		if (st_node->fd > 0)
-		{
+		if (st_node->fd != STDIN_FILENO)
 			fd_orig = open(st_node->file, st_node->mode, 0644);
-			saved_fd = dup(st_node->fd);
-		}
 		else
 			fd_orig = open(st_node->file, st_node->mode);
+		saved_fd = dup(st_node->fd);
 		if (fd_orig == -1)
 		{
 			perror("YM_FF_SHELL");
-			exit(1);
+			clean_exit(1);
 		}
 		if (dup2(fd_orig, st_node->fd) == -1)
-			exit(1);
+			clean_exit(1);
 		close(fd_orig);
 		if (st_node->cmd->type == RED)
 			start_exec(data, st_node->cmd);
 		else if (st_node->cmd->type == EXECUTE)
 			exec_execu((t_exec *)st_node->cmd, data);
-		if (dup2(saved_fd, STDOUT_FILENO) == -1)
-			exit(1);
+		if (st_node->fd != STDIN_FILENO)
+			dup2(saved_fd, STDOUT_FILENO);
+		else
+			dup2(saved_fd, STDIN_FILENO);
 		close(saved_fd);
-		exit(0);
+		clean_exit(0);
 	}
 	while (waitpid(pid, &status, 0) == -1)
 		;
@@ -610,9 +611,6 @@ void	exec_execu(t_exec *st_node, t_data *data)
 
 	if (check_builtins(data, st_node->argv) == 0)
 	{
-		data->cmd_path = find_path(data, st_node);
-		if (data->cmd_path == 0)
-			return ;
 		prepare_signal(data, signal_handler2);
 		pid = fork();
 		if (pid == -1)
@@ -622,11 +620,14 @@ void	exec_execu(t_exec *st_node, t_data *data)
 		}
 		if (pid == 0)
 		{
+			data->cmd_path = find_path(data, st_node);
+			if (data->cmd_path == 0)
+				clean_exit(127);
 			data->env = env_list_to_array(data);
 			if (execve(data->cmd_path, st_node->argv, data->env) == -1)
 			{
 				perror("YM_FF_SHELL");
-				exit(127);
+				clean_exit(127);
 			}
 		}
 		while (waitpid(pid, &status, 0) == -1)
@@ -637,7 +638,6 @@ void	exec_execu(t_exec *st_node, t_data *data)
 		// printf("%d termsig\n", WTERMSIG(status));
 		// if (WTERMSIG(status) == 0)
 		// 	ft_error(NULL, 0, NULL);
-		ft_free(data->cmd_path);
 		return ;
 	}
 }

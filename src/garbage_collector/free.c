@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:30:37 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/12 23:27:15 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/03 20:14:59 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,17 @@ void	ft_free(void *pointer)
 		if (current_bag->next->totrash == pointer)
 		{
 			tofree = current_bag->next;
-			current_bag->next = current_bag->next->next;
+			if (current_bag->next != trashmen->tail)
+				current_bag->next = current_bag->next->next;
+			else
+			{
+				trashmen->tail = current_bag;
+				current_bag->next = NULL;
+			}
 			free(tofree->totrash);
 			tofree->totrash = NULL;
 			free(tofree);
-			tofree = NULL;
+			//tofree = NULL;
 			trashmen->worker_num--;
 			return ;
 		}

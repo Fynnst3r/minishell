@@ -1,6 +1,6 @@
 NAME = minishell
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
-LDFLAGS = -lreadline -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror # -fsanitize=address -g
+LDFLAGS = -lreadline# -fsanitize=address -g
 SRCS = src/minishell.c \
 		src/signals.c \
 		src/parsing/start_lexer.c src/parsing/lexer_utils.c \

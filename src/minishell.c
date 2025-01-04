@@ -6,35 +6,13 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/02 22:40:45 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:31:38 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 int	g_signal = 0;
-
-// static long	ft_atol(char *str)
-// {
-// 	long	res;
-// 	int		minus;
-
-// 	minus = 1;
-// 	if (*str == '-')
-// 	{
-// 		minus = -1;
-// 		str++;
-// 	}
-// 	while (*str)
-// 	{
-// 		res = res * 10;
-// 		res = res + *str - '0';
-// 		str++;
-// 	}
-// 	if (res > INTMAX_MAX)
-// 		return (2);
-// 	return (res * minus);
-// }
 
 void	check_exit(t_cmd *cmd)
 {
@@ -75,22 +53,26 @@ static void	init_data(t_data *data, int ac, char **av, char **env)
 }
 
 // cat << end < 1				it should use 1 as input not heredoc
+// cat < 1 <<end				it should use heredoc as input not 1
 int	main(int ac, char **av, char **env)
 {
 	t_data		data;
-
+//env[0] = 0;
 	init_garbage_collector();
 	init_data(&data, ac, av, env);
+
 	// fill_test_struct(&data);
 	while (1)
 	{
 		data.input = readline(ANSI_BOLD ANSI_CYAN"YM_FF_SHELL: "ANSI_RESET);
+		g_signal = 0;
 		if (!data.input)
-			ft_error("exit", 1, NULL);
+			ft_error("exit", 0, NULL);
 		if (!*data.input)
 			continue ;
 		if (data.input)
 		{
+			// printf("%d\n", g_signal);
 			if (start_lexer(data.input, &data))
 				continue ;
 			check_exit(data.st_node);
@@ -98,12 +80,7 @@ int	main(int ac, char **av, char **env)
 			{
 				start_exec(&data, data.st_node);
 			}
-			ft_free_tree(data.st_node);
-			free_tokens(&data.token_top);
-			free(data.input);
-			// system("leaks minishell");
 		}
+		ft_clean(NULL, &data, &data.token_top);
 	}
-	delete_trash();
-	ft_bzero(get_workers(), sizeof(t_trashman));
 }

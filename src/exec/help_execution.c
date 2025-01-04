@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/02 21:54:42 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:57:52 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,11 @@ char	*find_path(t_data *data, t_exec *st_node)
 		}
 	}
 	data->e_status = 127;
-	perror("YM_FF_SHELL");
+	write(2, "YM_FF_SHELL: ", strlen("YM_FF_SHELL: "));
+	write(2, "Command not found: ", strlen("Command not found: "));
+	write(2, st_node->argv[0], strlen(st_node->argv[0]));
+	write(2, "\n", 1);
+	//perror("YM_FF_SHELL");
 	ft_free(cmd);
 	free_dp(mul_p);
 	return (0);
@@ -122,6 +126,7 @@ int	write_in_file(int fd, t_herd *st_node, t_data *data)
 {
 	ssize_t	bytes;
 	char	buffer[1024];
+	const	ssize_t	to_read = sizeof buffer - 2;
 
 	bytes = -1;
 	write(STDERR_FILENO, "heredoc> ", 9);
@@ -131,10 +136,13 @@ int	write_in_file(int fd, t_herd *st_node, t_data *data)
 			return (1);
 		if (bytes > 0)
 		{
+			if (buffer[bytes -1] != '\n')
+				write(STDERR_FILENO, "\n", 1);
 			buffer[bytes - 1] = '\n';
 			buffer[bytes] = '\0';
 			if (!ft_strncmp(buffer, st_node->del, ft_strlen(st_node->del)))
 				break ;
+
 			write(STDERR_FILENO, "heredoc> ", 9);
 			if (ft_strchr(buffer, '\'')
 				|| ft_strchr(buffer, '\"') || ft_strchr(buffer, '$'))
@@ -142,7 +150,14 @@ int	write_in_file(int fd, t_herd *st_node, t_data *data)
 			else
 				write(fd, buffer, bytes);
 		}
-		bytes = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
+		bytes = read(STDIN_FILENO, buffer, to_read);
+		while (bytes > 0 && bytes < to_read && buffer[bytes - 1] != '\n')
+			bytes += read(STDIN_FILENO, buffer + bytes, to_read - bytes);
+		if (bytes == 0)
+		{
+			write(2, "bash: warning: here-document delimited by end-of-file\n", ft_strlen("bash: warning: here-document delimited by end-of-file\n"));
+			break ;
+		}
 	}
 	return (0);
 }

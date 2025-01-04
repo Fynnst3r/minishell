@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/02 14:47:45 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 14:43:08 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,7 @@ void	child(t_cmd *st_node, t_data *data, int last, int pipefd[2])
 	else
 		close(pipefd[1]);
 	start_exec(data, (t_cmd *)st_node);
-	exit(data->e_status);
+	clean_exit(data->e_status);
+	// ft_clean("xd", data, &data->token_top);
+	// exit(32);
 }

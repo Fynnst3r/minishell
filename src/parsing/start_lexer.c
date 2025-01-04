@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/02 20:30:52 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/03 17:42:50 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int	start_lexer(char *input, t_data *data)
 		while (ft_isspace(input[lexer.position]))
 			lexer.position++;
 		if (!skip && input[lexer.position] != 0)
-			if (make_token(&token_top, &lexer))
-				return (ft_error(NULL, 0, &token_top), 1);
+			if (make_token(&token_top, &lexer, data))
+				return (ft_clean(NULL, data, &token_top), 1);
 		skip = false;
 	}
 	return (start_parser(data, token_top));
@@ -93,14 +93,14 @@ int	start_parser(t_data *data, t_token *token_top)
 	lexer = init_lex(NULL);
 	expand_tokens(&token_top, lexer, data);
 	if (evaluator(token_top))
-		return (data->e_status = 2, ft_error(NULL, 0, &token_top), 1);
+		return (data->e_status = 2, ft_clean(NULL, data, &token_top), 1);
 	if (empty_tokens(token_top))
-		return (ft_error(NULL, 0, &token_top), 1);
+		return (ft_clean(NULL, data, &token_top), 1);
 	set_token_id(token_top);
 	// print_token_data(token_top);
 	make_ast2(data, &token_top);
 	if (data->st_node == NULL)
-		return (ft_error(NULL, 0, &token_top), 1);
+		return (ft_clean(NULL, data, &token_top), 1);
 	// if (data->st_node->type == EXECUTE)
 		// print_exec((t_exec *)data->st_node);
 	// free_tokens(&token_top);

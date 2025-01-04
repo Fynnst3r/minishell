@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/02 20:48:20 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/03 22:50:36 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ int			handle_special(char *input, t_lexer *lex, t_token **toktop,
 				size_t start);
 
 //parsing/make_token.c
-int			make_token(t_token **tok, t_lexer *lexer);
+int			make_token(t_token **tok, t_lexer *lexer, t_data *data);
 void		make_special_token(t_token **toktop, char *str, int e_flag);
 
 //parsing/token_utils.c
@@ -168,6 +168,7 @@ char		*get_exp_str(char *s, char *exit_status, t_lexer *l, t_data *data);
 char		*check_val(char *s, t_lexer *l, t_list *env);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit);
 char		*add_char(char *ret, char add, size_t *position);
+
 //..uitls.c
 bool		needs_to_exp(t_token *tmp);
 char		*keep_expanding(char *s, char *ret, t_lexer *l, t_data *data);
@@ -199,6 +200,7 @@ void		ft_clean(char *message, t_data *data, t_token **toktop);
 void		ft_error(char *message, int errcode, t_token **toktop);
 int			ft_free_tree(t_cmd *st_node);
 void		free_tokens(t_token **t);
+void		clean_exit(int errnum);
 
 //error/errno_print.c
 void		print_access_error(char *path, int mode);
