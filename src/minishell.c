@@ -6,7 +6,7 @@
 /*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/11 14:48:08 by ymauk            ###   ########.fr       */
+/*   Updated: 2024/12/11 15:37:55 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	main(int ac, char **av, char**env)
 	fill_env_list(&data, env);
 	data.st_node = NULL;
 	// print_env_list(data.env_list);
-	// fill_test_struct(&data);
+	fill_test_struct(&data);
 	data.origin_stdin = dup(STDIN_FILENO);
 	data.origin_stdout = dup(STDOUT_FILENO);
 	while (1)

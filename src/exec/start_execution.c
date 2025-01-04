@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_execution.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2024/12/10 19:20:26 by fforster         ###   ########.fr       */
+/*   Updated: 2024/12/11 15:37:29 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void fill_test_struct(t_data *data) // pwd
     t_exec *exec_pwd = malloc(sizeof(t_exec));
     exec_pwd->type = EXECUTE;
     exec_pwd->argv = malloc(2 * sizeof(char *));
-    exec_pwd->argv[0] = strdup("env");  // Das Kommando `pwd`
+    exec_pwd->argv[0] = strdup("pwd");  // Das Kommando `pwd`
     exec_pwd->argv[1] = NULL;           // Null-Terminierung für exec-Kompatibilität
     data->st_node = (t_cmd *)exec_pwd;
 }
