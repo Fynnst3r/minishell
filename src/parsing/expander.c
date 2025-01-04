@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 15:11:54 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/02 20:37:40 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 17:04:26 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ char	*get_exp_str(char *s, char *exit_status, t_lexer *l, t_data *data)
 	ret = ft_strdup("");
 	while (s[l->position])
 	{
+		if (g_signal == SIGINT)
+			return (g_signal = 0, ft_clean(NULL, data, NULL), ft_strdup(""));
 		if (s[l->position] == '\"' && l->ignore_quotes == false)
 			ret = keep_expanding(s, ret, l, data);
 		else if (s[l->position] == '\'' && l->ignore_quotes == false)
@@ -122,7 +124,7 @@ void	expand_tokens(t_token **toktop, t_lexer l, t_data *data)
 	while (tmp)
 	{
 		l = init_lex(tmp->str);
-		if (needs_to_exp(tmp) && (!tmp->previous || tmp->previous->type != T_HERE))
+		if (needs_to_exp(tmp))
 			tmp->str = get_exp_str(tmp->str, exit_num_str, &l, data);
 		if (tmp->str)
 			tmp->len = ft_strlen(tmp->str);

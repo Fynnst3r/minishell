@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 17:37:15 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/01 21:48:43 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 15:33:52 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int	skip_quote(const char *s, size_t *i)
 		(*i)++;
 		while (s[*i] != '\'' && s[*i])
 			(*i)++;
-
 		if (s[*i] == 0)
 			return (printf("One \' too much!\n"), 1);
 		return (0);

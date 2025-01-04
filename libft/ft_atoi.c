@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 16:34:36 by fforster          #+#    #+#             */
-/*   Updated: 2024/03/19 16:33:23 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/03 14:59:15 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	ft_atoi(const char *str)
 	int		minus;
 
 	res = 0;
+	minus = 0;
 	while ((*str < 14 && *str > 8) || *str == 32)
 		str++;
 	if (*str == '+' || *str == '-')

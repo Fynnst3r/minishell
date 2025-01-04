@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:47:39 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/02 22:45:02 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 15:50:45 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	signal_handler(int signum)
 
 void	prepare_signal(t_data *data, void (sig_handler)(int))
 {
-	// data->sa.sa_flags = SA_SIGINFO;
 	g_signal = 0;
 	data->sa.sa_handler = sig_handler;
 	sigemptyset(&data->sa.sa_mask);

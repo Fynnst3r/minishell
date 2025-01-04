@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_start.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 15:28:09 by fforster          #+#    #+#             */
-/*   Updated: 2024/11/03 20:32:15 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 15:14:13 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ t_trashman	*init_garbage_collector(void)
 // 	char	*join;
 // 	i = 0;
 // 	l = 0;
-// 	join = ft_malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1 - start));
+// 	join = ft_malloc(sizeof(char) * 
+	//(ft_strlen(s1) + ft_strlen(s2) + 1 - start));
 // 	if (!join)
 // 		return (NULL);
 // 	while (s1[i] && i != start)

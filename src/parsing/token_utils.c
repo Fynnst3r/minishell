@@ -3,39 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:29:41 by fforster          #+#    #+#             */
-/*   Updated: 2024/12/10 16:24:51 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 15:39:44 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	print_token_data(t_token *top)
-{
-	t_token		*tmp;
-	int			count;
+// void	print_token_data(t_token *top)
+// {
+// 	t_token		*tmp;
+// 	int			count;
 
-	count = 0;
-	tmp = top;
-	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
-	while (tmp)
-	{
-		if (tmp->previous)
-			printf("PREVSTR[%d]=			%s	TYPE[%d]=%d\n", count, tmp->previous->str, count - 1, tmp->previous->type);
-		printf(ANSI_BOLD ANSI_GREEN"STRING[%d]=	%s\n"ANSI_RESET, count, tmp->str);
-		if (tmp->next)
-			printf("NEXTSTRING[%d]=			%s	TYPE[%d]=%d\n", count, tmp->next->str, count + 1, tmp->next->type);
-		printf(ANSI_YELLOW"LEN[%d]=%zu\n"ANSI_RESET, count, tmp->len);
-		printf(ANSI_RED"TYPE[%d]=%d\n"ANSI_RESET, count, tmp->type);
-		printf(ANSI_BLUE"ID	[%d]=%i\n\n"ANSI_RESET, count, tmp->id);
-		count++;
-	printf(ANSI_ITALIC"-----------END OF TOK [%d]---------------------\n\n"ANSI_RESET, count);
-		tmp = tmp->next;
-	}
-	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
-}
+// 	count = 0;
+// 	tmp = top;
+// 	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~
+// 		~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
+// 	while (tmp)
+// 	{
+// 		if (tmp->previous)
+// 			printf("PREVSTR[%d]=			%s	TYPE[%d]=%d\n",
+	// count, tmp->previous->str, count - 1, tmp->previous->type);
+// 		printf(ANSI_BOLD ANSI_GREEN"STRING[%d]=	%s\n"ANSI_RESET,
+	// count, tmp->str);
+// 		if (tmp->next)
+// 			printf("NEXTSTRING[%d]=			%s	TYPE[%d]=%d\n",
+	// count, tmp->next->str, count + 1, tmp->next->type);
+// 		printf(ANSI_YELLOW"LEN[%d]=%zu\n"ANSI_RESET, count, tmp->len);
+// 		printf(ANSI_RED"TYPE[%d]=%d\n"ANSI_RESET, count, tmp->type);
+// 		printf(ANSI_BLUE"ID	[%d]=%i\n\n"ANSI_RESET, count, tmp->id);
+// 		count++;
+// 	printf(ANSI_ITALIC"-----------END OF TOK [%d]------------------
+	// ---\n\n"ANSI_RESET, count);
+// 		tmp = tmp->next;
+// 	}
+// 	printf(ANSI_ITALIC"*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*\n\n"ANSI_RESET);
+// }
 
 void	remove_token(t_token *to_del)
 {
@@ -110,4 +115,5 @@ void	set_token_types(t_token *t)
 		}
 	}
 }
-// printf("curr str = %s\nprev str = %s\nprev type %i\n\n", t->str, t->previous->str, t->previous->type);
+// printf("curr str = %s\nprev str = %s\nprev type %i\n\n", 
+	// t->str, t->previous->str, t->previous->type);

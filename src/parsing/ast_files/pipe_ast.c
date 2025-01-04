@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 22:32:04 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/02 20:33:24 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 15:45:07 by ymauk            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ bool	check_for_next_pipe(t_token *tmp)
 	return (false);
 }
 
-	// print_token_data(t);
+// print_token_data(t);
 int	scan_cmd_type_pipe(t_token *t)
 {
 	int	ret;
@@ -64,7 +64,6 @@ t_cmd	*set_pipe_cmd(t_token *tmp, bool first)
 	int		cmd_type;
 
 	cmd_type = scan_cmd_type_pipe(tmp);
-	// printf("COMMAND TYPE %i\n\n\n", cmd_type);
 	if (cmd_type == EXECUTE)
 		return ((t_cmd *)make_cmd_node(tmp));
 	else if (cmd_type == RED)
