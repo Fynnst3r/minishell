@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/04 17:07:03 by ymauk            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:21:33 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void	child(t_cmd *st_node, t_data *data, int last, int pipefd[2])
 		close(pipefd[1]);
 	start_exec(data, (t_cmd *)st_node);
 	clean_exit(data->e_status);
+	// ft_clean("xd", data, &data->token_top);
+	// exit(32);
 }
 
 // clean_exit(data->e_status);

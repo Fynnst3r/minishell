@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 17:39:42 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 17:05:29 by ymauk            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:36:19 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-bool	n_exp(t_token *tmp)
+bool	needs_to_exp(t_token *tmp)
 {
 	if (tmp->previous)
 		if (tmp->previous->type == T_HERE)

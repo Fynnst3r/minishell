@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   start_lexer.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 17:06:19 by ymauk            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:18:29 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,9 @@ int	start_parser(t_data *data, t_token *token_top)
 	make_ast2(data, &token_top);
 	if (data->st_node == NULL)
 		return (ft_clean(NULL, data, &token_top), 1);
+	// if (data->st_node->type == EXECUTE)
+		// print_exec((t_exec *)data->st_node);
+	// free_tokens(&token_top);
 	return (0);
 }
 

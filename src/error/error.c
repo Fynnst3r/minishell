@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 16:47:52 by ymauk            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:20:59 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,32 @@ int	ft_free_herd(t_cmd *node)
 	return (1);
 }
 
+int	ft_free_tree(t_cmd *st_node)
+{
+	t_exec	*free_exec;
+	t_red	*free_red;
+	t_pipe	*free_pipe;
+
+	if (!st_node)
+		return (1);
+	if (st_node->type == EXECUTE)
+		return (free_exec = (t_exec *)st_node, free_dp(free_exec->argv),
+			ft_free(free_exec), free_exec = NULL, 0);
+	if (st_node->type == RED)
+		return (free_red = (t_red *)st_node, ft_free_tree(free_red->cmd),
+			ft_free(free_red), free_red = NULL, 0);
+	if (st_node->type == PIPE)
+	{
+		free_pipe = (t_pipe *)st_node;
+		if (free_pipe->left == PIPE)
+			ft_free_tree((t_cmd *)free_pipe->left);
+		// printf("%s%d freed left pipe\n", __FILE__, __LINE__);
+		return (ft_free_tree((t_cmd *)free_pipe->right), ft_free(free_pipe), 0);
+	}
+	if (st_node->type == HEREDOC)
+		ft_free_herd(st_node);
+	return (1);
+}
 	// static int count = 0;
 	// count++;
 	// printf("count %i\n", count);

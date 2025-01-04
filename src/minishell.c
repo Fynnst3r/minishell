@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 17:09:07 by ymauk            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:17:36 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	init_data(t_data *data, int ac, char **av, char **env)
 int	main(int ac, char **av, char **env)
 {
 	t_data		data;
-
+//env[0] = 0;
 	init_garbage_collector();
 	init_data(&data, ac, av, env);
 	while (1)
@@ -70,14 +70,15 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		if (data.input)
 		{
+			// printf("%d\n", g_signal);
 			if (start_lexer(data.input, &data))
 				continue ;
 			check_exit(data.st_node);
 			if (data.st_node != NULL)
 				start_exec(&data, data.st_node);
 		}
+		ft_clean(NULL, &data, &data.token_top);
 	}
-	ft_clean(NULL, &data, &data.token_top);
 }
 
 // free(data.input);
