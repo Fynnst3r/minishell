@@ -12,12 +12,13 @@ SRCS = src/minishell.c \
 		src/parsing/ast_files/make_ast_helper.c \
 		src/parsing/ast_files/pipe_ast.c \
 		src/error/error.c \
-		src/error/errno_print.c \
+		src/error/print_error.c \
 		src/garbage_collector/garbage_start.c \
 		src/garbage_collector/ft_malloc.c \
 		src/garbage_collector/free.c \
 		src/exec/start_execution.c \
 		src/exec/help_execution.c \
+		src/exec/path_finding.c \
 		src/exec/exec_utils.c \
 		src/exec/pipe.c \
 		src/builtins/builtins1.c \

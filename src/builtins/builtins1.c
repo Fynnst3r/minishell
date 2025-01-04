@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/01 16:28:17 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:22:23 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int	check_builtins(t_data *data, char **cmd)
 		exec_unset(data, cmd);
 	else if (ft_strncmp(cmd[0], "cd", 3) == 0)
 		exec_cd(data, cmd);
+	else if (ft_strncmp(cmd[0], "exit", 5) == 0)
+		return (1);
 	else
 		return (0);
 	return (1);

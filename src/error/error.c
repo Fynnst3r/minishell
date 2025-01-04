@@ -6,14 +6,16 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 19:10:15 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 18:20:59 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:26:27 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	clean_exit(int errnum)
+void	clean_exit(int errnum, bool printperror)
 {
+	if (printperror)
+		perror("YM_FF_SHELL");
 	delete_trash();
 	ft_bzero(get_workers(), sizeof(t_trashman));
 	exit(errnum);
@@ -106,13 +108,13 @@ int	ft_free_tree(t_cmd *st_node)
 		free_pipe = (t_pipe *)st_node;
 		if (free_pipe->left == PIPE)
 			ft_free_tree((t_cmd *)free_pipe->left);
-		// printf("%s%d freed left pipe\n", __FILE__, __LINE__);
 		return (ft_free_tree((t_cmd *)free_pipe->right), ft_free(free_pipe), 0);
 	}
 	if (st_node->type == HEREDOC)
 		ft_free_herd(st_node);
 	return (1);
 }
+		// printf("%s%d freed left pipe\n", __FILE__, __LINE__);
 	// static int count = 0;
 	// count++;
 	// printf("count %i\n", count);

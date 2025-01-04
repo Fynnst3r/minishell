@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 18:30:12 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:40:52 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@
 // OWN LIBS
 # include "libft/libft.h"
 # include "src/garbage_collector/garbage_collector.h"
-// COLOR
-# include "src/parsing/colors.h"
 
 extern int				g_signal;
 
@@ -203,12 +201,13 @@ void		ft_clean(char *message, t_data *data, t_token **toktop);
 void		ft_error(char *message, int errcode, t_token **toktop);
 int			ft_free_tree(t_cmd *st_node);
 void		free_tokens(t_token **t);
-void		clean_exit(int errnum);
+void		clean_exit(int errnum, bool printperror);
 
-//error/errno_print.c
-void		print_access_error(char *path, int mode);
-void		print_cd_error(char *path);
-void		print_open_error(char *path, int flags);
+//error/print_error.c
+void		print_error(char *message, char *path);
+// void		print_access_error(char *path, int mode);
+// void		print_cd_error(char *path);
+// void		print_open_error(char *path, int flags);
 
 /******************************************************************************/
 //<<<<<<<<<<<<<<<<<<<<<<<<    execution functions    >>>>>>>>>>>>>>>>>>>>>>>>>//
@@ -229,7 +228,10 @@ void		exec_execu(t_exec *st_node, t_data *data);
 void		exec_pipe(t_pipe *st_node, t_data *data);
 void		exec_red(t_red *st_node, t_data *data);
 void		exec_heredoc(t_herd *st_node, t_data *data);
-// void		fill_test_struct(t_data *data);
+
+//execution/path_finder
+char		*find_path(t_data *data, t_exec *st_node);
+void		free_dp(char **str);
 
 //execution/pipe
 void		check_pipe(t_pipe *st_node, t_data *data, int last);
@@ -237,19 +239,13 @@ void		run_pipe(t_cmd *st_node, t_data *data, int last);
 void		child(t_cmd *st_node, t_data *data, int last, int pipefd[2]);
 
 //execution/help_execution
-char		*find_path(t_data *data, t_exec *st_node);
-void		free_dp(char **str);
-char		**find_path_help(t_data *data);
 int			write_in_file(int fd, t_herd *st_node, t_data *data);
 void		extra_exec(t_data *data, t_cmd *st_node);
 char		**env_list_to_array(t_data *data);
 
 //execution/exec_utils
-// void		fill_env(t_data *data, char **env);
 void		fill_env_list(t_data *data, char **env);
-// void		ft_add_node_back(t_node **list, t_node *new_node);
-// t_node		*create_node(const char *env_entry);
-// void		print_env_list(t_node *list);
+pid_t		ft_fork(void);
 
 //builtins/builtins1
 int			check_builtins(t_data *data, char **cmd);

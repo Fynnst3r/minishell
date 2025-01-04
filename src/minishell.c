@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 18:17:36 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 18:43:38 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,11 @@ static void	init_data(t_data *data, int ac, char **av, char **env)
 
 // cat << end < 1				it should use 1 as input not heredoc
 // cat < 1 <<end				it should use heredoc as input not 1
+//env[0] = 0;
 int	main(int ac, char **av, char **env)
 {
 	t_data		data;
-//env[0] = 0;
+
 	init_garbage_collector();
 	init_data(&data, ac, av, env);
 	while (1)
@@ -70,7 +71,6 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		if (data.input)
 		{
-			// printf("%d\n", g_signal);
 			if (start_lexer(data.input, &data))
 				continue ;
 			check_exit(data.st_node);
@@ -80,6 +80,6 @@ int	main(int ac, char **av, char **env)
 		ft_clean(NULL, &data, &data.token_top);
 	}
 }
-
+// printf("%d\n", g_signal);
 // free(data.input);
 // system("leaks minishell");

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/04 18:19:57 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:31:21 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,43 +39,32 @@ void	exec_heredoc(t_herd *st_node, t_data *data)
 	int		status;
 
 	prepare_signal(data, signal_handler2);
-	pid = fork();
+	pid = ft_fork();
 	if (pid == -1)
 		return ;
 	if (pid == 0)
 	{
 		fd = open("heredoc.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
-		{
-			perror("YM_FF_SHELL");
-			clean_exit(1);
-		}
+			clean_exit(1, true);
 		if (write_in_file(fd, (t_herd *)st_node, data) == 1)
-		{
-			unlink("heredoc.txt");
-			close(fd);
-			clean_exit(0);
-		}
+			return (unlink("heredoc.txt"), close(fd), clean_exit(0, false));
 		close (fd);
 		fd = open("heredoc.txt", O_RDONLY);
 		if (dup2(fd, STDIN_FILENO) == -1)
-		{
-			perror("herd");
-			clean_exit(1);
-		}
+			clean_exit(1, true);
 		close(fd);
 		if (st_node->cmd->type == RED)
 			start_exec(data, st_node->cmd);
 		else if (st_node->cmd->type == EXECUTE)
 			exec_execu((t_exec *)st_node->cmd, data);
 		unlink("heredoc.txt");
-		clean_exit(0);
+		clean_exit(0, false);
 	}
 	while (waitpid(pid, &status, 0) == -1)
 		;
 	prepare_signal(data, signal_handler);
 	data->e_status = WEXITSTATUS(status);
-	// printf("wexit %d\n", WEXITSTATUS(status));
 	extra_exec(data, data->st_node);
 }
 
@@ -87,12 +76,9 @@ void	exec_red(t_red *st_node, t_data *data)
 	int		status;
 
 	prepare_signal(data, signal_handler2);
-	pid = fork();
+	pid = ft_fork();
 	if (pid == -1)
-	{
-		perror("YM_FF_SHELL");
 		return ;
-	}
 	if (pid == 0)
 	{
 		if (st_node->fd != STDIN_FILENO)
@@ -101,12 +87,9 @@ void	exec_red(t_red *st_node, t_data *data)
 			fd_orig = open(st_node->file, st_node->mode);
 		saved_fd = dup(st_node->fd);
 		if (fd_orig == -1)
-		{
-			perror("YM_FF_SHELL");
-			clean_exit(1);
-		}
+			clean_exit(1, true);
 		if (dup2(fd_orig, st_node->fd) == -1)
-			clean_exit(1);
+			clean_exit(1, true);
 		close(fd_orig);
 		if (st_node->cmd->type == RED)
 			start_exec(data, st_node->cmd);
@@ -117,7 +100,7 @@ void	exec_red(t_red *st_node, t_data *data)
 		else
 			dup2(saved_fd, STDIN_FILENO);
 		close(saved_fd);
-		clean_exit(0);
+		clean_exit(0, false);
 	}
 	while (waitpid(pid, &status, 0) == -1)
 		;
@@ -134,33 +117,22 @@ void	exec_execu(t_exec *st_node, t_data *data)
 	if (check_builtins(data, st_node->argv) == 0)
 	{
 		prepare_signal(data, signal_handler2);
-		pid = fork();
+		pid = ft_fork();
 		if (pid == -1)
-		{
-			perror("YM_FF_SHELL");
 			return ;
-		}
 		if (pid == 0)
 		{
 			data->cmd_path = find_path(data, st_node);
 			if (data->cmd_path == 0)
-				clean_exit(127);
+				clean_exit(127, false);
 			data->env = env_list_to_array(data);
 			if (execve(data->cmd_path, st_node->argv, data->env) == -1)
-			{
-				perror("YM_FF_SHELL");
-				clean_exit(127);
-			}
+				clean_exit(127, true);
 		}
 		while (waitpid(pid, &status, 0) == -1)
 			;
 		prepare_signal(data, signal_handler);
 		data->e_status = WEXITSTATUS(status);
-		// printf("%d exit statd\n", WEXITSTATUS(status));
-		// printf("%d termsig\n", WTERMSIG(status));
-		// if (WTERMSIG(status) == 0)
-		// 	ft_error(NULL, 0, NULL);
-		return ;
 	}
 }
 
@@ -169,6 +141,6 @@ void	exec_pipe(t_pipe *st_node, t_data *data)
 	check_pipe((t_pipe *)st_node->left, data, 0);
 	dup2(data->origin_stdout, STDOUT_FILENO);
 	run_pipe((t_cmd *)st_node->right, data, 1);
+}
 	// printf("pipe done\n");
 	// exit(0);
-}

@@ -6,13 +6,13 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/03 19:59:00 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:14:04 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	check_for_shlvl(t_data *data)
+static void	check_for_shlvl(t_data *data)
 {
 	t_list		*current;
 	t_env_entry	*entry;
@@ -38,7 +38,7 @@ void	check_for_shlvl(t_data *data)
 	exec_export(data, tmp);
 }
 
-void	handle_shlvl(t_env_entry *entry)
+static void	handle_shlvl(t_env_entry *entry)
 {
 	char	*tmp;
 
@@ -86,4 +86,17 @@ void	fill_env_list(t_data *data, char **env)
 		i++;
 	}
 	check_for_shlvl(data);
+}
+
+pid_t	ft_fork(void)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("YM_FF_SHELL: fork fail");
+		return (-1);
+	}
+	return (pid);
 }

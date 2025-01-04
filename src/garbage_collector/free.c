@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 18:30:37 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 18:26:43 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 19:37:01 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,33 +51,28 @@ static void	ft_free_head(t_trashman *trashmen)
 
 void	ft_free(void *pointer)
 {
-	t_trashman		*trashmen;
 	t_trashnode		*tofree;
 	t_trashnode		*current_bag;
 
 	if (!pointer)
 		return ;
-	trashmen = get_workers();
-	current_bag = trashmen->head;
-	if (trashmen->head->totrash == pointer)
-		return (ft_free_head(trashmen));
-	while (current_bag != trashmen->tail)
+	current_bag = get_workers()->head;
+	if (get_workers()->head->totrash == pointer)
+		return (ft_free_head(get_workers()));
+	while (current_bag != get_workers()->tail)
 	{
 		if (current_bag->next->totrash == pointer)
 		{
 			tofree = current_bag->next;
-			if (current_bag->next != trashmen->tail)
+			if (current_bag->next != get_workers()->tail)
 				current_bag->next = current_bag->next->next;
 			else
 			{
-				trashmen->tail = current_bag;
+				get_workers()->tail = current_bag;
 				current_bag->next = NULL;
 			}
-			free(tofree->totrash);
-			tofree->totrash = NULL;
-			free(tofree);
-			trashmen->worker_num--;
-			return ;
+			return (free(tofree->totrash), tofree->totrash = NULL,
+				get_workers()->worker_num--, free(tofree));
 		}
 		current_bag = current_bag->next;
 	}

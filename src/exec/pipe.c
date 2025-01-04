@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/04 18:21:33 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:26:54 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	run_pipe(t_cmd *st_node, t_data *data, int last)
 
 	if (pipe(pipefd) == -1)
 		return ;
-	pid1 = fork();
+	pid1 = ft_fork();
 	if (pid1 == -1)
 		return ;
 	if (pid1 == 0)
@@ -63,11 +63,11 @@ void	child(t_cmd *st_node, t_data *data, int last, int pipefd[2])
 	else
 		close(pipefd[1]);
 	start_exec(data, (t_cmd *)st_node);
-	clean_exit(data->e_status);
-	// ft_clean("xd", data, &data->token_top);
-	// exit(32);
+	clean_exit(data->e_status, false);
 }
 
+	// ft_clean("xd", data, &data->token_top);
+	// exit(32);
 // clean_exit(data->e_status);
 // 	// ft_clean("xd", data, &data->token_top);
 // 	// exit(32);

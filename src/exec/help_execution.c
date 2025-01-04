@@ -6,99 +6,13 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 12:58:19 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/04 14:57:52 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/04 20:32:50 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
 //wont find path for current dir? try : ./minishell			it wont find it...
-char	*find_path(t_data *data, t_exec *st_node)
-{
-	int		i;
-	char	**mul_p;
-	char	*cmd;
-	char	*full_p;
-
-	if (!ft_strncmp("./", st_node->argv[0], 2))
-		return (ft_strjoin(getcwd(NULL, 0), &st_node->argv[0][1]));
-	if (!ft_strncmp("../", st_node->argv[0], 3))
-		return (ft_strjoin(getcwd(NULL, 0), &st_node->argv[0][2]));
-	if (st_node->argv[0][0] != '/')
-		cmd = ft_strjoin("/", st_node->argv[0]);
-	else
-	{
-		if (access(st_node->argv[0], X_OK) != 0)
-			return (data->e_status = 127, perror("YM_FF_SHELL"), NULL);
-		else
-			return (st_node->argv[0]);
-	}
-	mul_p = find_path_help(data);
-	i = -1;
-	while (mul_p && mul_p[++i] != NULL)
-	{
-		full_p = ft_strjoin(mul_p[i], cmd);
-		if (access(full_p, X_OK) == 0)
-		{
-			ft_free(cmd);
-			free_dp(mul_p);
-			return (full_p);
-		}
-		else
-		{
-			ft_free(full_p);
-		}
-	}
-	data->e_status = 127;
-	write(2, "YM_FF_SHELL: ", strlen("YM_FF_SHELL: "));
-	write(2, "Command not found: ", strlen("Command not found: "));
-	write(2, st_node->argv[0], strlen(st_node->argv[0]));
-	write(2, "\n", 1);
-	//perror("YM_FF_SHELL");
-	ft_free(cmd);
-	free_dp(mul_p);
-	return (0);
-}
-
-char	**find_path_help(t_data *data)
-{
-	char		*path;
-	char		**mul;
-	t_list		*current;
-	t_env_entry	*entry;
-
-	current = data->env_list;
-	path = NULL;
-	while (current != NULL)
-	{
-		entry = (t_env_entry *)current->content;
-		if (ft_strncmp(entry->name, "PATH", 4) == 0 && entry->value != NULL)
-		{
-			path = entry->value;
-			break ;
-		}
-		current = current->next;
-	}
-	if (!path)
-		return (NULL);
-	mul = ft_split(path, ':');
-	return (mul);
-}
-
-void	free_dp(char **str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return ;
-	while (str && str[i] != NULL)
-	{
-		ft_free(str[i]);
-		i++;
-	}
-	ft_free(str);
-}
 
 void	expand_heredoc(int fd, char *buffer, t_data *data)
 {
@@ -142,7 +56,6 @@ int	write_in_file(int fd, t_herd *st_node, t_data *data)
 			buffer[bytes] = '\0';
 			if (!ft_strncmp(buffer, st_node->del, ft_strlen(st_node->del)))
 				break ;
-
 			write(STDERR_FILENO, "heredoc> ", 9);
 			if (ft_strchr(buffer, '\'')
 				|| ft_strchr(buffer, '\"') || ft_strchr(buffer, '$'))
@@ -243,91 +156,3 @@ char	**env_list_to_array(t_data *data)
 	}
 	return (ret);
 }
-
-// void	expand_heredoc(char *buffer, t_data *data)
-// {
-// 	char	*exit_status;
-// 	char	*expan;
-// 	t_lexer	lex;
-
-// 	lex = init_lex(NULL);
-// 	lex.ignore_quotes = true;
-// 	buffer[ft_strlen(buffer) - 1] = 0;
-// 	exit_status = ft_itoa(g_signal);
-// 	expan = get_exp_str(buffer, exit_status, &lex, data->env_list);
-	
-// 	ft_free(expan);
-// 	ft_free(exit_status);
-// }
-
-// void	exec_heredoc(t_herd *st_node, t_data *data)
-// {
-// 	int		fd;
-// 	char	*buffer;
-
-// 	while (1)
-// 	{
-// 		buffer = readline("heredoc> ");
-// 		if (ft_strchr(buffer, '\'')
-// 				|| ft_strchr(buffer, '\"') || ft_strchr(buffer, '$'))
-// 			expand_heredoc(buffer, data);
-// 	}
-// }
-
-// void heredoc_simulation(t_herd *st_node, t_data *data)
-// {
-//     char *line = NULL;
-//     int fd = open(heredoc_input.txt, O_WRONLY | O_CREAT | O_TRUNC, 0644);  // Open file for writing
-//     if (fd == -1) {
-//         perror("Failed to open file for heredoc");
-//         exit(EXIT_FAILURE);
-//     }
-
-//     printf("Entering heredoc. Type '%s' to finish input.\n", st_node->del);
-
-//     // Read input until the delimiter is encountered
-//     while (1) {
-//         line = readline("> ");
-//         if (!line) {
-//             break;  // Handle EOF or error
-//         }
-
-//         // Check if the line is the delimiter (EOF)
-//         if (strcmp(line, st_node->del) == 0) {
-//             free(line);
-//             break;
-//         }
-
-//         // Write the line to the file
-//         if (write(fd, line, strlen(line)) == -1) {
-//             perror("Failed to write to file");
-//             free(line);
-//             close(fd);
-//             exit(EXIT_FAILURE);
-//         }
-        
-//         // Write a newline character to the file (simulating heredoc behavior)
-//         if (write(fd, "\n", 1) == -1) {
-//             perror("Failed to write newline to file");
-//             free(line);
-//             close(fd);
-//             exit(EXIT_FAILURE);
-//         }
-
-//         free(line);  // Free the input line after writing
-//     }
-
-//     close(fd);  // Close the file after writing
-//     printf("Heredoc content written to '%s'.\n", heredoc_input.txt);
-// }
-
-
-// int main() {
-//     // Step 1: Simulate heredoc and write to a file
-//     heredoc_simulation();
-
-//     // Step 2: Use the heredoc file as input for a command (example: 'cat')
-//     execute_command_with_heredoc_input();
-
-//     return 0;
-// }
