@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 14:42:27 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 18:43:38 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:47:46 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ int	main(int ac, char **av, char **env)
 	{
 		data.input = readline("YM_FF_SHELL: ");
 		g_signal = 0;
+		if (g_signal == SIGINT)
+			change_e_stat(&data, 130);
 		if (!data.input)
 			ft_error("exit", 0, NULL);
 		if (!*data.input)
@@ -73,6 +75,7 @@ int	main(int ac, char **av, char **env)
 		{
 			if (start_lexer(data.input, &data))
 				continue ;
+			data.e_status = 0;
 			check_exit(data.st_node);
 			if (data.st_node != NULL)
 				start_exec(&data, data.st_node);

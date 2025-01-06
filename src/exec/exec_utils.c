@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 12:59:04 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/04 20:14:04 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:34:57 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static void	check_for_shlvl(t_data *data)
 
 	entry = NULL;
 	current = data->env_list;
-	data->e_status = 0;
+	change_e_stat(data, 0);
 	if (current == NULL)
-		data->e_status = 1;
+		change_e_stat(data, 1);
 	while (current != NULL)
 	{
 		if (current->content)

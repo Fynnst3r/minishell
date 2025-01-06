@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 23:17:46 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/01 16:24:04 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:33:22 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,5 @@ void	exec_echo(t_data *data, char **cmd)
 	}
 	if (newline)
 		printf("\n");
-	data->e_status = 0;
+	change_e_stat(data, 0);
 }

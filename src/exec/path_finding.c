@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 18:49:33 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 20:43:04 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:35:17 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static char	*find_path_helper(t_data *data, t_exec *st_node, char *cmd)
 			ft_free(full_p);
 		}
 	}
-	data->e_status = 127;
+	change_e_stat(data, 127);
 	print_error("Command not found: ", st_node->argv[0]);
 	ft_free(cmd);
 	free_dp(mul_p);
@@ -106,7 +106,7 @@ char	*find_path(t_data *data, t_exec *st_node)
 	else
 	{
 		if (access(st_node->argv[0], X_OK) != 0)
-			return (data->e_status = 127, perror("YM_FF_SHELL"), NULL);
+			return (change_e_stat(data, 127), perror("YM_FF_SHELL"), NULL);
 		else
 			return (st_node->argv[0]);
 	}

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 10:18:53 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/04 20:26:54 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:35:38 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	run_pipe(t_cmd *st_node, t_data *data, int last)
 		child(st_node, data, last, pipefd);
 	while (waitpid(pid1, &status, 0) == -1)
 		;
-	data->e_status = WEXITSTATUS(status);
+	change_e_stat(data, WEXITSTATUS(status));
 	close(pipefd[1]);
 	if (last == 0)
 		dup2(pipefd[0], STDIN_FILENO);

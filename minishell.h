@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 20:40:52 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:39:31 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,6 @@ typedef struct s_here_d
 /******************************************************************************/
 //<<<<<<<<<<<<<<<<<<<<<<<<<   parsing functions   >>>>>>>>>>>>>>>>>>>>>>>>>>>>//
 /******************************************************************************/
-//minishell.c
-// void		fill_env(t_data *data, char **env);
 
 //parsing/start_lexer.c
 int			start_lexer(char *input, t_data *data);
@@ -167,7 +165,6 @@ char		*get_exp_str(char *s, char *exit_status, t_lexer *l, t_data *data);
 char		*check_val(char *s, t_lexer *l, t_list *env);
 char		*ft_strjoin_at(char *s1, char *s2, t_lexer *l, bool print_exit);
 char		*add_char(char *ret, char add, size_t *position);
-
 //..uitls.c
 bool		needs_to_exp(t_token *tmp);
 char		*keep_expanding(char *s, char *ret, t_lexer *l, t_data *data);
@@ -177,17 +174,13 @@ char		*ft_getenv(char *tolook, t_list *env);
 //evaluator.c
 int			evaluator(t_token *toktop);
 
-///parsing/ast_files/make_ast2.c
-void		make_ast2(t_data *data, t_token **toktop);
-int			scan_cmd_type(t_token *t);
-void		print_exec(t_exec *cmd);
-void		print_pipe_ast(t_pipe *pipe);
+///parsing/ast_files/make_ast.c
+// void		print_exec(t_exec *cmd);
+// void		print_pipe_ast(t_pipe *pipe);
 t_exec		*make_cmd_node(t_token *t);
 t_red		*create_redir_cmd(t_token *t);
 t_herd		*make_herd_node(t_token *t);
-
-///parsing/ast_files/make_pipe_ast.c
-t_pipe		*make_pipe_ast(t_token **toktop);
+void		make_ast2(t_data *data, t_token **toktop);
 
 ///parsing/ast_files/make_ast_helper.c
 int			scan_cmd_type(t_token *t);
@@ -196,15 +189,19 @@ t_red		*find_last_red(t_red *top);
 t_token		*scan_last_heredoc(t_token *t, t_herd *herd);
 size_t		count_cmd_args(t_token *tmp);
 
+///parsing/ast_files/make_pipe_ast.c
+t_pipe		*make_pipe_ast(t_token **toktop);
+
 //error/error.c
+void		clean_exit(int errnum, bool printperror);
 void		ft_clean(char *message, t_data *data, t_token **toktop);
 void		ft_error(char *message, int errcode, t_token **toktop);
+//error/free_tokens_and_tree.c
 int			ft_free_tree(t_cmd *st_node);
 void		free_tokens(t_token **t);
-void		clean_exit(int errnum, bool printperror);
-
 //error/print_error.c
 void		print_error(char *message, char *path);
+void		change_e_stat(t_data *data, int new);
 // void		print_access_error(char *path, int mode);
 // void		print_cd_error(char *path);
 // void		print_open_error(char *path, int flags);
@@ -213,33 +210,31 @@ void		print_error(char *message, char *path);
 //<<<<<<<<<<<<<<<<<<<<<<<<    execution functions    >>>>>>>>>>>>>>>>>>>>>>>>>//
 /******************************************************************************/
 
-//minishell.c
-int			main(int ac, char **av, char **env);
-// void		setting_data(t_data *data);
-
 //sigma.c
 void		signal_handler(int signum);
 void		signal_handler2(int signum);
+void		signal_handler3(int signum);
 void		prepare_signal(t_data *data, void (sig_handler)(int));
 
 //execution/start_execution
 void		start_exec(t_data *data, t_cmd *cmd);
-void		exec_execu(t_exec *st_node, t_data *data);
 void		exec_pipe(t_pipe *st_node, t_data *data);
+void		exec_execu(t_exec *st_node, t_data *data);
 void		exec_red(t_red *st_node, t_data *data);
-void		exec_heredoc(t_herd *st_node, t_data *data);
-
-//execution/path_finder
-char		*find_path(t_data *data, t_exec *st_node);
-void		free_dp(char **str);
 
 //execution/pipe
 void		check_pipe(t_pipe *st_node, t_data *data, int last);
 void		run_pipe(t_cmd *st_node, t_data *data, int last);
 void		child(t_cmd *st_node, t_data *data, int last, int pipefd[2]);
 
+//execution/exec_heredoc
+void		exec_heredoc(t_herd *st_node, t_data *data);
+
+//execution/path_finder
+char		*find_path(t_data *data, t_exec *st_node);
+void		free_dp(char **str);
+
 //execution/help_execution
-int			write_in_file(int fd, t_herd *st_node, t_data *data);
 void		extra_exec(t_data *data, t_cmd *st_node);
 char		**env_list_to_array(t_data *data);
 

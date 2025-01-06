@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:46:56 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/04 20:22:23 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:30:17 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ void	exec_env(t_data *data)
 	t_env_entry	*entry;
 
 	current = data->env_list;
-	data->e_status = 0;
+	change_e_stat(data, 0);
 	if (current == NULL)
-		data->e_status = 1;
+		change_e_stat(data, 1);
 	while (current != NULL)
 	{
 		if (current->content)
@@ -58,11 +58,11 @@ void	exec_pwd(t_data *data)
 {
 	char	*pwd;
 
-	data->e_status = 0;
+	change_e_stat(data, 0);
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{
-		data->e_status = 1;
+		change_e_stat(data, 1);
 		return ;
 	}
 	printf("%s\n", pwd);

@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 16:51:05 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 20:42:42 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:41:29 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,17 @@
 
 void	print_error(char *message, char *path)
 {
-	write(2, "YM_FF_SHELL: ", ft_strlen("YM_FF_SHELL: "));
+	write(STDERR_FILENO, "YM_FF_SHELL: ", ft_strlen("YM_FF_SHELL: "));
 	ft_putstr_fd(message, 2);
 	if (path)
 		write(2, path, ft_strlen(path));
-	write(2, "\n", 1);
+	write(STDERR_FILENO, "\n", 1);
+}
+
+void	change_e_stat(t_data *data, int new)
+{
+	if (data->e_status == 0)
+		data->e_status = new;
 }
 
 // static void	print_access_error2(char *path)

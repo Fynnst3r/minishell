@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:36:55 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/01 21:47:28 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:34:16 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	exec_unset(t_data *data, char **cmd)
 			{
 				curr = curr->next;
 				if (remove_entry(&data->env_list, enventry, NULL))
-					data->e_status = 1;
+					change_e_stat(data, 1);
 			}
 			else
 				curr = curr->next;

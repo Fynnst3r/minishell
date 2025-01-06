@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/05 19:41:49 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 18:44:18 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:30:04 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	start_lexer(char *input, t_data *data)
 			skip = true;
 			if (handle_special(input, &lexer, &token_top, lexer.position))
 				return (printf("YM_FF_SHELL: too many `<' or `>'.\n"),
-					free_tokens(&token_top), data->e_status = 2, 1);
+					free_tokens(&token_top), change_e_stat(data, 2), 1);
 		}
 		while (ft_isspace(input[lexer.position]))
 			lexer.position++;
@@ -93,9 +93,10 @@ int	start_parser(t_data *data, t_token *token_top)
 	lexer = init_lex(NULL);
 	expand_tokens(&token_top, lexer, data);
 	if (evaluator(token_top))
-		return (data->e_status = 2, ft_clean(NULL, data, &token_top), 1);
+		return (change_e_stat(data, 2),
+			ft_clean(NULL, data, &token_top), 1);
 	if (empty_tokens(token_top))
-		return (ft_clean(NULL, data, &token_top), 1);
+		return (ft_clean(NULL, data, &token_top), change_e_stat(data, 0), 1);
 	set_token_id(token_top);
 	make_ast2(data, &token_top);
 	if (data->st_node == NULL)

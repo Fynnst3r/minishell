@@ -3,21 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymauk <ymauk@student.42.fr>                +#+  +:+       +#+        */
+/*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 17:47:39 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/04 15:50:45 by ymauk            ###   ########.fr       */
+/*   Updated: 2025/01/04 21:31:41 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	signal_handler3(int signum)
+{
+	g_signal = signum;
+	if (signum == SIGINT)
+	{
+		write(2, "\n", 1);
+	}
+	if (signum == SIGQUIT)
+	{
+	}
+}
 
 void	signal_handler2(int signum)
 {
 	g_signal = signum;
 	if (signum == SIGINT)
 	{
-		write(1, "\n", 1);
+		write(2, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 1);
 	}
@@ -31,7 +43,7 @@ void	signal_handler(int signum)
 	g_signal = signum;
 	if (signum == SIGINT)
 	{
-		write(1, "\n", 1);
+		write(2, "^C\n", 3);
 		rl_on_new_line();
 		rl_replace_line("", 1);
 		rl_redisplay();

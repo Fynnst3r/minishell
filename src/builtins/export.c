@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 22:03:24 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/01 16:42:24 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:34:07 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ static int	check_valid_name(char *s, t_data *data)
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '$')
+		if (s[i] == '$' || s[i] == '-' || ft_isspace(s[i]))
 		{
 			printf("YM_FF_SHELL: export: `%s': not a valid identifier\n", s);
-			data->e_status = 2;
+			change_e_stat(data, 2);
 			return (1);
 		}
 		if (s[i] == '=')
@@ -32,7 +32,7 @@ static int	check_valid_name(char *s, t_data *data)
 	if (i == 0)
 	{
 		printf("YM_FF_SHELL: export: `%s': not a valid identifier\n", s);
-		data->e_status = 2;
+		change_e_stat(data, 2);
 		return (1);
 	}
 	return (0);
@@ -88,7 +88,7 @@ void	exec_export(t_data *data, char **cmd)
 	size_t		i;
 
 	i = 1;
-	data->e_status = 0;
+	change_e_stat(data, 0);
 	while (cmd[i])
 	{
 		equal_sign = ft_strchr(cmd[i], '=');

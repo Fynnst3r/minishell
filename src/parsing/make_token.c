@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 20:55:00 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/03 13:59:41 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/05 19:37:01 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	make_token(t_token **toktop, t_lexer *lexer, t_data *data)
 	if (!node)
 		return (1);
 	if (get_str(lexer, &node))
-		return (data->e_status = 2, 1);
+		return (change_e_stat(data, 2), 1);
 	if (node->str)
 		node->len = ft_strlen(node->str);
 	node->next = NULL;
