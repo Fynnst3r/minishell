@@ -46,7 +46,7 @@ $(NAME): $(OBJS)
 	@cd $(LIBFT) && $(MAKE) --silent
 	@echo $(G)"Compiling minishell..."$(DC)
 	@cc $(OBJS) $(INLIBFT) -o $(NAME) $(LDFLAGS)
-	@echo $(Y)"Lets Go Minishell!!!"$(DC)
+	@echo $(Y)"Let's Go Minishell!!!"$(DC)
 
 $(OBJ_DIR)/%.o: %.c | create_dirs
 	@cc $(CFLAGS) -c $< -o $@

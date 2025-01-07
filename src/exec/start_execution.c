@@ -6,17 +6,17 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 13:24:39 by ymauk             #+#    #+#             */
-/*   Updated: 2025/01/05 19:49:25 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:23:49 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	start_exec(t_data *data, t_cmd *cmd)
+void	start_exec(t_data *data, t_cmd *cmd, bool in_pipe)
 {
 	if (cmd->type == EXECUTE)
 	{
-		exec_execu((t_exec *)cmd, data);
+		exec_execu((t_exec *)cmd, data, in_pipe);
 	}
 	if (cmd->type == PIPE)
 	{
@@ -24,11 +24,11 @@ void	start_exec(t_data *data, t_cmd *cmd)
 	}
 	if (cmd->type == RED)
 	{
-		exec_red((t_red *)cmd, data);
+		exec_red((t_red *)cmd, data, in_pipe);
 	}
 	if (cmd->type == HEREDOC)
 	{
-		exec_heredoc((t_herd *)cmd, data);
+		exec_heredoc((t_herd *)cmd, data, in_pipe);
 	}
 }
 
@@ -39,15 +39,17 @@ void	exec_pipe(t_pipe *st_node, t_data *data)
 	run_pipe((t_cmd *)st_node->right, data, 1);
 }
 
-void	exec_execu(t_exec *st_node, t_data *data)
+void	exec_execu(t_exec *st_node, t_data *data, bool in_pipe)
 {
 	pid_t		pid;
 	int			status;
 
+	pid = 0;
 	if (check_builtins(data, st_node->argv) == 0)
 	{
 		prepare_signal(data, signal_handler2);
-		pid = ft_fork();
+		if (!in_pipe)
+			pid = ft_fork();
 		if (pid == -1)
 			return ;
 		if (pid == 0)
@@ -66,7 +68,7 @@ void	exec_execu(t_exec *st_node, t_data *data)
 	}
 }
 
-void	redir_helper_child(t_red *st_node, t_data *data)
+void	redir_helper_child(t_red *st_node, t_data *data, bool in_pipe)
 {
 	int		fd_orig;
 	int		saved_fd;
@@ -82,9 +84,9 @@ void	redir_helper_child(t_red *st_node, t_data *data)
 		clean_exit(1, true);
 	close(fd_orig);
 	if (st_node->cmd->type == RED)
-		start_exec(data, st_node->cmd);
+		start_exec(data, st_node->cmd, in_pipe);
 	else if (st_node->cmd->type == EXECUTE)
-		exec_execu((t_exec *)st_node->cmd, data);
+		exec_execu((t_exec *)st_node->cmd, data, in_pipe);
 	if (st_node->fd != STDIN_FILENO)
 		dup2(saved_fd, STDOUT_FILENO);
 	else
@@ -93,7 +95,7 @@ void	redir_helper_child(t_red *st_node, t_data *data)
 	clean_exit(0, false);
 }
 
-void	exec_red(t_red *st_node, t_data *data)
+void	exec_red(t_red *st_node, t_data *data, bool in_pipe)
 {
 	pid_t	pid;
 	int		status;
@@ -102,16 +104,13 @@ void	exec_red(t_red *st_node, t_data *data)
 	pid = ft_fork();
 	if (pid == -1)
 		return ;
-	printf("EHHH\n");
 	if (pid == 0)
 	{
-		redir_helper_child(st_node, data);
+		redir_helper_child(st_node, data, in_pipe);
 	}
 	while (waitpid(pid, &status, 0) == -1)
 		;
 	prepare_signal(data, signal_handler);
-	printf("EHHH status befor kill %d\n", data->e_status);
 	change_e_stat(data, WEXITSTATUS(status));
-	printf("EHHH status afta kill %d\n", data->e_status);
 	extra_exec(data, data->st_node);
 }

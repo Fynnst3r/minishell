@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 16:37:28 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/05 19:39:31 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/06 15:36:51 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,10 +217,10 @@ void		signal_handler3(int signum);
 void		prepare_signal(t_data *data, void (sig_handler)(int));
 
 //execution/start_execution
-void		start_exec(t_data *data, t_cmd *cmd);
+void		start_exec(t_data *data, t_cmd *cmd, bool in_pipe);
 void		exec_pipe(t_pipe *st_node, t_data *data);
-void		exec_execu(t_exec *st_node, t_data *data);
-void		exec_red(t_red *st_node, t_data *data);
+void		exec_execu(t_exec *st_node, t_data *data, bool in_pipe);
+void		exec_red(t_red *st_node, t_data *data, bool in_pipe);
 
 //execution/pipe
 void		check_pipe(t_pipe *st_node, t_data *data, int last);
@@ -228,7 +228,7 @@ void		run_pipe(t_cmd *st_node, t_data *data, int last);
 void		child(t_cmd *st_node, t_data *data, int last, int pipefd[2]);
 
 //execution/exec_heredoc
-void		exec_heredoc(t_herd *st_node, t_data *data);
+void		exec_heredoc(t_herd *st_node, t_data *data, bool in_pipe);
 
 //execution/path_finder
 char		*find_path(t_data *data, t_exec *st_node);

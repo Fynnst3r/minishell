@@ -6,7 +6,7 @@
 /*   By: fforster <fforster@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/04 21:46:35 by fforster          #+#    #+#             */
-/*   Updated: 2025/01/05 20:21:35 by fforster         ###   ########.fr       */
+/*   Updated: 2025/01/06 23:27:51 by fforster         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	expand_heredoc(int fd, char *buffer, t_data *data)
 	ft_free(exit_status);
 }
 
-int	write_in_file(t_data *data, char *buffer, int fd, ssize_t bytes)
+static int	write_in_file(t_data *data, char *buffer, int fd, ssize_t bytes)
 {
 	t_herd	*st_node;
 
@@ -83,7 +83,7 @@ static void	make_temporary_file(int fd, t_herd *st_node, t_data *data)
 	}
 }
 
-static void	heredoc_helper_child(t_herd *st_node, t_data *data)
+static void	heredoc_helper_child(t_herd *st_node, t_data *data, bool in_pipe)
 {
 	int	fd;
 
@@ -99,14 +99,14 @@ static void	heredoc_helper_child(t_herd *st_node, t_data *data)
 		clean_exit(1, true);
 	close(fd);
 	if (st_node->cmd->type == RED)
-		start_exec(data, st_node->cmd);
+		start_exec(data, st_node->cmd, in_pipe);
 	else if (st_node->cmd->type == EXECUTE)
-		exec_execu((t_exec *)st_node->cmd, data);
+		exec_execu((t_exec *)st_node->cmd, data, in_pipe);
 	unlink("heredoc.txt");
 	clean_exit(0, false);
 }
 
-void	exec_heredoc(t_herd *st_node, t_data *data)
+void	exec_heredoc(t_herd *st_node, t_data *data, bool in_pipe)
 {
 	pid_t	pid;
 	int		status;
@@ -117,7 +117,7 @@ void	exec_heredoc(t_herd *st_node, t_data *data)
 		return ;
 	if (pid == 0)
 	{
-		heredoc_helper_child(st_node, data);
+		heredoc_helper_child(st_node, data, in_pipe);
 	}
 	while (waitpid(pid, &status, 0) == -1)
 		;
